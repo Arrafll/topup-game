@@ -147,7 +147,7 @@ $('.js-filter').on('click', function () {
 
 // 7 autoplay-slider
 $('.autoplay-slider').slick({
-  slidesToShow: 2,
+  slidesToShow: 1,
   slidesToScroll: 1,
   autoplay: true,
   autoplaySpeed: 2000,
