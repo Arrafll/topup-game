@@ -1,5 +1,5 @@
-    <!-- Menu Navigation starts -->
-    <nav class="horizontal-sidebar">
+    <!-- Menu Navigation starts --> 
+    <nav class="@if ($role == 1) vertical-sidebar @else horizontal-sidebar @endif">
       <div class="app-logo">
         <a class="logo d-inline-block" href="index.html">
           <img src="{{ asset('assets/images/logo/1.png') }}" alt="#">

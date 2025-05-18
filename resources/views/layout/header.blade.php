@@ -731,7 +731,7 @@
                               </span>
                             </div>
                             <div class="text-center mt-2">
-                              <h6 class="mb-0"> Laura Monaldo</h6>
+                              <h6 class="mb-0"> {{ auth()->user()->username }} </h6>
                               <p class="f-s-12 mb-0 text-secondary">lauradesign@gmail.com</p>
                             </div>
                           </li>
@@ -824,7 +824,8 @@
                           <li class="app-divider-v dotted py-1"></li>
 
                           <li>
-                            <a class="mb-0 text-danger" href="./sign_in.html" target="_blank">
+                            
+                            <a class="mb-0 text-danger" href="{{ route('logout') }}">
                               <i class="ph-duotone  ph-sign-out pe-1 f-s-20"></i> Log Out
                             </a>
                           </li>

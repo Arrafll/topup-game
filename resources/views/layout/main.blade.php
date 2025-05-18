@@ -12,7 +12,7 @@
   <meta name="author" content="la-themes">
   <link rel="icon" href="{{ asset('assets/images/logo/favicon.png') }}" type="image/x-icon">
   <link rel="shortcut icon" href="{{ asset('assets/images/logo/favicon.png') }}" type="image/x-icon">
-  <title>Ecommerce Dashboard | ra-admin - Premium Admin Template</title>
+  <title> {{ $title }} | KlikTopUp</title>
 
   <!-- Animation css -->
   <link rel="stylesheet" href="{{ asset('assets/vendor/animation/animate.min.css') }}">

@@ -9,6 +9,11 @@ class AdminController extends Controller
     //
 
     public function index(){
-        return view('index');
+        $data = [
+            'title' => 'Home',
+            'role' => 1
+        ];
+
+        return view('admin/index', $data);
     }
 }
