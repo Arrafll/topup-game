@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('user_data', function (Blueprint $table) {
             $table->id();
-            $table->string('telepon')->nullable();
-            $table->string('no_hp')->nullable();
+            $table->string('handphone')->nullable();
             $table->text('alamat')->nullable();
             $table->text('bio')->nullable();
             $table->text('pic')->nullable();

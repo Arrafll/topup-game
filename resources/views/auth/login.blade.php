@@ -50,7 +50,7 @@
                   <img src="{{ asset('assets/images/logo/1.png') }}" alt="" class="img-fluid ">
                 </span>
               </div>
-             
+
               <div class="signup-bg-img">
                 <img src="{{ asset('assets/images/login/04.png') }}" alt="" class="img-fluid">
               </div>
@@ -59,7 +59,7 @@
           </div>
           <div class="col-lg-6 form-contentbox">
             <div class="form-container">
-              <form class="app-form" action="{{ route('login') }}" method="POST">
+              <form class="app-form" action="{{ route('signin') }}" method="POST">
                 @csrf
                 <div class="row">
                   <div class="col-12">
@@ -69,26 +69,49 @@
                     </div>
                   </div>
                   <div class="col-12">
+                    @session('success')
+                      <div class="alert alert-light-border-success d-flex align-items-center justify-content-between"role="alert">
+                        <p class="mb-0" style="color:rgba(var(--success), 1);">
+                          <i class="ti ti-circle-check f-s-18 me-2"></i>
+                              {{ session('success') }}
+                        </p>
+                        <i class="ti ti-x" data-bs-dismiss="alert"></i>
+                      </div>
+                    @endsession
+                    @session('invalid')
+                      <div class="alert alert-light-border-danger d-flex align-items-center justify-content-between"role="alert">
+                        <p class="mb-0" style="color:rgba(var(--danger), 1);">
+                          <i class="ti ti-circle-x f-s-18 me-2"></i>
+                              {{ session('invalid') }}
+                        </p>
+                        <i class="ti ti-x" data-bs-dismiss="alert"></i>
+                      </div>
+                    @endsession
+
+                  </div>
+                  <div class="col-12">
                     <div class="mb-3">
                       <label for="username" class="form-label">Username</label>
-                      <input type="text" class="form-control @error('username') is-invalid @enderror auth-form" name="username"  placeholder="Enter Your Username" id="username">
-                        @error('username')     
-                          <div class="invalid-feedback">
-                              {{ $message }}
-                          </div>
-                        @enderror
+                      <input type="text" class="form-control @error('username') is-invalid @enderror auth-form"
+                        name="username" placeholder="Enter Your Username" id="username">
+                      @error('username')
+              <div class="invalid-feedback">
+              {{ $message }}
+              </div>
+            @enderror
                     </div>
                   </div>
                   <div class="col-12">
                     <div class="mb-3">
                       <label for="password" class="form-label">Password</label>
                       <a href="./pwd_reset.html" class="link-primary float-end">Forgot Password ?</a>
-                      <input type="password" class="form-control @error('password') is-invalid @enderror auth-form" name="password" placeholder="Enter Your Password" id="password">
-                        @error('password')     
-                          <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                        @enderror
+                      <input type="password" class="form-control @error('password') is-invalid @enderror auth-form"
+                        name="password" placeholder="Enter Your Password" id="password">
+                      @error('password')
+              <div class="invalid-feedback">
+              {{ $message }}
+              </div>
+            @enderror
                     </div>
                   </div>
                   <div class="col-12">
@@ -106,7 +129,7 @@
                   </div>
                   <div class="col-12">
                     <div class="text-center text-lg-start">
-                      Don't Have Your Account yet? <a href="./sign_up.html"
+                      Belum punya akun? <a href="{{ route('register') }}"
                         class="link-primary text-decoration-underline"> Sign up</a>
                     </div>
                   </div>
@@ -114,7 +137,9 @@
                     <p>Or sign in with</p>
                   </div>
                   <div class="col-12">
-                      <a type="button" href="{{ route('google_redirect') }}" class="btn btn-gmail text-white d-inline-flex-center w-100"><i class="fa-solid fa-brands fa-google fa-fw"></i> &nbsp;Sign In With Google </a>
+                    <a type="button" href="{{ route('google_redirect') }}"
+                      class="btn btn-gmail text-white d-inline-flex-center w-100"><i
+                        class="fa-solid fa-brands fa-google fa-fw"></i> &nbsp;Sign In With Google </a>
                   </div>
                 </div>
               </form>
@@ -135,10 +160,10 @@
 </html>
 
 <script>
-  $('.auth-form').each(function(){
-    $(this).on('keyup', function(){
-        $(this).removeClass('is-invalid');
-        $(this).next('invalid-feedback').hide();
+  $('.auth-form').each(function () {
+    $(this).on('keyup', function () {
+      $(this).removeClass('is-invalid');
+      $(this).next('invalid-feedback').hide();
     });
   });
 </script>

@@ -45,7 +45,7 @@ class AuthController extends Controller
             }
         }
 
-        return redirect('/auth')->with('invalid', 'Username atau password tidak tedaftar.');
+        return redirect('/login')->with('invalid', 'Username atau password tidak tedaftar.');
             
     }
 
@@ -117,12 +117,22 @@ class AuthController extends Controller
             'username' => 'required|min:8|max:12',
             'password' => 'required|confirmed',
             'email'    => 'required|email',
+            'handphone' => 'required|numeric',
             'password_confirmation' => 'required',
+        ],[
+            'password_confirmation.required' => 'Mohon konfirmasi ulang password', 
+            'required' => 'Kolom :attribute harus diisi',
+            'email.email' => 'Email harus valid',
+            'max' => 'Panjang :attribute tidak lebih dari :max karakter',
+            'min' => 'Panjang :attribute tidak kurang dari :min karakter',
+            'numeric' => 'Nomor :attribute harus angka',
+            'password.confirmed' => 'Konfirmasi password harus sama',
         ]);
 
         $data = [
             'name' => $request->fullname,
             'username' => $request->username,
+            'handphone' => $request->handphone,
             'password' => bcrypt($request->password),
             'email' => $request->email,
             'role_id' => 2,
@@ -134,7 +144,7 @@ class AuthController extends Controller
         ];
 
         UserData::create($userData);
-        return redirect('/auth')->with('success', 'Akun berhasil dibuat.');   
+        return redirect('/login')->with('success', 'Selamat, akun berhasil dibuat!');   
     }
 
     public function logout(){
