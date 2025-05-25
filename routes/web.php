@@ -57,4 +57,10 @@ Route::group(['middleware' => ['auth',  \App\Http\Middleware\Role::class . ':2']
     Route::post('/customer_order_review',  [CustomerController::class, 'order_review'])->name('customer_order_review');
     Route::get('/customer_order_rating/{id}',  [CustomerController::class, 'order_rating'])->name('customer_order_rating');
     Route::post('/customer_checkout',  [CustomerController::class, 'checkout'])->name('customer_checkout');
+    
+    Route::get('/customer/home',  [CustomerController::class, 'home'])->name('customer.home');
+    Route::get('/customer/products',  [CustomerController::class, 'productList'])->name('customer.products');
+    Route::get('/customer/product/{id}',  [CustomerController::class, 'productDetail'])->name('customer.product');
+    Route::get('/customer/invoices',  [CustomerController::class, 'invoiceList'])->name('customer.invoices');
+    Route::get('/customer/invoice/{id}',  [CustomerController::class, 'productInvoice'])->name('customer.invoice');
 });
