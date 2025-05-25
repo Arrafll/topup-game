@@ -22,7 +22,6 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\User::factory()->create([
             'name' => 'Admin',
-            'username' => 'admin',
             'password' => bcrypt('admin123'),
             'email' => 'andrew@gmail.com',
             'role_id' => 1
@@ -30,7 +29,6 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\User::factory()->create([
             'name' => 'Gamer',
-            'username' => 'gamer',
             'password' => bcrypt('gamer123'),
             'email' => 'gamer1@gmail.com',
             'role_id' => 2

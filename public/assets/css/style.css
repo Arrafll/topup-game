@@ -11168,10 +11168,9 @@ header.header-main .container-fluid .header-right .header-cart .badge {
   font-size: 11px;
 }
 header.header-main .container-fluid .header-right .header-cart .header-cart-canvas {
-  top: 64px;
+  top: 108px;
   border: 0;
   border-radius: 18px;
-  height: calc(100vh - 63px) !important;
 }
 header.header-main .container-fluid .header-right .header-cart .head-box-footer {
   border-top: 1px dotted rgb(var(--dark), 0.2);
@@ -11208,7 +11207,7 @@ header.header-main .container-fluid .header-right .header-notification .head-ico
 }
 header.header-main .container-fluid .header-right .header-notification .header-notification-canvas {
   border-radius: 18px;
-  top: 64px;
+  top: 108px;
   right: 10px;
   border: 0;
   height: -moz-fit-content;
@@ -11279,7 +11278,7 @@ header.header-main .container-fluid .header-right .header-profile a {
 header.header-main .container-fluid .header-right .header-profile .header-profile-canvas {
   width: 300px;
   height: calc(100vh - 274px);
-  top: 64px;
+  top: 98px;
   right: 10px;
   border: 0;
   border-radius: var(--app-border-radius);
@@ -11377,18 +11376,6 @@ body[style="overflow: hidden; padding-right: 17px;"] .app-wrapper nav.horizontal
   z-index: 1003;
 }
 
-.ltr .horizontal-sidebar ~ .app-content .header-main .header-searchbar .offcanvas {
-  right: 500px !important;
-}
-.ltr .horizontal-sidebar ~ .app-content .header-main .header-cart .offcanvas {
-  right: 430px !important;
-}
-.ltr .horizontal-sidebar ~ .app-content .header-main .header-notification .offcanvas {
-  right: 350px !important;
-}
-.ltr .horizontal-sidebar ~ .app-content .header-main .header-profile .offcanvas {
-  right: 300px !important;
-}
 
 .toggle-semi-nav {
   float: right;
@@ -11753,7 +11740,7 @@ nav .app-nav .menu-item .btn .ti:before {
 }
 .app-wrapper nav.horizontal-sidebar .app-logo .logo {
   position: absolute;
-  top: -48px;
+  top: -58px;
   padding: 0;
   left: 18px;
 }

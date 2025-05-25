@@ -10,8 +10,8 @@
     <meta name="keywords"
         content="admin template, ra-admin admin template, dashboard template, flat admin template, responsive admin template, web app">
     <meta name="author" content="la-themes">
-    <link rel="icon" href="{{ asset('assets/images/logo/favicon.png')}}" type="image/x-icon">
-    <link rel="shortcut icon" href="{{ asset('assets/images/logo/favicon.png')}}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('assets/images/logo/kliktopup-favicon.png')}}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('assets/images/logo/kliktopup-favicon.png')}}" type="image/x-icon">
 
     <title>Sign Up | KlikTopUp </title>
 
@@ -43,16 +43,10 @@
             <!-- sign up start -->
             <div class="container">
                 <div class="row sign-in-content-bg">
-                    <div class="col-lg-6 image-contentbox d-none d-lg-block">
+                    <div class="col-lg-6 image-contentbox d-none d-lg-block p-0">
                         <div class="form-container">
-
-                            <div class="signup-content mt-4">
-                                <span>
-                                    <img src="{{ asset('assets/images/logo/1.png')}}" alt="" class="img-fluid ">
-                                </span>
-                            </div>
                             <div class="signup-bg-img">
-                                <img src="{{ asset('assets/images/login/02.png')}}" alt="" class="img-fluid">
+                                <img src="{{ asset('assets/images/login/banner-login.png') }}" alt="" class="img-fluid">
                             </div>
                         </div>
                     </div>
@@ -84,40 +78,12 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="username" class="form-label">Username</label>
-                                            <input type="text"
-                                                class="form-control @error('username') is-invalid @enderror"
-                                                placeholder="Masukkan username" id="username" name="username"
-                                                value="{{ old('username') }}">
-                                            @error('username')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
                                             <label for="email" class="form-label">Email</label>
                                             <input type="email"
                                                 class="form-control @error('email') is-invalid @enderror"
                                                 placeholder="Masukkan email" id="email" name="email"
                                                 value="{{ old('email') }}">
                                             @error('email')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="handphone" class="form-label">Handphone</label>
-                                            <input type="text"
-                                                class="form-control @error('handphone') is-invalid @enderror"
-                                                placeholder="Masukkan nomor handphone" id="handphone" name="handphone"
-                                                value="{{ old('handphone') }}">
-                                            @error('handphone')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
                                                 </div>

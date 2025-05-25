@@ -28,14 +28,14 @@ class AuthController extends Controller
 
     public function signin(Request $request){    
         $validated = $request->validate([
-            'username' => 'required|max:25',
+            'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        $username = $request->username;
+        $email = $request->email;
         $password = $request->password;
         
-        if (Auth::attempt(['username' => $username, 'password' => $password])) {
+        if (Auth::attempt(['email' => $email, 'password' => $password])) {
             $request->session()->regenerate();
            
             if(Auth::user()->role_id == 1) {
@@ -62,12 +62,9 @@ class AuthController extends Controller
             $registeredUser = User::where('email', $socialUser->email)->first(); 
             
             if (!$registeredUser) { 
-                
-                $uname = explode('@', $socialUser->email);
                 // Buat user baru 
                 $user = User::create([ 
                     'name' => $socialUser->name, 
-                    'username' => $uname[0],
                     'email' => $socialUser->email, 
                     'media_id' => $socialUser->id, 
                     'media_token' => $socialUser->token,
@@ -109,15 +106,10 @@ class AuthController extends Controller
     
     public function createUser(Request $request){
 
-        $username = $request->username;
-        $password = $request->password;
-        
         $validated = $request->validate([
             'fullname' => 'required|max:25',
-            'username' => 'required|min:8|max:12',
             'password' => 'required|confirmed',
             'email'    => 'required|email',
-            'handphone' => 'required|numeric',
             'password_confirmation' => 'required',
         ],[
             'password_confirmation.required' => 'Mohon konfirmasi ulang password', 
@@ -125,16 +117,13 @@ class AuthController extends Controller
             'email.email' => 'Email harus valid',
             'max' => 'Panjang :attribute tidak lebih dari :max karakter',
             'min' => 'Panjang :attribute tidak kurang dari :min karakter',
-            'numeric' => 'Nomor :attribute harus angka',
             'password.confirmed' => 'Konfirmasi password harus sama',
         ]);
 
         $data = [
-            'name' => $request->fullname,
-            'username' => $request->username,
-            'handphone' => $request->handphone,
-            'password' => bcrypt($request->password),
             'email' => $request->email,
+            'name' => $request->fullname,
+            'password' => bcrypt($request->password),
             'role_id' => 2,
         ];
         $user = User::create($data);
