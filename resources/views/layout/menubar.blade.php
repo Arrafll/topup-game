@@ -11,8 +11,35 @@
       </div>
       <div class="app-nav" id="app-simple-bar">
         <ul class="main-nav p-0 mt-2">
-          <li class="menu-title">
-            <span>Dashboard</span>
+          {{-- /////////////////// Customer --}}
+          <li class="no-sub">
+            <a class="" href="{{ route('customer.home') }}">
+              <i class="ph-duotone  ph-house-line"></i> Beranda
+            </a>
+          </li>
+          <li class="no-sub">
+            <a class="" href="{{ route('customer.products') }}">
+              <i class="ph ph-game-controller"></i> Games
+            </a>
+          </li>
+          <li class="no-sub">
+            <a class="" href="{{ route('customer.invoices') }}">
+              <i class="ti ti-report-search"></i> Cek Pesanan
+            </a>
+          </li>
+          {{-- /////////////////// Customer --}}
+          {{-- <li>
+            <a class="" data-bs-toggle="collapse" href="#dashboard" aria-expanded="false">
+              <i class="ph-duotone  ph-house-line"></i>
+              Home
+              <span class="badge text-bg-success badge-notification ms-2">4</span>
+            </a>
+            <ul class="collapse" id="dashboard">
+              <li><a href="index.html">Ecommerce</a></li>
+              <li><a href="project_dashboard.html">Project</a></li>
+              <li><a href="crypto_dashboard.html">Crypto</a></li>
+              <li><a href="education.html">Education</a></li>
+            </ul>
           </li>
           <li>
             <a class="" data-bs-toggle="collapse" href="#dashboard" aria-expanded="false">
@@ -382,7 +409,7 @@
             <a class="" href="mailto:teqlathemes@gmail.com">
               <i class="ph-duotone  ph-chats"></i> Support
             </a>
-          </li>
+          </li> --}}
 
 
         </ul>

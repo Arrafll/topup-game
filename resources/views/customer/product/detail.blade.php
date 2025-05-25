@@ -10,14 +10,14 @@
                 <h4 class="main-title">Product Details</h4>
                 <ul class="app-line-breadcrumbs mb-3">
                     <li class="">
-                        <a href="#" class="f-s-14 f-w-500">
+                        <a href="{{ route('customer.home') }}" class="f-s-14 f-w-500">
                             <span>
-                                <i class="ph-duotone  ph-stack f-s-16"></i> Apps
+                                <i class="ph-duotone  ph-stack f-s-16"></i> Beranda
                             </span>
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="f-s-14 f-w-500">E-shop</a>
+                        <a href="{{ route('customer.products') }}" class="f-s-14 f-w-500">Games</a>
                     </li>
                     <li class="active">
                         <a href="#" class="f-s-14 f-w-500">Product Details</a>
@@ -98,136 +98,97 @@
 
                             <div class="app-divider-v dotted pb-2"></div>
 
-                            <div class="product-detailbox mt-4">
-                                <div>
+
+                            <div class="product-detailbox mt-4 row">
+                                <div class="col-sm-9">
                                     <h5>Diamond:</h5>
                                     <div class="form-selectgroup">
                                         <label class="select-items">
-                                            <input type="checkbox" class="select-input" checked>
+                                            <input type="radio" class="select-input" name="diamond" checked>
                                             <span class="select-box">
                                                 <span class="selectitem">
-                                                    6
+                                                    <h5>60</h5>
+                                                    Rp.30.000
                                                 </span>
                                             </span>
                                         </label>
                                         <label class="select-items">
-                                            <input type="checkbox" class="select-input">
+                                            <input type="radio" class="select-input" name="diamond">
                                             <span class="select-box">
                                                 <span class="selectitem">
-                                                    7
+                                                    <h5>120</h5>
+                                                    Rp.60.000
                                                 </span>
                                             </span>
                                         </label>
                                         <label class="select-items">
-                                            <input type="checkbox" class="select-input">
+                                            <input type="radio" class="select-input" name="diamond">
                                             <span class="select-box">
                                                 <span class="selectitem">
-                                                    25
+                                                    <h5>250</h5>
+                                                    Rp.125.000
                                                 </span>
                                             </span>
                                         </label>
                                         <label class="select-items">
-                                            <input type="checkbox" class="select-input">
+                                            <input type="radio" class="select-input" name="diamond">
                                             <span class="select-box">
                                                 <span class="selectitem">
-                                                    30
+                                                    <h5>500</h5>
+                                                    Rp.250.000
                                                 </span>
                                             </span>
                                         </label>
-                                        <label class="select-items">
-                                            <input type="checkbox" class="select-input">
-                                            <span class="select-box">
-                                                <span class="selectitem">
-                                                    40
-                                                </span>
-                                            </span>
-                                        </label>
+                                        <!-- Tambahkan lebih banyak pilihan jika diperlukan -->
                                     </div>
                                 </div>
-                                <div>
+                                <div class="col-sm-3">
                                     <h5>Total:</h5>
+                                    <div class="mt-2">
+                                        <input type="number" class="form-control" name="total" min="1"
+                                            >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="product-detailbox mt-4 row">
+                                <div class="col-sm-9">
+                                    <h5>Payment:</h5>
                                     <div class="form-selectgroup">
                                         <label class="select-items">
-                                            <input type="checkbox" class="select-input" checked>
+                                            <input type="radio" class="select-input" name="diamond" checked>
                                             <span class="select-box">
                                                 <span class="selectitem">
-                                                    6
+                                                    <h5><i class="ph ph-paypal-logo"></i> Paypal</h5>
+                                                    Rp.30.000
                                                 </span>
                                             </span>
                                         </label>
                                         <label class="select-items">
-                                            <input type="checkbox" class="select-input">
+                                            <input type="radio" class="select-input" name="diamond" checked>
                                             <span class="select-box">
                                                 <span class="selectitem">
-                                                    7
+                                                    <h5><i class="ph ph-paypal-logo"></i> Paypal</h5>
+                                                    Rp.30.000
                                                 </span>
                                             </span>
                                         </label>
                                         <label class="select-items">
-                                            <input type="checkbox" class="select-input">
+                                            <input type="radio" class="select-input" name="diamond" checked>
                                             <span class="select-box">
                                                 <span class="selectitem">
-                                                    25
+                                                    <h5><i class="ph ph-paypal-logo"></i> Paypal</h5>
+                                                    Rp.30.000
                                                 </span>
                                             </span>
                                         </label>
-                                        <label class="select-items">
-                                            <input type="checkbox" class="select-input">
-                                            <span class="select-box">
-                                                <span class="selectitem">
-                                                    30
-                                                </span>
-                                            </span>
-                                        </label>
-                                        <label class="select-items">
-                                            <input type="checkbox" class="select-input">
-                                            <span class="select-box">
-                                                <span class="selectitem">
-                                                    40
-                                                </span>
-                                            </span>
-                                        </label>
+                                        <!-- Tambahkan lebih banyak pilihan jika diperlukan -->
                                     </div>
                                 </div>
-
-
-                            </div>
-                            <div class="product-detailbox mt-4">
-                                <div>
-                                    <h5>Payment:</h5>
-                                    <div class="option-color-list check-container">
-                                        <label class="check-box">
-                                            <input type="radio" name="radio-group1" checked>
-                                            <span class="radiomark check-primary ms-2"></span>
-                                        </label>
-                                        <label class="check-box">
-                                            <input type="radio" name="radio-group1">
-                                            <span class="radiomark check-secondary ms-2"></span>
-                                        </label>
-                                        <label class="check-box">
-                                            <input type="radio" name="radio-group1">
-                                            <span class="radiomark check-success ms-2"></span>
-                                        </label>
-                                        <label class="check-box">
-                                            <input type="radio" name="radio-group1">
-                                            <span class="radiomark check-danger ms-2"></span>
-                                        </label>
-                                        <label class="check-box">
-                                            <input type="radio" name="radio-group1">
-                                            <span class="radiomark check-warning ms-2"></span>
-                                        </label>
-                                        <label class="check-box">
-                                            <input type="radio" name="radio-group1">
-                                            <span class="radiomark check-info ms-2"></span>
-                                        </label>
-                                        <label class="check-box">
-                                            <input type="radio" name="radio-group1">
-                                            <span class="radiomark check-light ms-2"></span>
-                                        </label>
-                                        <label class="check-box">
-                                            <input type="radio" name="radio-group1">
-                                            <span class="radiomark check-dark ms-2"></span>
-                                        </label>
+                                <div class="col-sm-3">
+                                    <h5>Game ID:</h5>
+                                    <div class="mt-2">
+                                        <input type="text" class="form-control" name="total"
+                                            >
                                     </div>
                                 </div>
                             </div>
@@ -250,20 +211,22 @@
                         <div class="product-details-contentbox">
                             <div>
                                 <ul class="offer-details-list">
-                        <li>
-                          <i class="ti ti-tags text-primary f-s-18 me-1"></i> <b class="text-secondary">Bank
-                            Offer</b> 10% Instant
-                          Discount on ICICI
-                          Bank Credit Card, up to ₹1250 on orders of ₹5,000 and above
-                        </li>
-                        <li>
-                          <i class="ti ti-tags text-primary f-s-18 me-1"></i> <b class="text-secondary">Bank
-                            Offer</b>
-                          Kotak Bank
-                          Credit Card, up
-                          to ₹1250 on orders of ₹5,000 and above
-                        </li>
-                      </ul>
+                                    <li>
+                                        <i class="ti ti-tags text-primary f-s-18 me-1"></i> <b
+                                            class="text-secondary">Bank
+                                            Offer</b> 10% Instant
+                                        Discount on ICICI
+                                        Bank Credit Card, up to ₹1250 on orders of ₹5,000 and above
+                                    </li>
+                                    <li>
+                                        <i class="ti ti-tags text-primary f-s-18 me-1"></i> <b
+                                            class="text-secondary">Bank
+                                            Offer</b>
+                                        Kotak Bank
+                                        Credit Card, up
+                                        to ₹1250 on orders of ₹5,000 and above
+                                    </li>
+                                </ul>
                                 <h5>Similar Products:</h5>
                                 <div class="product-details-table">
                                     <table class="table table-bottom-border align-middle products-data-table">
