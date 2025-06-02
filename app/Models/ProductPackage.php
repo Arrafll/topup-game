@@ -4,10 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Attachment extends Model
+class ProductPackage extends Model
 {
     //
-    
     protected $guarded = [
         'id'
     ];

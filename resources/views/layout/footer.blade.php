@@ -21,7 +21,7 @@
     </footer>
 
     <!-- modal -->
-
+{{-- 
   <div class="modal" tabindex="-1" id="welcomeCard" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content welcome-card">
@@ -46,10 +46,10 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> --}}
 
   <!--customizer-->
-  <div id="customizer"></div>
+  {{-- <div id="customizer"></div> --}}
   <!-- latest jquery-->
   <script src="{{ asset('assets/js/jquery-3.6.3.min.js') }}"></script>
 
@@ -71,10 +71,6 @@
 
   <!--cleave js  -->
   <script src="{{ asset('assets/vendor/cleavejs/cleave.min.js') }}"></script>
-
-  <!-- apexcharts-->
-  <script src="{{ asset('assets/vendor/apexcharts/apexcharts.min.js') }}"></script>
-
   <!-- data table js-->
   <script src="{{ asset('assets/vendor/datatable/jquery.dataTables.min.js') }}"></script>
 
@@ -93,5 +89,10 @@
   <!-- App js-->
   <script src="{{ asset('assets/js/script.js') }}"></script>
 
+   <!-- select2 -->
+  <script src="{{ asset('assets/vendor/select/select2.min.js') }}"></script>
     <!-- Footer Section ends-->
 
+
+    <!-- Custom js-->
+  <script src="{{ asset('assets/js/custom.js') }}"></script>

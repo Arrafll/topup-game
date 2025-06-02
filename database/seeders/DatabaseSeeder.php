@@ -47,11 +47,26 @@ class DatabaseSeeder extends Seeder
             'name' => 'Customer',
         ]);
 
+        \App\Models\Category::insert(
+            [
+                [
+                    'name' => 'Mobile Game',
+                ],
+                [
+                    'name' => 'PC Game',
+                ],
+                [
+                    'name' => 'Voucher',
+                ]
+            ]
+        );
+
+
         // array_map('unlink', array_filter((array) glob("public/uploads/product/*")));
         // array_map('unlink', array_filter((array) glob("public/uploads/user-avatar/*")));
         // array_map('unlink', array_filter((array) glob("public/uploads/payment/*")));
 
-        // \App\Models\Product::factory(25)->create();
+        \App\Models\Product::factory(25)->create();
         // \App\Models\Attachment::factory(25)->create();
 
 

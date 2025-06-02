@@ -9,13 +9,15 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+   public function up(): void
     {
-        Schema::create('attachments', function (Blueprint $table) {
+       Schema::create('product_packages', function (Blueprint $table) {
             $table->id();
-            $table->text('name');
+            $table->integer('amount');
+            $table->integer('price');
             $table->integer('product_id');
-            $table->timestamps();
+            $table->dateTime('created_at');
+            $table->dateTime('updated_at');
         });
     }
 
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('attachments');
+        Schema::dropIfExists('product_packages');
     }
 };

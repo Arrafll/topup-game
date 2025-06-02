@@ -15353,6 +15353,18 @@ button:focus:not(:focus-visible) {
   border-radius: 100%;
 }
 
+.card .card-body.code-header .close-card,
+.card .card-header.code-header .close-card {
+  font-size: 20px;
+  color: rgba(var(--dark), 1);
+  position: absolute;
+  right: 20px;
+  top: 14px;
+  color:red;
+  padding: 6px;
+  border-radius: 100%;
+}
+
 .horizontal-card img {
   -o-object-fit: cover;
      object-fit: cover;
