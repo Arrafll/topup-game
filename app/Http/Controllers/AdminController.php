@@ -17,11 +17,11 @@ class AdminController extends Controller
     public function index()
     {
         $data = [
-            'title' => 'Home',
+            'title' => 'Dashboard',
             'role' => 1
         ];
 
-        return view('admin/index', $data);
+        return view('admin/dashboard', $data);
     }
     public function product_list()
     {

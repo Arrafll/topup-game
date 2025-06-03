@@ -80,9 +80,6 @@
   <!-- Customizer js-->
   <script src="{{ asset('assets/js/customizer.js') }}"></script>
 
-  <!-- Ecommerce js-->
-  <script src="{{ asset('assets/js/ecommerce_dashboard.js') }}"></script>
-
   <!-- prism js-->
   <script src="{{ asset('assets/vendor/prism/prism.min.js') }}"></script>
 
@@ -96,3 +93,6 @@
 
     <!-- Custom js-->
   <script src="{{ asset('assets/js/custom.js') }}"></script>
+<!-- apexcharts-->
+
+  <script src="{{ asset('assets/vendor/apexcharts/apexcharts.min.js') }}"></script>

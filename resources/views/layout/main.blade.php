@@ -10,8 +10,8 @@
   <meta name="keywords"
     content="admin template, ra-admin admin template, dashboard template, flat admin template, responsive admin template, web app">
   <meta name="author" content="la-themes">
-  <link rel="icon" href="{{ asset('assets/images/logo/favicon.png') }}" type="image/x-icon">
-  <link rel="shortcut icon" href="{{ asset('assets/images/logo/favicon.png') }}" type="image/x-icon">
+  <link rel="icon" href="{{ asset('assets/images/logo/kliktopup-favicon.png') }}" type="image/x-icon">
+  <link rel="shortcut icon" href="{{ asset('assets/images/logo/kliktopup-favicon.png') }}" type="image/x-icon">
   <title> {{ $title }} | KlikTopUp</title>
 
   <!-- Animation css -->
