@@ -6,7 +6,7 @@
           <div class="col-md-9 col-12">
             <ul class="footer-text">
               <li>
-                <p class="mb-0">Copyright © 2024 ra-admin. All rights reserved 💖</p>
+                <p class="mb-0">Copyright © 2024 KlikTopUp. All rights reserved</p>
               </li>
               <li> <a href="#"> V1.0.0 </a></li>
             </ul>
@@ -21,7 +21,7 @@
     </footer>
 
     <!-- modal -->
-
+{{-- 
   <div class="modal" tabindex="-1" id="welcomeCard" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content welcome-card">
@@ -46,12 +46,10 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> --}}
 
   <!--customizer-->
-  <div id="customizer"></div>
-  <!-- latest jquery-->
-  <script src="{{ asset('assets/js/jquery-3.6.3.min.js') }}"></script>
+  {{-- <div id="customizer"></div> --}}
 
   <!-- Bootstrap js-->
   <script src="{{ asset('assets/vendor/bootstrap/bootstrap.bundle.min.js') }}"></script>
@@ -71,10 +69,6 @@
 
   <!--cleave js  -->
   <script src="{{ asset('assets/vendor/cleavejs/cleave.min.js') }}"></script>
-
-  <!-- apexcharts-->
-  <script src="{{ asset('assets/vendor/apexcharts/apexcharts.min.js') }}"></script>
-
   <!-- data table js-->
   <script src="{{ asset('assets/vendor/datatable/jquery.dataTables.min.js') }}"></script>
 
@@ -84,15 +78,14 @@
   <!-- Customizer js-->
   <script src="{{ asset('assets/js/customizer.js') }}"></script>
 
-  <!-- Ecommerce js-->
-  <script src="{{ asset('assets/js/ecommerce_dashboard.js') }}"></script>
-
   <!-- prism js-->
   <script src="{{ asset('assets/vendor/prism/prism.min.js') }}"></script>
 
   <!-- App js-->
   <script src="{{ asset('assets/js/script.js') }}"></script>
 
+   <!-- select2 -->
+  <script src="{{ asset('assets/vendor/select/select2.min.js') }}"></script>
     <!-- Footer Section ends-->
 
 
@@ -103,7 +96,7 @@
           <div class="col-md-9 col-12">
             <ul class="footer-text">
               <li>
-                <p class="mb-0">Copyright © 2024 ra-admin. All rights reserved 💖</p>
+                <p class="mb-0">Copyright © 2024 KlikTopUp. All rights reserved</p>
               </li>
               <li> <a href="#"> V1.0.0 </a></li>
             </ul>
@@ -195,3 +188,8 @@
 
     <!-- Footer Section ends-->
 
+    <!-- Custom js-->
+  <script src="{{ asset('assets/js/custom.js') }}"></script>
+<!-- apexcharts-->
+
+  <script src="{{ asset('assets/vendor/apexcharts/apexcharts.min.js') }}"></script>
