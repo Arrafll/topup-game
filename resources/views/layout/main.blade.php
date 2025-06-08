@@ -22,16 +22,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400..900&display=swap" rel="stylesheet">
 
-  <!-- wheather icon css--> 
+  <!-- wheather icon css-->
   <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/weather/weather-icons.css')}}">
   <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/weather/weather-icons-wind.css') }}">
 
   <!--flag Icon css-->
   <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/flag-icons-master/flag-icon.css') }}">
 
-    <!--font-awesome-css-->
+  <!--font-awesome-css-->
   <link rel="stylesheet" href="{{ asset('assets/vendor/fontawesome/css/all.css') }}">
-  
+
   <!-- tabler icons-->
   <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/tabler-icons/tabler-icons.css') }}">
 
@@ -50,7 +50,8 @@
 
   <!-- Data Table css-->
   <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatable/jquery.dataTables.min.css') }}">
-  <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/datatable/datatable2/buttons.dataTables.min.css') }}">
+  <link rel="stylesheet" type="text/css"
+    href="{{ asset('assets/vendor/datatable/datatable2/buttons.dataTables.min.css') }}">
 
   <!-- Bootstrap css-->
   <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/bootstrap/bootstrap.min.css') }}">
@@ -69,7 +70,9 @@
 
   <!-- Responsive css-->
   <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive.css') }}">
-  
+  <!-- latest jquery-->
+  <script src="{{ asset('assets/js/jquery-3.6.3.min.js') }}"></script>
+
   <!-- Selecrt css -->
   <link href="{{ asset('assets/vendor/select/select2.min.css') }}" rel="stylesheet">
 
@@ -91,14 +94,14 @@
     </div>
     <!-- Body main section ends -->
 
-    
+
     <!-- tap on top -->
     <div class="go-top">
       <span class="progress-value">
         <i class="ti ti-arrow-up"></i>
       </span>
     </div>
-      @include('layout.footer')
+    @include('layout.footer')
   </div>
 
 

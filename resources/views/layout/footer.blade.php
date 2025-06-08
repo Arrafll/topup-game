@@ -50,8 +50,6 @@
 
   <!--customizer-->
   {{-- <div id="customizer"></div> --}}
-  <!-- latest jquery-->
-  <script src="{{ asset('assets/js/jquery-3.6.3.min.js') }}"></script>
 
   <!-- Bootstrap js-->
   <script src="{{ asset('assets/vendor/bootstrap/bootstrap.bundle.min.js') }}"></script>

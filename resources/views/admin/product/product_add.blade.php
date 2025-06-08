@@ -11,17 +11,17 @@
                     <h4 class="main-title">Add Product</h4>
                     <ul class="app-line-breadcrumbs mb-3">
                         <li class="">
-                            <a href="#" class="f-s-14 f-w-500">
+                            <a href="/" class="f-s-14 f-w-500">
                                 <span>
-                                    <i class="ph-duotone  ph-stack f-s-16"></i> Apps
+                                   KlikTopUp
                                 </span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="f-s-14 f-w-500">E-shop</a>
+                            <a href="#" class="f-s-14 f-w-500">Data Management</a>
                         </li>
                         <li class="active">
-                            <a href="#" class="f-s-14 f-w-500">Add Product</a>
+                            <a href="#" class="f-s-14 f-w-500">Product Add</a>
                         </li>
                     </ul>
                 </div>
@@ -157,17 +157,9 @@
                                 <div class="main-title">
                                     <h6>Gambar Produk</h6>
                                 </div>
-
-                                <div>
-                                    <div class="input-file mb-2">
-                                        <label class="form-label mb-2">Gambar Utama</label>
-                                        <input type="file" class="form-control form-product" name="imgDetailProduk[]">
-                                    </div>
-                                </div>
-                                <div class="app-divider-v dashed"></div>
                                 <div class="gambar-detail-produk">
                                     <div class="input-file mb-2 row-gambar-detail-produk">
-                                        <label class="form-label mb-2">Detail Gambar</label>
+                                        <label class="form-label mb-2">Upload Gambar</label>
                                         <input type="file" class="form-control form-product" name="imgDetailProduk[]">
                                     </div>
                                 </div>
@@ -198,11 +190,11 @@
 
         function addPaketRow() {
             let eleRow = `  <div class="col-md-6 paket-row"><div class="card hover-effect box-shadow-3"><div class="card-header code-header">
-                                             <h6>Paket</h6><a href="#" aria-expanded="false" aria-controls="accordionsItem1" onclick="deletePaketRow(this)">
-                                             <i class="fa-solid fa-times fa-fw close-card"></i></a></div><div class="card-body"><div class="app-form">
-                                             <div class="input-group mb-3"><input type="number" min="1" class="form-control form-product" placeholder="Masukkan jumlah paket (100 diamond, 100 cash, dll)"
-                                             name="jumlahPaket[]"></div><div class="input-group"><input type="number" min="1" class="form-control form-product" placeholder="Masukkan nominal harga" name="nominalPaket[]">
-                                             </div></div></div></div></div>`
+                                                 <h6>Paket</h6><a href="#" aria-expanded="false" aria-controls="accordionsItem1" onclick="deletePaketRow(this)">
+                                                 <i class="fa-solid fa-times fa-fw close-card"></i></a></div><div class="card-body"><div class="app-form">
+                                                 <div class="input-group mb-3"><input type="number" min="1" class="form-control form-product" placeholder="Masukkan jumlah paket (100 diamond, 100 cash, dll)"
+                                                 name="jumlahPaket[]"></div><div class="input-group"><input type="number" min="1" class="form-control form-product" placeholder="Masukkan nominal harga" name="nominalPaket[]">
+                                                 </div></div></div></div></div>`
 
             $('.list-paket').append(eleRow);
             window.scrollTo(0, document.body.scrollHeight);
@@ -218,12 +210,29 @@
         formProduct.addEventListener("submit", function (e) {
             e.preventDefault();
             let isValid = true;
-            $(`.form-product`).removeClass(`is-invalid`);
-            $(`.form-product`).each(function () {
-                console.log($(this));
+            let fileType;
 
+            $(`.form-product`).removeClass(`is-invalid`);
+            $(`.invalid-feedback`).remove();
+
+            $(`.form-product`).each(function () {
                 if ($(this).val() == "") {
                     $(this).addClass('is-invalid');
+                    $(this).after(`<div class="invalid-feedback">
+                              Formulir tidak boleh kosong!
+                        </div>`)
+                    isValid = false;
+                }
+            })
+
+            var validImageTypes = ["image/jpg", "image/jpeg", "image/png"];
+            $(`.image-form`).each(function () {
+                fileType = $(this).prop("files")[0].type;
+                if ($.inArray(fileType, validImageTypes) < 0) {
+                    $(this).addClass('is-invalid');
+                    $(this).after(`<div class="invalid-feedback">
+                              Format file harus jpg, jpeg, atau png!
+                            </div>`)
                     isValid = false;
                 }
             })
@@ -247,9 +256,9 @@
 
         function addGambarRow() {
             let ele = ` <div class="input-file mb-2 row-gambar-detail-produk">
-                                            <label class="form-label mb-2">Detail Gambar</label>
-                                            <input type="file" class="form-control form-product" name="imgDetailProduk">
-                                            </div>`
+                                                <label class="form-label mb-2">Upload Gambar</label>
+                                                <input type="file" class="form-control form-product" name="imgDetailProduk[]" form="form-add-product">
+                                                </div>`
 
             $(`.gambar-detail-produk`).append(ele);
             $(`#rmImgDetailBtn`).show();
