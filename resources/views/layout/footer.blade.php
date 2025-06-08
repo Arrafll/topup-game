@@ -6,14 +6,14 @@
           <div class="col-md-9 col-12">
             <ul class="footer-text">
               <li>
-                <p class="mb-0">Copyright © 2024 ra-admin. All rights reserved 💖</p>
+                <p class="mb-0">Copyright © 2025 KlikTopUp. All rights reserved</p>
               </li>
               <li> <a href="#"> V1.0.0 </a></li>
             </ul>
           </div>
           <div class="col-md-3">
             <ul class="footer-text text-end">
-              <li> <a href="document.html"> Need Help <i class="ti ti-help"></i></a></li>
+    
             </ul>
           </div>
         </div>

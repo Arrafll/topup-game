@@ -48,7 +48,7 @@
       </a>
       </li>
       <li class="no-sub">
-      <a class="" href="widget.html">
+      <a class="{{ Route::is('admin_user*') ? 'active' : '' }}" href="/admin_user_list">
         <i class="ph-duotone ph-user"></i> User
       </a>
       </li>
