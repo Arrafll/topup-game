@@ -282,29 +282,31 @@
                     $('.button-action').attr('disabled', true);
                 },
                 success: function (response) {
+                    
+                    
                     $('#cartAddBtn').html('+ Keranjang')
                     $('.button-action').attr('disabled', false);
 
                     let cartCounts = parseInt($('#cartCounts').text());
                     $('#cartCounts').text(cartCounts + 1);
 
-                    let cartTotalCounts = parseInt($('#cartTotalCounts').text());
-                    $('#cartTotalCounts').text(parseInt(cartTotalCounts) + parseInt(response.carts.product_price));
-
+                    let cartTotalCounts = parseInt($('#cartTotalCounts').data('total'));
+                    $('#cartTotalCounts').text(`Rp ` + formatIdrs(parseInt(cartTotalCounts) + parseInt(response.carts.product_price)));
+                    $('#cartTotalCounts').data('total', parseInt(cartTotalCounts) + parseInt(response.carts.product_price));
                     let element =
                         `<div class="head-box">
-                    <img src="{{ asset('uploads/product/${response.carts.product_pic}') }}" alt="cart"
-                      class="h-50 object-fit-cover me-3 b-r-10">
-                    <div class="flex-grow-1">
-                      <a class="mb-0 f-w-600 f-s-16" href="product_details.html" target="_blank">${response.carts.name}</a><br>
-                      <span class="text-secondary text-dark f-w-400">${response.carts.game}</span><br>
-                      <span class="text-secondary">${response.carts.package_amount} ${response.carts.unit} - <span class="text-dark f-w-400">Rp ${formatIdr(response.carts.product_price)}</span></span>
-                    </div>
-                    <div class="text-end">
-                      <i class="ph ph-trash f-s-25 text-danger" data-cart="${response.carts.cart_id}" onclick="removeCart(this)"></i>
+                        <img src="{{ asset('uploads/product/${response.carts.product_pic}') }}" alt="cart"
+                          class="h-50 object-fit-cover me-3 b-r-10">
+                        <div class="flex-grow-1">
+                          <a class="mb-0 f-w-600 f-s-16" href="product_details.html" target="_blank">${response.carts.name}</a><br>
+                          <span class="text-secondary text-dark f-w-400">${response.carts.game}</span><br>
+                          <span class="text-secondary">${response.carts.package_amount} ${response.carts.unit} - <span class="text-dark f-w-400 row-cart-price" data-price="${response.carts.product_price}">Rp ${formatIdrs(response.carts.product_price)}</span></span>
+                        </div>
+                        <div class="text-end">
+                          <i class="ph ph-trash f-s-25 text-danger" data-cart="${response.carts.cart_id}" onclick="removeCart(this)"></i>
 
-                    </div>
-                    </div>`
+                        </div>
+                        </div>`
 
 
 
@@ -329,7 +331,8 @@
 
         }
 
-        var formatIdr = function (num) {
+        
+      var formatIdrs = function (num) {
             var str = num.toString().replace("", ""), parts = false, output = [], i = 1, formatted = null;
             if (str.indexOf(".") > 0) {
                 parts = str.split(".");
@@ -349,6 +352,8 @@
             return ("" + formatted + ((parts) ? "." + parts[1].substr(0, 2) : ""));
         };
 
+  
+        
     </script>
     {{--
     <script src="{{ asset('assets/js/product_details.js') }}"></script> --}}
