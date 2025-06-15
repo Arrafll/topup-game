@@ -10,6 +10,7 @@ Route::get('/', function () {
 });
 
 Route::get('/home', [AuthController::class, 'redirectLogged'])->name('home');
+    Route::get('/shop',  [CustomerController::class, 'shop'])->name('shop');
 
 Route::group(['middleware' => ['guest']], function () {
     Route::get('/login', [AuthController::class, 'login'])->name('login');
@@ -18,7 +19,6 @@ Route::group(['middleware' => ['guest']], function () {
     Route::get('/register', [AuthController::class, 'register'])->name('register');
     Route::post('/signin', [AuthController::class, 'signin'])->name('signin');
     Route::post('/signup', [AuthController::class, 'createUser'])->name('signup');
-    Route::get('/shop',  [CustomerController::class, 'shop'])->name('shop');
 });  
 
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -42,7 +42,7 @@ Route::group(['middleware' => ['auth', \App\Http\Middleware\Role::class . ':1']]
 });
 
 Route::group(['middleware' => ['auth',  \App\Http\Middleware\Role::class . ':2']], function () {
-    Route::get('/customer',  [CustomerController::class, 'shop'])->name('customer');
+    Route::get('/customer',  [CustomerController::class, 'home'])->name('customer');
     Route::get('/customer_profile',  [CustomerController::class, 'profile'])->name('customer_profile');
     Route::get('/customer_detail_product/{id}',  [CustomerController::class, 'detail_product'])->name('customer_detail_product');
     Route::get('/customer_cart_list',  [CustomerController::class, 'cart_list'])->name('customer_cart_list');
@@ -57,8 +57,8 @@ Route::group(['middleware' => ['auth',  \App\Http\Middleware\Role::class . ':2']
     Route::post('/customer_order_review',  [CustomerController::class, 'order_review'])->name('customer_order_review');
     Route::get('/customer_order_rating/{id}',  [CustomerController::class, 'order_rating'])->name('customer_order_rating');
     Route::post('/customer_checkout',  [CustomerController::class, 'checkout'])->name('customer_checkout');
-    
-    Route::get('/customer/home',  [CustomerController::class, 'home'])->name('customer.home');
+
+    Route::post('/customer_get_product',  [CustomerController::class, 'get_product'])->name('customer_get_product');
     Route::get('/customer/products',  [CustomerController::class, 'productList'])->name('customer.products');
     Route::get('/customer/product/{id}',  [CustomerController::class, 'productDetail'])->name('customer.product');
     Route::get('/customer/invoices',  [CustomerController::class, 'invoiceList'])->name('customer.invoices');

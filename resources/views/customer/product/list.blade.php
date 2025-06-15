@@ -9,7 +9,7 @@
                 <h4 class="main-title">Games</h4>
                 <ul class="app-line-breadcrumbs mb-3">
                     <li class="">
-                        <a href="{{ route('customer.home') }}" class="f-s-14 f-w-500">
+                        <a href="{{ route('customer') }}" class="f-s-14 f-w-500">
                             <span>
                                 <i class="ph-duotone  ph-stack f-s-16"></i> Beranda
                             </span>

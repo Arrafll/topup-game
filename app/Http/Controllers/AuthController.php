@@ -34,8 +34,9 @@ class AuthController extends Controller
 
         $email = $request->email;
         $password = $request->password;
+        $remember = ($request->remember == "1") ? true : false;
         
-        if (Auth::attempt(['email' => $email, 'password' => $password])) {
+        if (Auth::attempt(['email' => $email, 'password' => $password], $remember)) {
             $request->session()->regenerate();
            
             if(Auth::user()->role_id == 1) {

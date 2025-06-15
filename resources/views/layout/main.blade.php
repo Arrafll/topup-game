@@ -77,6 +77,8 @@
   <link href="{{ asset('assets/vendor/select/select2.min.css') }}" rel="stylesheet">
 
 
+
+
 </head>
 
 <body>

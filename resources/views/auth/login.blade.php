@@ -110,7 +110,7 @@
                   </div>
                   <div class="col-12">
                     <div class="form-check mb-3">
-                      <input class="form-check-input" type="checkbox" value="" id="checkDefault">
+                      <input class="form-check-input" type="checkbox" value="1" id="checkDefault" name="remember">
                       <label class="form-check-label text-secondary" for="checkDefault">
                         Remember me
                       </label>

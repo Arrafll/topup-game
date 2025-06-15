@@ -2,6 +2,10 @@
 @section('content')
 
     <!-- toastify css-->
+    <!-- slick css -->
+    <link rel="stylesheet" href="{{ asset('assets/vendor/slick/slick.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/slick/slick-theme.css') }}">
+
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/toastify/toastify.css') }}">
     <main>
         <div class="container-fluid">
@@ -10,10 +14,10 @@
                 <div class="col-12 ">
                     <h4 class="main-title">Edit Product</h4>
                     <ul class="app-line-breadcrumbs mb-3">
-                           <li class="">
+                        <li class="">
                             <a href="/" class="f-s-14 f-w-500">
                                 <span>
-                                     KlikTopUp
+                                    KlikTopUp
                                 </span>
                             </a>
                         </li>
@@ -246,17 +250,18 @@
     <!-- Toatify js-->
     <script src="{{ asset('assets/vendor/notifications/toastify-js.js') }}"></script>
     <script src="{{ asset('assets/vendor/toastify/toastify.js') }}"></script>
-
+    <!-- slick-file -->
+    <script src="{{ asset('assets/vendor/slick/slick.min.js') }}"></script>
 
     <script>
 
         function addPaketRow() {
             let eleRow = `  <div class="col-md-6 paket-row"><div class="card hover-effect box-shadow-3"><div class="card-header code-header">
-                     <h6>Paket</h6><a href="#" aria-expanded="false" aria-controls="accordionsItem1" onclick="deletePaketRow(this)">
-                     <i class="fa-solid fa-times fa-fw close-card"></i></a></div><div class="card-body"><div class="app-form">
-                     <div class="input-group mb-3"><input type="number" min="1" class="form-control form-product" placeholder="Masukkan jumlah paket (100 diamond, 100 cash, dll)"
-                     name="jumlahPaket[]"></div><div class="input-group"><input type="number" min="1" class="form-control form-product" placeholder="Masukkan nominal harga" name="nominalPaket[]">
-                     </div></div></div></div></div>`
+                                 <h6>Paket</h6><a href="#" aria-expanded="false" aria-controls="accordionsItem1" onclick="deletePaketRow(this)">
+                                 <i class="fa-solid fa-times fa-fw close-card"></i></a></div><div class="card-body"><div class="app-form">
+                                 <div class="input-group mb-3"><input type="number" min="1" class="form-control form-product" placeholder="Masukkan jumlah paket (100 diamond, 100 cash, dll)"
+                                 name="jumlahPaket[]"></div><div class="input-group"><input type="number" min="1" class="form-control form-product" placeholder="Masukkan nominal harga" name="nominalPaket[]">
+                                 </div></div></div></div></div>`
 
             $('.list-paket').append(eleRow);
             window.scrollTo(0, document.body.scrollHeight);
@@ -283,8 +288,8 @@
                 if ($(this).val() == "") {
                     $(this).addClass('is-invalid');
                     $(this).after(`<div class="invalid-feedback">
-                          Formulir tidak boleh kosong!
-                    </div>`)
+                                      Formulir tidak boleh kosong!
+                                </div>`)
                     isValid = false;
                 }
             })
@@ -295,8 +300,8 @@
                 if ($.inArray(fileType, validImageTypes) < 0) {
                     $(this).addClass('is-invalid');
                     $(this).after(`<div class="invalid-feedback">
-                          Format file harus jpg, jpeg, atau png!
-                        </div>`)
+                                      Format file harus jpg, jpeg, atau png!
+                                    </div>`)
                     isValid = false;
                 }
             })
@@ -323,9 +328,9 @@
 
         function addGambarRow() {
             let ele = ` <div class="input-file mb-2 row-gambar-detail-produk">
-                    <label class="form-label mb-2">Upload Gambar</label>
-                    <input type="file" class="form-control form-product image-form" name="imgDetailProduk[]" form="form-edit-product" accept="image/*">
-                    </div>`
+                                <label class="form-label mb-2">Upload Gambar</label>
+                                <input type="file" class="form-control form-product image-form" name="imgDetailProduk[]" form="form-edit-product" accept="image/*">
+                                </div>`
 
             $(`.gambar-detail-produk`).append(ele);
             $(`#rmImgDetailBtn`).show();
@@ -349,6 +354,26 @@
             $('#reuploadImgDetailBtn').addClass('d-none')
 
         }
+
+        $('.responsive').slick({
+            slidesToShow: 2,
+            slidesToScroll: 2,
+            responsive: [
+                {
+                    breakpoint: 768,
+                    settings: {
+                        slidesToShow: 2
+                    }
+                },
+                {
+                    breakpoint: 576,
+                    settings: {
+                        slidesToShow: 1
+                    }
+                },
+            ]
+        });
+
 
     </script>
 @endsection

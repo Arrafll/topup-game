@@ -53,13 +53,14 @@
       </a>
       </li>
     @else
+   
      <li class="no-sub">
-            <a class="" href="{{ route('customer.home') }}">
+            <a class="{{ Route::is('customer') ? 'active' : '' }}" href="{{ route('customer') }}">
               <i class="ph-duotone  ph-house-line"></i> Beranda
             </a>
           </li>
           <li class="no-sub">
-            <a class="" href="{{ route('customer.products') }}">
+            <a class="{{ Route::is('shop') ? 'active' : '' }}" href="{{ route('customer.products') }}">
               <i class="ph ph-game-controller"></i> Games
             </a>
           </li>
