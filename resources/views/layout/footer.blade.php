@@ -50,8 +50,6 @@
 <!--customizer-->
 {{-- <div id="customizer"></div> --}}
 
-<!-- Bootstrap js-->
-<script src="{{ asset('assets/vendor/bootstrap/bootstrap.bundle.min.js') }}"></script>
 
 <!-- Simple bar js-->
 <script src="{{ asset('assets/vendor/simplebar/simplebar.js') }}"></script>
@@ -163,6 +161,8 @@
 
 <!-- Footer Section ends-->
 
+<!-- sweetalert js-->
+<script src="{{ asset('assets/vendor/sweetalert/sweetalert.js') }}"></script>
+
 <!-- Custom js-->
 <script src="{{ asset('assets/js/custom.js') }}"></script>
-

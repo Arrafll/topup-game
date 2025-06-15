@@ -60,7 +60,7 @@
             </a>
           </li>
           <li class="no-sub">
-            <a class="{{ Route::is('shop') ? 'active' : '' }}" href="{{ route('customer.products') }}">
+            <a class="{{ Route::is('customer_product*') ? 'active' : '' }}" href="{{ route('customer_product_list') }}">
               <i class="ph ph-game-controller"></i> Games
             </a>
           </li>

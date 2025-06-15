@@ -90,8 +90,6 @@ class AuthController extends Controller
             return redirect()->intended('customer'); 
         } catch (\Exception $e) { 
             // Redirect ke halaman utama jika terjadi kesalahan 
-            echo $e;
-            die;
             return redirect('/login')->with('error', 'Terjadi kesalahan saat login dengan Google.'); 
         } 
     }
@@ -148,12 +146,11 @@ class AuthController extends Controller
         $user = Auth::user();
         if(!isset($user->role_id)) return redirect('/login');
         $roleUser = $user->role_id;
-
+        
         switch ($roleUser) {
             case 1:
                 return redirect()->route('admin');
                 break;
-            
             default:
                 return redirect()->route('customer');
                 break;

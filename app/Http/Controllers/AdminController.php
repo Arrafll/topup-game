@@ -75,7 +75,6 @@ class AdminController extends Controller
         ];
 
         $productId = Product::create($product)->id;
-        ;
 
         $packages = $request->jumlahPaket;
         $nominal = $request->nominalPaket;

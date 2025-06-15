@@ -48,8 +48,7 @@
     <!-- slick-file -->
     <script src="{{ asset('assets/vendor/slick/slick.min.js') }}"></script>
     <script src="{{ asset('assets/js/slick.js') }}"></script>
-    <!-- slick-file -->
-    <script src="{{ asset('assets/vendor/slick/slick.min.js') }}"></script>
+
     <script src="{{ asset('assets/js/product_details.js') }}"></script>
 
     <script>
@@ -253,20 +252,14 @@
                                                    <div class="product-content-box">
                                                        <div class="product-grid">
                                                            <div class="product-image">
-                                                               <a href="#" class="image">
+                                                               <a href="/customer_product_detail/${product.id}" class="image">
                                                                    <img class="pic-1" src="${imgPath}" alt="">
                                                                    <img class="images_box" src="${imgPath}"
                                                                        alt="">
                                                                </a>
                                                                <ul class="product-links">
-                                                                   <li><a href="wishlist.html"
-                                                                           class="bg-danger h-30 w-30 d-flex-center b-r-20"><i
-                                                                               class="f-s-18 ti ti-heart text-light"></i></a></li>
-                                                                   <li><a href="cart.html"
-                                                                           class="bg-primary h-30 w-30 d-flex-center b-r-20"><i
-                                                                               class="ti ti-shopping-cart f-s-18 text-light"></i></a>
-                                                                   </li>
-                                                                   <li><a href="product_details.html"
+                                                            
+                                                                   <li><a href="/customer_product_detail/${product.id}"
                                                                            class="bg-success h-30 w-30 d-flex-center b-r-20"><i
                                                                                class="ti ti-eye f-s-18 text-light"></i></a></li>
                                                                </ul>
@@ -274,7 +267,7 @@
                                                        </div>
                                                        <div class="p-3">
                                                            <div class="d-flex justify-content-between align-items-center">
-                                                               <a href="product_details.html" class="m-0 f-s-18 f-w-500">${product.name.slice(0, 17) + (product.name.length > 17 ? "..." : "")}</a>
+                                                               <a href="/customer_product_detail/${product.id}" class="m-0 f-s-18 f-w-500">${product.name.slice(0, 17) + (product.name.length > 17 ? "..." : "")}</a>
                                                                 <span class="badge text-bg-info text-white b-r-10">${product.category_name}</span>
                                                            </div>
                                                            <p class="text-secondary">${product.game}</p>
@@ -322,7 +315,7 @@
         $('.cat-card').on('click', function (ele) {
             event.preventDefault();
             if ($(this).data('category') == "other") {
-                window.location.href = `{{ route('shop') }}`;
+                window.location.href = `{{ route('customer_product_list') }}`;
                 return false;
             }
 

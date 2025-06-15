@@ -1,312 +1,355 @@
 @extends('layout.main')
 <!-- Body main section starts -->
 @section('content')
+    <!-- toastify css-->
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/toastify/toastify.css') }}">
+    <style>
+        .form-selects .card {
+            border: 1px solid var(--border_color);
+            border-radius: var(--bs-border-radius);
+            cursor: pointer;
+        }
 
-<main>
-    <div class="container-fluid">
-        <!-- Breadcrumb start -->
-        <div class="row m-1">
-            <div class="col-12 ">
-                <h4 class="main-title">Product Details</h4>
-                <ul class="app-line-breadcrumbs mb-3">
-                    <li class="">
-                        <a href="{{ route('customer') }}" class="f-s-14 f-w-500">
-                            <span>
-                                <i class="ph-duotone  ph-stack f-s-16"></i> Beranda
-                            </span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('customer.products') }}" class="f-s-14 f-w-500">Games</a>
-                    </li>
-                    <li class="active">
-                        <a href="#" class="f-s-14 f-w-500">Product Details</a>
-                    </li>
-                </ul>
+
+        .form-selects .card .select-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            visibility: hidden;
+        }
+
+        .form-selects .card:has(.select-input:checked) {
+            border: 1px solid rgb(var(--primary), 1);
+            color: rgb(var(--primary), 1);
+        }
+
+        .product-slider-nav img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .product-slider-for img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+    </style>
+
+    <main>
+        <div class="container-fluid">
+            <!-- Breadcrumb start -->
+            <div class="row m-1">
+                <div class="col-12 ">
+                    <h4 class="main-title">Product Details</h4>
+                    <ul class="app-line-breadcrumbs mb-3">
+                        <li class="">
+                            <a href="{{ route('customer') }}" class="f-s-14 f-w-500">
+                                <span>
+                                    <i class="ph-duotone  ph-stack f-s-16"></i> Beranda
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('customer_product_list') }}" class="f-s-14 f-w-500">Games</a>
+                        </li>
+                        <li class="active">
+                            <a href="#" class="f-s-14 f-w-500">Product Details</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
-        <!-- Breadcrumb end -->
+            <!-- Breadcrumb end -->
 
-        <!-- Product Details start -->
-        <div class="row">
-            <div class="col-md-6 col-xxl-3 order-md-2 order-xxl-1">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="slider product-slider-for mb-3">
-                            <div class="slider-1">
-                                <img src="../../assets/images/ecommerce/09.jpg" class="img-fluid rounded" alt="image">
+            <!-- Product Details start -->
+            <div class="row">
+                <div class="col-md-6 col-xxl-3 order-md-2 order-xxl-1">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="slider product-slider-for mb-3">
+                                @foreach ($attachments as $at)
+                                    <div class="img-detail-container">
+                                        <img src="{{ asset('uploads/product/' . $at->name) }}" class="img-fluid rounded"
+                                            style="width:100%" alt="image">
+                                    </div>
+                                @endforeach
                             </div>
-                            <div class="slider-2">
-                                <img src="../../assets/images/ecommerce/26.jpg" class="img-fluid rounded" alt="image">
-                            </div>
-                            <div class="slider-3">
-                                <img src="../../assets/images/ecommerce/27.jpg" class="img-fluid rounded" alt="image">
-                            </div>
-                            <div class="slider-4">
-                                <img src="../../assets/images/ecommerce/28.jpg" class="img-fluid rounded" alt="image">
-                            </div>
+                            @if (count($attachments) > 1)
+                                <div class="slider product-slider-nav app-arrow">
+                                    @foreach ($attachments as $at)
+                                        <div class="img-detail-container">
+                                            <img src="{{ asset('uploads/product/' . $at->name) }}" class="img-fluid rounded"
+                                                style="width:100%" alt="image">
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
                         </div>
+                    </div>
+                </div>
 
-                        <div class="slider product-slider-nav app-arrow">
-                            <div class="slider-1">
-                                <img src="../../assets/images/ecommerce/09.jpg" class="img-fluid rounded" alt="image">
-                            </div>
-                            <div class="slider-2">
-                                <img src="../../assets/images/ecommerce/26.jpg" class="img-fluid rounded" alt="image">
-                            </div>
-                            <div class="slider-3">
-                                <img src="../../assets/images/ecommerce/27.jpg" class="img-fluid rounded" alt="image">
-                            </div>
-                            <div class="slider-4">
-                                <img src="../../assets/images/ecommerce/28.jpg" class="img-fluid rounded" alt="image">
+                <div class="col-xxl-6 order-xxl-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="product-details-contentbox">
+                                <h3>{{ $product->name }}</h3>
+
+                                <div class="mt-2 product-details">
+                                    <h5>
+                                        {{ $product->game }}
+                                    </h5>
+                                </div>
+
+                                <div class="app-divider-v dotted pb-2"></div>
+                                <div class="product-detailbox mt-3 row">
+
+                                    <input type="hidden" value="{{ $product->id }}" id="productId">
+                                    <div class="col-sm-6">
+                                        <h5>Game ID</h5>
+                                        <div class="mt-2">
+                                            <input type="text" class="form-control" name="total"
+                                                placeholder="Masukkan ID Game" id="gameId">
+                                        </div>
+                                    </div>
+                                </div>
+                                <h5 class="mt-4">Deskripsi</h5>
+                                <div class="col-sm-12 mt-2 row ">
+                                    <p>{{ $product->description }} </p>
+                                </div>
+
+                                <h5 class="mt-4">Paket {{ $product->unit }}</h5>
+                                <div class="col-sm-12 mt-2 row form-selects">
+                                    @foreach ($packages as $p)
+
+                                        <div class="col-sm-4">
+                                            <div class="card hover-effect select-package">
+                                                <input type="radio" class="select-input" name="package" value="{{ $p->id}}">
+                                                <div class="card-body  p-3">
+                                                    <h5>{{ $p->amount}}</h5>
+                                                    <h6>{{ toCurrency($p->price, 'IDN') }}</h6>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    @endforeach
+                                </div>
+
+
+
+                                <div class="product-details-btn text-end mt-4">
+                                    {{-- <a href="cart.html" role="button" class="btn btn-primary">Add To Cart</a> --}}
+
+                                    <button href="#" onclick="addToCart()" role="button"
+                                        class="btn btn-light-primary button-action" id="cartAddBtn">+
+                                        Keranjang</button>
+                                    <button href="#" role="button" class="btn btn-primary button-action">Beli
+                                        Langsung</button>
+                                    {{-- <a href="wishlist.html" role="button" class="btn btn-danger">Add to Wishlist</a>
+                                    --}}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-xxl-6 order-xxl-2">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="product-details-contentbox">
-                            <h4>Trendy &amp; Stylish For Men</h4>
-                            <div class="mt-2 d-flex align-items-center gap-2">
-                                <div class="rating ">
-                                    <input type="radio" id="star11" name="ratings2" value="11" checked="" disabled="">
-                                    <label class="star" for="star11"><span
-                                            class="ti ti-star-filled f-s-20 text-warning"></span></label>
-                                    <input type="radio" id="star15" name="ratings2" value="15" checked="" disabled="">
-                                    <label class="star" for="star15"><span
-                                            class="ti ti-star-filled f-s-20 text-warning"></span></label>
-                                    <input type="radio" id="star12" name="ratings2" value="12" disabled="">
-                                    <label class="star" for="star12"><span
-                                            class="ti ti-star-half-filled text-warning f-s-20"></span></label>
-                                    <input type="radio" id="star13" name="ratings2" value="13" disabled="">
-                                    <label class="star" for="star13"><span
-                                            class="ti ti-star f-s-20 text-warning"></span></label>
-                                    <input type="radio" id="star14" name="ratings2" value="14" disabled="">
-                                    <label class="star" for="star14"><span
-                                            class="ti ti-star f-s-20 text-warning"></span></label>
-                                </div>
+                <div class="col-md-6 col-xxl-3 order-md-1 order-xxl-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="product-details-contentbox">
                                 <div>
-                                    <h6 class="m-0 text-warning">(<span class="f-w-600">4.50k</span> Review )</h6>
-                                </div>
-                            </div>
-                            <div class="mt-4 product-details">
-                                <h3>$26.00 <span>(54% OFF)</span></h3>
-                            </div>
+                                    <h5>Produk Serupa</h5>
+                                    <div class="product-details-table">
+                                        <table class="table table-bottom-border align-middle products-data-table">
+                                            <tbody>
+                                                @foreach ($related as $r)
 
-                            <div class="app-divider-v dotted pb-2"></div>
-
-
-                            <div class="product-detailbox mt-4 row">
-                                <div class="col-sm-9">
-                                    <h5>Diamond:</h5>
-                                    <div class="form-selectgroup">
-                                        <label class="select-items">
-                                            <input type="radio" class="select-input" name="diamond" checked>
-                                            <span class="select-box">
-                                                <span class="selectitem">
-                                                    <h5>60</h5>
-                                                    Rp.30.000
-                                                </span>
-                                            </span>
-                                        </label>
-                                        <label class="select-items">
-                                            <input type="radio" class="select-input" name="diamond">
-                                            <span class="select-box">
-                                                <span class="selectitem">
-                                                    <h5>120</h5>
-                                                    Rp.60.000
-                                                </span>
-                                            </span>
-                                        </label>
-                                        <label class="select-items">
-                                            <input type="radio" class="select-input" name="diamond">
-                                            <span class="select-box">
-                                                <span class="selectitem">
-                                                    <h5>250</h5>
-                                                    Rp.125.000
-                                                </span>
-                                            </span>
-                                        </label>
-                                        <label class="select-items">
-                                            <input type="radio" class="select-input" name="diamond">
-                                            <span class="select-box">
-                                                <span class="selectitem">
-                                                    <h5>500</h5>
-                                                    Rp.250.000
-                                                </span>
-                                            </span>
-                                        </label>
-                                        <!-- Tambahkan lebih banyak pilihan jika diperlukan -->
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <h5>Total:</h5>
-                                    <div class="mt-2">
-                                        <input type="number" class="form-control" name="total" min="1"
-                                            >
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product-detailbox mt-4 row">
-                                <div class="col-sm-9">
-                                    <h5>Payment:</h5>
-                                    <div class="form-selectgroup">
-                                        <label class="select-items">
-                                            <input type="radio" class="select-input" name="diamond" checked>
-                                            <span class="select-box">
-                                                <span class="selectitem">
-                                                    <h5><i class="ph ph-paypal-logo"></i> Paypal</h5>
-                                                    Rp.30.000
-                                                </span>
-                                            </span>
-                                        </label>
-                                        <label class="select-items">
-                                            <input type="radio" class="select-input" name="diamond" checked>
-                                            <span class="select-box">
-                                                <span class="selectitem">
-                                                    <h5><i class="ph ph-paypal-logo"></i> Paypal</h5>
-                                                    Rp.30.000
-                                                </span>
-                                            </span>
-                                        </label>
-                                        <label class="select-items">
-                                            <input type="radio" class="select-input" name="diamond" checked>
-                                            <span class="select-box">
-                                                <span class="selectitem">
-                                                    <h5><i class="ph ph-paypal-logo"></i> Paypal</h5>
-                                                    Rp.30.000
-                                                </span>
-                                            </span>
-                                        </label>
-                                        <!-- Tambahkan lebih banyak pilihan jika diperlukan -->
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <h5>Game ID:</h5>
-                                    <div class="mt-2">
-                                        <input type="text" class="form-control" name="total"
-                                            >
-                                    </div>
-                                </div>
-                            </div>
-
-
-
-                            <div class="product-details-btn text-end mt-4">
-                                {{-- <a href="cart.html" role="button" class="btn btn-primary">Add To Cart</a> --}}
-                                <a href="checkout.html" role="button" class="btn btn-success">Buy Now</a>
-                                {{-- <a href="wishlist.html" role="button" class="btn btn-danger">Add to Wishlist</a> --}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-xxl-3 order-md-1 order-xxl-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="product-details-contentbox">
-                            <div>
-                                <ul class="offer-details-list">
-                                    <li>
-                                        <i class="ti ti-tags text-primary f-s-18 me-1"></i> <b
-                                            class="text-secondary">Bank
-                                            Offer</b> 10% Instant
-                                        Discount on ICICI
-                                        Bank Credit Card, up to ₹1250 on orders of ₹5,000 and above
-                                    </li>
-                                    <li>
-                                        <i class="ti ti-tags text-primary f-s-18 me-1"></i> <b
-                                            class="text-secondary">Bank
-                                            Offer</b>
-                                        Kotak Bank
-                                        Credit Card, up
-                                        to ₹1250 on orders of ₹5,000 and above
-                                    </li>
-                                </ul>
-                                <h5>Similar Products:</h5>
-                                <div class="product-details-table">
-                                    <table class="table table-bottom-border align-middle products-data-table">
-                                        <tbody>
-                                            <tr class="border-0">
-                                                <td>
-                                                    <div class="position-relative">
-                                                        <img src="../../assets/images/dashboard/ecommerce-dashboard/16.png"
-                                                            alt="product-image" class="w-45 h-45 position-absolute">
-                                                        <div class="mg-s-40">
-                                                            <h6 class="text-dark f-w-600 txt-ellipsis-1">Sports shoes
+                                                    <tr class="border-0">
+                                                        <td>
+                                                            <div class="position-relative">
+                                                                <img src="../../assets/images/dashboard/ecommerce-dashboard/16.png"
+                                                                    alt="product-image" class="w-45 h-45 position-absolute">
+                                                                <div class="mg-s-40">
+                                                                    <h6 class="text-dark f-w-600 txt-ellipsis-1">{{ $r->name }}
+                                                                    </h6>
+                                                                    <p class="text-secondary mb-0">{{ $r->game }}</p>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-end">
+                                                            <h6 class="f-s-15 text-success">
+                                                                {{ toCurrency($r->product_price, 'IDN') }}
                                                             </h6>
-                                                            <p class="text-secondary mb-0">#AB9875</p>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td class="text-end">
-                                                    <h6 class="f-s-15 text-success">$450</h6>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="position-relative">
-                                                        <img src="../../assets/images/dashboard/ecommerce-dashboard/01.png"
-                                                            alt="product-image" class="w-45 h-45 position-absolute">
-                                                        <div class="mg-s-40">
-                                                            <h6 class="text-dark f-w-600 txt-ellipsis-1">Smartwatch</h6>
-                                                            <p class="text-secondary mb-0">#AB8394</p>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td class="text-end">
-                                                    <h6 class="f-s-15 text-success">$920</h6>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="position-relative">
-                                                        <img src="../../assets/images/dashboard/ecommerce-dashboard/09.png"
-                                                            alt="product-image" class="w-45 h-45 position-absolute">
-                                                        <div class="mg-s-40">
-                                                            <h6 class="text-dark f-w-600 txt-ellipsis-1">T-shirt</h6>
-                                                            <p class="text-secondary mb-0">#AB3804</p>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td class="text-end">
-                                                    <h6 class="f-s-15 text-success">$100</h6>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="position-relative">
-                                                        <img src="../../assets/images/dashboard/ecommerce-dashboard/02.png"
-                                                            alt="product-image" class="w-45 h-45 position-absolute">
-                                                        <div class="mg-s-40">
-                                                            <h6 class="text-dark f-w-600 txt-ellipsis-1">Airpods</h6>
-                                                            <p class="text-secondary mb-0">#AB2903</p>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td class="text-end">
-                                                    <h6 class="f-s-15 text-success">$10,900</h6>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <a role="button" href="product.html" target="_blank"
-                                        class="btn  btn-primary w-100">View All Products</a>
+                                                        </td>
+                                                    </tr>
+
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                        <a role="button" href="/customer_product_list" target="_blank"
+                                            class="btn  btn-primary w-100">View All Products</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- Product Details end -->
         </div>
-        <!-- Product Details end -->
-    </div>
-</main>
+    </main>
+
+    <!-- slick-file -->
+    <script src="{{ asset('assets/vendor/slick/slick.min.js') }}"></script>
+    <script src="{{ asset('assets/js/slick.js') }}"></script>
+
+    <!-- Toatify js-->
+    <script src="{{ asset('assets/vendor/notifications/toastify-js.js') }}"></script>
+    <script src="{{ asset('assets/vendor/toastify/toastify.js') }}"></script>
 
 
-{{-- <script src="{{ asset('assets/js/product_details.js') }}"></script> --}}
+    <script>
+        // slick slider js
+        // slick slider js
+        $('.product-slider-for').slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            arrows: false,
+            fade: true,
+            asNavFor: '.product-slider-nav'
+        });
+        $('.product-slider-nav').slick({
+            slidesToShow: '{{ $attachmentsCount }}',
+            slidesToScroll: 1,
+            asNavFor: '.product-slider-for',
+            dots: false,
+            arrows: true,
+            centerMode: true,
+            focusOnSelect: true,
+            responsive: [
+                {
+                    breakpoint: 1200,
+                    settings: {
+                        slidesToShow: 3
+                    }
+                },
+                {
+                    breakpoint: 576,
+                    settings: {
+                        slidesToShow: 2
+                    }
+                },
+            ]
+        });
+
+        $(`.select-package`).on('click', function (e) {
+            $(this).find('input[name="package"]').prop('checked', true);
+        })
+
+        function addToCart() {
+            let gameId = $(`#gameId`).val();
+            let productId = $(`#productId`).val();
+            let packageId = $(`input[name="package"]:checked`).val();
+            $(`#gameId`).removeClass('is-invalid')
+            if (gameId.length < 1 || packageId == undefined) {
+
+
+                if (gameId.length < 1) $(`#gameId`).addClass('is-invalid')
+                Toastify({
+                    text: "Mohon isi id game dan pilih salah satu paket!",
+                    duration: 2500,
+                    position: "right",
+                    style: {
+                        background: "rgb(var(--danger),1)",
+                    }
+                }).showToast();
+                return false;
+            }
+
+            $dataPost = {
+                "_token": "{{ csrf_token() }}",
+                "productId": productId,
+                "gameId": gameId,
+                "packageId": packageId
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('customer_cart_add') }}",
+                data: $dataPost,
+                beforeSend: function () {
+                    $('#cartAddBtn').html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Loading');
+                    $('.button-action').attr('disabled', true);
+                },
+                success: function (response) {
+                    $('#cartAddBtn').html('+ Keranjang')
+                    $('.button-action').attr('disabled', false);
+
+                    let cartCounts = parseInt($('#cartCounts').text());
+                    $('#cartCounts').text(cartCounts + 1);
+
+                    let cartTotalCounts = parseInt($('#cartTotalCounts').text());
+                    $('#cartTotalCounts').text(parseInt(cartTotalCounts) + parseInt(response.carts.product_price));
+
+                    let element =
+                        `<div class="head-box">
+                    <img src="{{ asset('uploads/product/${response.carts.product_pic}') }}" alt="cart"
+                      class="h-50 object-fit-cover me-3 b-r-10">
+                    <div class="flex-grow-1">
+                      <a class="mb-0 f-w-600 f-s-16" href="product_details.html" target="_blank">${response.carts.name}</a><br>
+                      <span class="text-secondary text-dark f-w-400">${response.carts.game}</span><br>
+                      <span class="text-secondary">${response.carts.package_amount} ${response.carts.unit} - <span class="text-dark f-w-400">Rp ${formatIdr(response.carts.product_price)}</span></span>
+                    </div>
+                    <div class="text-end">
+                      <i class="ph ph-trash f-s-25 text-danger" data-cart="${response.carts.cart_id}" onclick="removeCart(this)"></i>
+
+                    </div>
+                    </div>`
+
+
+
+
+                    $(`#headContainerCart`).append(element);
+
+
+
+                    Toastify({
+                        text: "Berhasil ditambahkan ke keranjang!",
+                        duration: 2500,
+                        position: "right",
+                        style: {
+                            background: "rgb(var(--success),1)",
+                        }
+                    }).showToast();
+
+                    console.log(response.carts);
+
+                }
+            });
+
+        }
+
+        var formatIdr = function (num) {
+            var str = num.toString().replace("", ""), parts = false, output = [], i = 1, formatted = null;
+            if (str.indexOf(".") > 0) {
+                parts = str.split(".");
+                str = parts[0];
+            }
+            str = str.split("").reverse();
+            for (var j = 0, len = str.length; j < len; j++) {
+                if (str[j] != ",") {
+                    output.push(str[j]);
+                    if (i % 3 == 0 && j < (len - 1)) {
+                        output.push(".");
+                    }
+                    i++;
+                }
+            }
+            formatted = output.reverse().join("");
+            return ("" + formatted + ((parts) ? "." + parts[1].substr(0, 2) : ""));
+        };
+
+    </script>
+    {{--
+    <script src="{{ asset('assets/js/product_details.js') }}"></script> --}}
 @endsection

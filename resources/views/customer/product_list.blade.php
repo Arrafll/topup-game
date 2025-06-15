@@ -262,17 +262,13 @@
                                                <div class="product-content-box">
                                                    <div class="product-grid">
                                                        <div class="product-image">
-                                                           <a href="#" class="image">
+                                                           <a href="/customer_product_list" class="image">
                                                                <img class="pic-1" src="${imgPath}" alt="">
                                                                <img class="images_box" src="${imgPath}"
                                                                    alt="">
                                                            </a>
                                                            <ul class="product-links">
-                                                               <li><a href="cart.html"
-                                                                       class="bg-primary h-30 w-30 d-flex-center b-r-20"><i
-                                                                           class="ti ti-shopping-cart f-s-18 text-light"></i></a>
-                                                               </li>
-                                                               <li><a href="product_details.html"
+                                                               <li><a href="/customer_product_list"
                                                                        class="bg-success h-30 w-30 d-flex-center b-r-20"><i
                                                                            class="ti ti-eye f-s-18 text-light"></i></a></li>
                                                            </ul>
@@ -280,7 +276,7 @@
                                                    </div>
                                                    <div class="p-3">
                                                        <div class="d-flex justify-content-between align-items-center">
-                                                           <a href="product_details.html" class="m-0 f-s-16 f-w-500">${product.name.slice(0, 13) + (product.name.length > 13 ? "..." : "")}</a>
+                                                           <a href="/customer_product_list" class="m-0 f-s-16 f-w-500">${product.name.slice(0, 13) + (product.name.length > 13 ? "..." : "")}</a>
                                                             <span class="badge text-bg-info text-white b-r-10 f-s-10">${product.category_name}</span>
                                                        </div>
                                                        <p class="text-secondary">${product.game}</p>
