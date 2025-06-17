@@ -14,8 +14,14 @@ return new class extends Migration {
             $table->id();
             $table->integer('user_id');
             $table->string('code');
+            $table->text('snap_token')->nullable();
             $table->text('note')->nullable();
             $table->string('status');
+            $table->string('pay_method');
+            $table->integer('pay_total')->nullable();
+            $table->string('pay_status')->nullable();
+            $table->string('pay_cred')->nullable();
+            $table->dateTime('payed_at')->nullable();
             $table->dateTime('processed_at')->nullable();
             $table->dateTime('finished_at')->nullable();
             $table->dateTime('created_at');

@@ -48,10 +48,9 @@
             <div class="hidden-massage py-4 px-3">
             <img src="{{ asset('assets/images/icons/cart.png') }}" alt="cart" class="w-50 h-50 mb-3">
             <div>
-              <h6 class="mb-0">Your Cart is Empty</h6>
-              <p class="text-secondary mb-0">Add some items :)</p>
-              <a class="btn btn-light-primary btn-xs mt-2" href="product_details.html">Shop
-              Now</a>
+              <h6 class="mb-0">Keranjang Kosong!</h6>
+              <p class="text-secondary mb-0">Ayo beli beberapa produk :)</p>
+              <a class="btn btn-light-primary btn-xs mt-2" href="/customer_product_list">Belanja Sekarang</a>
             </div>
             </div>
           </div>
@@ -63,8 +62,8 @@
               </span></h6>
             </div>
             <div class="header-cart-btn">
-            <a href="./checkout.html" target="_blank" role="button" class="btn btn-light-success">
-              Checkout <i class="ti ti-shopping-cart"></i></a>
+            <a href="/customer_order_cart" target="_blank" role="button" class="btn btn-light-success">
+              Buat Pesanan</i></a>
             </div>
           </div>
           </div>

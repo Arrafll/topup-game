@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->integer('product_id');
             $table->integer('package_id');
-            $table->integer('game_id');
+            $table->string('game_id', '100');
             $table->integer('user_id');
             $table->dateTime('created_at');
             $table->dateTime('updated_at');

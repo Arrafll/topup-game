@@ -277,7 +277,7 @@
                                                    </div>
                                                    <div class="p-3">
                                                        <div class="d-flex justify-content-between align-items-center">
-                                                           <a href="/customer_product_detail/${product.id}" class="m-0 f-s-16 f-w-500">${product.name.slice(0, 13) + (product.name.length > 13 ? "..." : "")}</a>
+                                                           <a href="/customer_product_detail/${product.id}" class="m-0 f-s-16 f-w-500">${product.name.slice(0, 11) + (product.name.length > 13 ? "..." : "")}</a>
                                                             <span class="badge text-bg-info text-white b-r-10 f-s-10">${product.category_name}</span>
                                                        </div>
                                                        <p class="text-secondary">${product.game}</p>

@@ -3,6 +3,8 @@ $(".datatable-original").DataTable({
     order: [[2, 'desc']]
 });
 
+$(".datatable-raw").DataTable();
+
 
 function removeCart(ele){
      Swal.fire({

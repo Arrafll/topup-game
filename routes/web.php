@@ -49,8 +49,10 @@ Route::group(['middleware' => ['auth', \App\Http\Middleware\Role::class . ':2']]
     Route::get('/customer_cart_list', [CustomerController::class, 'cart_list'])->name('customer_cart_list');
     Route::post('/customer_cart_add', [CustomerController::class, 'cart_add'])->name('customer_cart_add');
     Route::get('/customer_cart_delete/{id}', [CustomerController::class, 'cart_delete'])->name('customer_cart_delete');
-    Route::get('/customer_order_now/{id}/{amount}', [CustomerController::class, 'order_now'])->name('customer_order_now');
+    Route::get('/customer_cart_delete_sync/{id}', [CustomerController::class, 'cart_delete_sync'])->name('customer_cart_delete_sync');
+    Route::get('/customer_order_now/{id}/{amount}', [CustomerController::class, 'order_now'])->name(name: 'customer_order_now');
     Route::get('/customer_order_cart', [CustomerController::class, 'order_cart'])->name('customer_order_cart');
+    Route::post('/customer_order_add', [CustomerController::class, 'order_add'])->name('customer_order_add');
     Route::get('/customer_order_list', [CustomerController::class, 'order_list'])->name('customer_order_list');
     Route::get('/customer_order_detail/{id}', [CustomerController::class, 'order_detail'])->name('customer_order_detail');
     Route::get('/customer_order_cancel/{id}', [CustomerController::class, 'order_cancel'])->name('customer_order_cancel');
@@ -58,6 +60,8 @@ Route::group(['middleware' => ['auth', \App\Http\Middleware\Role::class . ':2']]
     Route::post('/customer_order_review', [CustomerController::class, 'order_review'])->name('customer_order_review');
     Route::get('/customer_order_rating/{id}', [CustomerController::class, 'order_rating'])->name('customer_order_rating');
     Route::post('/customer_checkout', [CustomerController::class, 'checkout'])->name('customer_checkout');
+
+    Route::get('/customer_process', [CustomerController::class, 'customer_process'])->name('customer_process');
     Route::post('/customer_get_product', [CustomerController::class, 'get_product'])->name('customer_get_product');
     Route::get('/customer/invoices', [CustomerController::class, 'invoiceList'])->name('customer.invoices');
     Route::get('/customer/invoice/{id}', [CustomerController::class, 'productInvoice'])->name('customer.invoice');

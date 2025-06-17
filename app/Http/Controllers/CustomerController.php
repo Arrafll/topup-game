@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Order;
+use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\ProductPackage;
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Database\Query\JoinClause;
+use Midtrans\Config;
+use Midtrans\Snap;
 
 class CustomerController extends Controller
 {
@@ -24,7 +27,8 @@ class CustomerController extends Controller
     {
         $data = [
             'title' => 'Home',
-            'role' => 2
+            'role' => 2,
+            'cartList' => $this->cartList
         ];
 
         return view('customer.mainPage.home', $data);
@@ -36,7 +40,7 @@ class CustomerController extends Controller
             ->select(DB::raw(value: 'MIN(attachments.name) as product_pic'), 'product_id')
             ->groupBy('attachments.product_id');
         $carts = DB::table('carts')
-            ->select('products.*', 'carts.id as cart_id', 'attachments.product_pic', 'product_packages.price as product_price', 'product_packages.amount as package_amount')
+            ->select('products.*', 'carts.id as cart_id', 'attachments.product_pic', 'product_packages.price as product_price', 'product_packages.amount as package_amount', 'carts.game_id', 'product_packages.id as package_id')
             ->leftJoin('products', 'products.id', '=', 'carts.product_id')
             ->leftJoin('product_packages', 'product_packages.id', '=', 'carts.package_id')
             ->leftJoinSub($queryAttachment, 'attachments', function (JoinClause $join) {
@@ -120,6 +124,7 @@ class CustomerController extends Controller
         $data = [
             'title' => 'Games',
             'role' => 2,
+            'cartList' => $this->cartList,
             'categories' => $category
         ];
 
@@ -129,7 +134,8 @@ class CustomerController extends Controller
     {
         $data = [
             'title' => 'Home',
-            'role' => 2
+            'role' => 2,
+            'cartList' => $this->cartList
         ];
 
         return view('customer.invoice.list', $data);
@@ -180,7 +186,8 @@ class CustomerController extends Controller
     {
         $data = [
             'title' => 'Home',
-            'role' => 2
+            'role' => 2,
+            'cartList' => $this->cartList
         ];
 
         return view('customer.invoice.invoice', $data);
@@ -227,4 +234,172 @@ class CustomerController extends Controller
         return response()->json(['response' => 'success']);
 
     }
+
+    public function cart_delete_sync($id)
+    {
+
+        $cart = Cart::findOrFail($id);
+        $cart->delete();
+
+        return redirect()->back()->with('successEdit', 'Data profil berhasil diperbarui.');
+    }
+
+    public function order_cart()
+    {
+        if($this->cartList->count('id') == 0) return redirect()->back();
+        $data = [
+            'title' => 'Buat Pesanan',
+            'role' => 2,
+            'carts' => $this->cartList,
+            'cartList' => $this->cartList,
+        ];
+
+        return view('customer.order.cart', $data);
+
+    }
+
+    public function order_list()
+    {
+        $orders = Order::where('user_id' , '=', Auth::user()->id)->get();
+
+        $data = [
+            'title' => 'Order List',
+            'role' => 2,
+            'orders' => $orders,
+            'cartList' => $this->cartList
+        ];
+
+        return view('customer.order.list', $data);
+    }
+
+    public function order_add(Request $request)
+    {
+
+        $note = $request->descOrder;
+        $orderCode = "KTO" . date('ymdhis');
+        $userId = Auth::user()->id;
+
+        $dataOrder = ['user_id' => $userId, 'note' => $note, 'status' => 'Waiting Payment', 'code' => $orderCode, 'pay_status' => 'Unpaid'];
+        $orderId = Order::create($dataOrder)->id;
+
+        $carts = $this->cartList;
+        foreach ($carts as $c) {
+            $orderItem = [
+                'order_id' => $orderId,
+                'product_id' => $c->id,
+                'package_id' => $c->package_id,
+                'game_id' => $c->game_id,
+            ];
+
+            OrderItem::create($orderItem);
+
+        }
+
+        $carts = Cart::where('user_id', '=', $userId)->delete();
+        return redirect('/customer_order_detail/' . $orderId);
+
+    }
+
+    public function order_detail($id)
+    {
+
+        $order = Order::find($id);
+        $queryAttachment = DB::table('attachments')
+            ->select(DB::raw(value: 'MIN(attachments.name) as product_pic'), 'product_id')
+            ->groupBy('attachments.product_id');
+        $orders = DB::table(table: 'orders')
+            ->select(
+                'products.*',
+                'attachments.product_pic',
+                'product_packages.price as product_price',
+                'product_packages.amount as package_amount',
+                'orders.created_at as order_date',
+                'order_items.game_id'
+            )
+            ->leftJoin('order_items', 'order_items.order_id', '=', 'orders.id')
+            ->leftJoin('products', 'products.id', '=', 'order_items.product_id')
+            ->leftJoin('product_packages', 'product_packages.id', '=', 'order_items.package_id')
+            ->leftJoinSub($queryAttachment, 'attachments', first: function (JoinClause $join) {
+                $join->on('products.id', '=', 'attachments.product_id');
+            })
+            ->where('orders.id', $id)
+            ->get();
+
+        $snapToken = $order->snap_token;
+        if (empty($order->snap_token) && empty($order->payed_at)) {
+            Config::$serverKey = config('midtrans.server_key');
+            Config::$isProduction = config('midtrans.is_production');
+            Config::$isSanitized = config('midtrans.is_sanitized');
+            Config::$is3ds = config('midtrans.is_3ds');
+
+            $params = [
+                'transaction_details' => [
+                    'order_id' => $order->code,
+                    'gross_amount' => $orders->sum('product_price') + 2500,
+                ],
+                'customer_details' => [
+                    'first_name' => Auth::user()->name,
+                    'email' => Auth::user()->email,
+                ],
+            ];
+
+            $snapToken = Snap::getSnapToken($params);
+
+            $order->snap_token = $snapToken;
+            $order->save();
+
+        }
+        $data = [
+            'title' => 'Order Detail',
+            'role' => 2,
+            'orders' => $orders,
+            'order' => $order,
+            'snapToken' => $snapToken,
+            'cartList' => $this->cartList
+        ];
+
+        return view('customer.order.detail', $data);
+    }
+
+    public function order_cancel($id)
+    {
+        $order = Order::findOrFail($id);
+        $order->status = "Cancelled";
+        $order->finished_at = date('Y-m-d H:i:s');
+        $order->save();
+        return redirect('/customer_order_detail/' . $id)->with('cancel', 'Pesanan telah dibatalkan');
+    }
+
+    public function checkout(request $request)
+    {
+
+        $id = $request->orderId;
+        $jsonMidtrans = $request->jsonMidtrans;
+        $respMidtrans = json_decode($jsonMidtrans, true);
+
+        $order = Order::find($id);
+        $order->pay_method = $respMidtrans['payment_type'];
+        $order->payed_at = $respMidtrans['transaction_time'];
+        $order->status = "Processed";
+        $order->processed_at = date('Y-m-d h:i:s');
+        $order->pay_status = "Paid";
+        $order->save();
+
+        return redirect('/customer_order_detail/' . $id)->with('paid', 'Pesanan akan segera diproses, mohon tunggu');
+    }
+
+    // public function checkout_process($order)
+    // {
+    //     $desc = $request->descOrder;
+    //     $code = $request->code;
+
+    //     $dataOrder = [
+    //         'snap_token' => $request->snap_token,
+    //         'note' => $desc,
+    //         'code' => $code
+    //     ];
+
+    //     $order = Order::create($dataOrder);
+
+    // }
 }

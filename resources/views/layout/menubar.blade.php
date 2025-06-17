@@ -65,7 +65,7 @@
             </a>
           </li>
           <li class="no-sub">
-            <a class="" href="{{ route('customer.invoices') }}">
+            <a class="{{ Route::is('customer_order*') ? 'active' : '' }}" href="{{ route('customer_order_list') }}">
               <i class="ti ti-report-search"></i> Cek Pesanan
             </a>
           </li>
