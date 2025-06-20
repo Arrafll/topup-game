@@ -57,37 +57,39 @@
                 @csrf
                 <div class="row">
                   <div class="col-12">
-                    <div class="mb-5 text-center text-lg-start">
+                    <div class="mb-3 text-center text-lg-start">
                       <h2 class="text-primary f-w-600">Welcome To KlikTopUp! </h2>
                       <p>Sign in with your data that you enterd during your registration</p>
                     </div>
                   </div>
                   <div class="col-12">
                     @session('success')
-                      <div class="alert alert-light-border-success d-flex align-items-center justify-content-between"role="alert">
-                        <p class="mb-0" style="color:rgba(var(--success), 1);">
-                          <i class="ti ti-circle-check f-s-18 me-2"></i>
-                              {{ session('success') }}
-                        </p>
-                        <i class="ti ti-x" data-bs-dismiss="alert"></i>
-                      </div>
-                    @endsession
+            <div class="alert alert-light-border-success d-flex align-items-center justify-content-between"
+              role="alert">
+              <p class="mb-0" style="color:rgba(var(--success), 1);">
+              <i class="ti ti-circle-check f-s-18 me-2"></i>
+              {{ session('success') }}
+              </p>
+              <i class="ti ti-x" data-bs-dismiss="alert"></i>
+            </div>
+          @endsession
                     @session('invalid')
-                      <div class="alert alert-light-border-danger d-flex align-items-center justify-content-between"role="alert">
-                        <p class="mb-0" style="color:rgba(var(--danger), 1);">
-                          <i class="ti ti-circle-x f-s-18 me-2"></i>
-                              {{ session('invalid') }}
-                        </p>
-                        <i class="ti ti-x" data-bs-dismiss="alert"></i>
-                      </div>
-                    @endsession
+            <div class="alert alert-light-border-danger d-flex align-items-center justify-content-between"
+              role="alert">
+              <p class="mb-0" style="color:rgba(var(--danger), 1);">
+              <i class="ti ti-circle-x f-s-18 me-2"></i>
+              {{ session('invalid') }}
+              </p>
+              <i class="ti ti-x" data-bs-dismiss="alert"></i>
+            </div>
+          @endsession
 
                   </div>
                   <div class="col-12">
                     <div class="mb-3">
                       <label for="email" class="form-label">Email</label>
                       <input type="email" class="form-control @error('email') is-invalid @enderror auth-form"
-                        name="email" placeholder="Enter Your email" id="email">
+                        name="email" placeholder="Enter Your email" id="email" value="{{ old('email') }}">
                       @error('email')
               <div class="invalid-feedback">
               {{ $message }}

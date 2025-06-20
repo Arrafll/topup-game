@@ -141,7 +141,7 @@
                                                 class="link-primary text-decoration-underline"> Sign in</a>
                                         </div>
                                     </div>
-                                    <div class="app-divider-v justify-content-center">
+                                    {{-- <div class="app-divider-v justify-content-center">
                                         <p>Atau daftar dengan</p>
                                     </div>
                                     <div class="col-12">
@@ -149,7 +149,7 @@
                                             class="btn btn-gmail text-white d-inline-flex-center w-100"><i
                                                 class="fa-solid fa-brands fa-google fa-fw"></i> &nbsp;Sign Up With
                                             Google </a>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </form>
                         </div>

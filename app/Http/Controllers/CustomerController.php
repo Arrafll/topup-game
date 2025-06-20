@@ -246,7 +246,8 @@ class CustomerController extends Controller
 
     public function order_cart()
     {
-        if($this->cartList->count('id') == 0) return redirect()->back();
+        if ($this->cartList->count('id') == 0)
+            return redirect()->back();
         $data = [
             'title' => 'Buat Pesanan',
             'role' => 2,
@@ -258,9 +259,21 @@ class CustomerController extends Controller
 
     }
 
+    public function order_now($id)
+    {
+        // $order-fuckyou
+        // $data = [
+        //     'title' => 'Buat Pesanan',
+        //     'role' => 2,
+        //     'carts' => $this->cartList,
+        //     'cartList' => $this->cartList,
+        // ];
+
+    }
+
     public function order_list()
     {
-        $orders = Order::where('user_id' , '=', Auth::user()->id)->get();
+        $orders = Order::where('user_id', '=', Auth::user()->id)->get();
 
         $data = [
             'title' => 'Order List',

@@ -30,7 +30,7 @@
       </li>
       </li>
       <li class="no-sub">
-      <a class="{{ Route::is('admin_order*') ? 'active' : '' }}" href="/admin_product_list">
+      <a class="{{ Route::is('admin_order*') ? 'active' : '' }}" href="/admin_order_list">
         <i class="ph-duotone  ph-clipboard"></i>Order
       </a>
       </li>

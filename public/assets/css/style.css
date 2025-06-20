@@ -21871,7 +21871,7 @@ body[class="ltr dark"] .payment-details-content h4 {
   white-space: nowrap;
   background-color: transparent;
   color: var(--font-color);
-  padding: 1.5rem 0;
+  padding: 0.8rem 0;
   display: flex;
 }
 .app-divider-v > p, .app-divider-v h1, .app-divider-v h2, .app-divider-v h3, .app-divider-v h4, .app-divider-v h5, .app-divider-v h6, .app-divider-v span {
@@ -26085,7 +26085,7 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 .sign-in-bg {
-  background-color: rgba(var(--primary), 0.3);
+  background-color: #dfdfdf;
 }
 .sign-in-bg .sign-in-content-bg {
   background-color: var(--white);

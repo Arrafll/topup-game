@@ -307,11 +307,7 @@
 
                         </div>
                         </div>`
-
-
-
-
-                    $(`#headContainerCart`).append(element);
+                    $(element).insertBefore('#emptyCartMessage');
 
 
 

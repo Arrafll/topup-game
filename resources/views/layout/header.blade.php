@@ -34,18 +34,22 @@
         <img src="{{ asset('uploads/product/' . $cl->product_pic) }}" alt="cart"
           class="h-50 object-fit-cover me-3 b-r-10">
         <div class="flex-grow-1">
-          <a class="mb-0 f-w-600 f-s-16" href="product_details.html" target="_blank"> {{ $cl->name }}</a><br>
+          <a class="mb-0 f-w-600 f-s-16" href="product_details.html" target="_blank">
+          {{ $cl->name }}</a><br>
           <span class="text-secondary text-dark f-w-400">{{ $cl->game }}</span><br>
-          <span class="text-secondary">{{ $cl->package_amount }} {{ $cl->unit }} - <span class="text-dark f-w-400 row-cart-price" data-price="{{ $cl->product_price }}">{{ toCurrency($cl->product_price, 'IDN') }}</span></span>
+          <span class="text-secondary">{{ $cl->package_amount }} {{ $cl->unit }} - <span
+          class="text-dark f-w-400 row-cart-price"
+          data-price="{{ $cl->product_price }}">{{ toCurrency($cl->product_price, 'IDN') }}</span></span>
         </div>
         <div class="text-end">
-          <i class="ph ph-trash f-s-25 text-danger" data-cart="{{ $cl->cart_id }}" onclick="removeCart(this)"></i>
-          
+          <i class="ph ph-trash f-s-25 text-danger" data-cart="{{ $cl->cart_id }}"
+          onclick="removeCart(this)"></i>
+
         </div>
         </div>
 
-            @endforeach
-            <div class="hidden-massage py-4 px-3">
+        @endforeach
+            <div class="hidden-massage py-4 px-3" id="emptyCartMessage">
             <img src="{{ asset('assets/images/icons/cart.png') }}" alt="cart" class="w-50 h-50 mb-3">
             <div>
               <h6 class="mb-0">Keranjang Kosong!</h6>
@@ -58,7 +62,8 @@
           <div class="offcanvas-footer">
           <div class="head-box-footer p-3">
             <div class="mb-4">
-            <h6 class="text-muted f-w-600">Total <span class="float-end" id="cartTotalCounts" data-total="{{ $cartList->sum('product_price') }}">{{ toCurrency($cartList->sum('product_price'), 'IDN') }}
+            <h6 class="text-muted f-w-600">Total <span class="float-end" id="cartTotalCounts"
+              data-total="{{ $cartList->sum('product_price') }}">{{ toCurrency($cartList->sum('product_price'), 'IDN') }}
               </span></h6>
             </div>
             <div class="header-cart-btn">

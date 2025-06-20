@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\ProductPackage;
 use App\Models\Attachment;
 use Intervention\Image\Laravel\Facades\Image;
@@ -140,7 +142,7 @@ class AdminController extends Controller
     public function product_edit($id)
     {
         $product = Product::findOrFail($id);
-        
+
         $packages = ProductPackage::where('product_id', '=', $id)->get();
         $attachments = Attachment::where('product_id', '=', $id)->get();
         $category = Category::all();
@@ -227,6 +229,18 @@ class AdminController extends Controller
         return redirect('admin_product_list')->with('success', "Data produk $namaProduk berhasil diubah.");
     }
 
+
+    public function order_list()
+    {
+
+        $orders = Order::where('pay_status', '!=', 'unpaid')->get();
+        $data = [
+            'title' => 'Dashboard',
+            'role' => 1
+        ];
+
+        return view('admin/dashboard', $data);
+    }
 
 
 }

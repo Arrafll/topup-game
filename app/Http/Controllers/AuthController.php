@@ -46,7 +46,7 @@ class AuthController extends Controller
             }
         }
 
-        return redirect('/login')->with('invalid', 'Username atau password tidak tedaftar.');
+        return redirect('/login')->withInput()->with('invalid', 'Email atau password tidak valid');
             
     }
 
@@ -108,12 +108,18 @@ class AuthController extends Controller
         $validated = $request->validate([
             'fullname' => 'required|max:25',
             'password' => 'required|confirmed',
-            'email'    => 'required|email',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users')
+            ],
             'password_confirmation' => 'required',
         ],[
             'password_confirmation.required' => 'Mohon konfirmasi ulang password', 
+            'fullname.required' => 'Kolom nama harus diisi',
             'required' => 'Kolom :attribute harus diisi',
             'email.email' => 'Email harus valid',
+            'email.unique' => 'Email sudah terdaftar',
             'max' => 'Panjang :attribute tidak lebih dari :max karakter',
             'min' => 'Panjang :attribute tidak kurang dari :min karakter',
             'password.confirmed' => 'Konfirmasi password harus sama',
