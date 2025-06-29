@@ -36,10 +36,11 @@ Route::group(['middleware' => ['auth', \App\Http\Middleware\Role::class . ':1']]
     Route::get('/admin_order_history_list', [AdminController::class, 'order_history_list'])->name('admin_order_history_list');
     Route::get('/admin_order_detail/{id}', [AdminController::class, 'order_detail'])->name('admin_order_detail');
     Route::get('/admin_order_cancel/{id}', [AdminController::class, 'order_cancel'])->name('admin_order_cancel');
-    Route::get('/admin_order_process/{id}', [AdminController::class, 'order_process'])->name('admin_order_process');
-    Route::get('/admin_order_ship/{id}', [AdminController::class, 'order_ship'])->name('admin_order_ship');
-    Route::get('/admin_order_finish/{id}', [AdminController::class, 'order_finish'])->name('admin_order_finish');
+    Route::post('/admin_order_finish', [AdminController::class, 'order_finish'])->name('admin_order_finish');
     Route::get('/admin_profile', [AdminController::class, 'profile'])->name('admin_profile');
+    Route::get('/admin_report_list', [AdminController::class, 'report_list'])->name('admin_report_list');
+    Route::get('/admin_report_export', [AdminController::class, 'report_export'])->name('admin_report_export');
+    Route::get('/admin_report_export/{year}/{month}', [AdminController::class, 'report_export'])->name('admin_report_export');
 });
 
 Route::group(['middleware' => ['auth', \App\Http\Middleware\Role::class . ':2']], function () {

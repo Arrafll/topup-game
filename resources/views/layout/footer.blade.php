@@ -63,8 +63,6 @@
 
 <!--cleave js  -->
 <script src="{{ asset('assets/vendor/cleavejs/cleave.min.js') }}"></script>
-<!-- data table js-->
-<script src="{{ asset('assets/vendor/datatable/jquery.dataTables.min.js') }}"></script>
 
 <!-- Glight js -->
 <script src="{{ asset('assets/vendor/glightbox/glightbox.min.js') }}"></script>

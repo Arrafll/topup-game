@@ -27,13 +27,16 @@ function getStatusLabel($value)
             $label = '<span class="badge text-bg-info text-white"> Dalam Proses</span>';
             break;
         case 'Done':
-            $label = '<span class="badge text-bg-success"> Dibatalkan</span>';
+            $label = '<span class="badge text-bg-success"> Selesai</span>';
             break;
         case 'Cancelled':
             $label = '<span class="badge text-bg-danger"> Dibatalkan</span>';
             break;
         case 'Paid':
             $label = '<span class="badge text-bg-success"> Dibayar</span>';
+            break;
+        case 'Refunded':
+            $label = '<span class="badge text-bg-danger"> Refund</span>';
             break;
         default:
             $label = '<span class="badge text-bg-warning text-white">Menunggu Pembayaran</span>';

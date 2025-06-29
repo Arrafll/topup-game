@@ -76,7 +76,8 @@
   <!-- Selecrt css -->
   <link href="{{ asset('assets/vendor/select/select2.min.css') }}" rel="stylesheet">
 
-
+  <!-- data table js-->
+  <script src="{{ asset('assets/vendor/datatable/jquery.dataTables.min.js') }}"></script>
 
 
 </head>

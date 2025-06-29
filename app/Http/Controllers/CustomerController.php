@@ -22,7 +22,11 @@ class CustomerController extends Controller
     public function __construct()
     {
         $this->cartList = $this->get_carts();
+        setlocale(LC_TIME, 'id_ID');
+        \Carbon\Carbon::setLocale('id');
     }
+
+
     public function home()
     {
         $data = [
@@ -163,6 +167,7 @@ class CustomerController extends Controller
             ->where('products.id', '!=', $product->id)
             ->limit(5)
             ->get();
+
 
         $packages = ProductPackage::where('product_id', '=', $id)->get();
         $attachments = Attachment::where('product_id', '=', $id)->get();
@@ -327,7 +332,8 @@ class CustomerController extends Controller
                 'product_packages.price as product_price',
                 'product_packages.amount as package_amount',
                 'orders.created_at as order_date',
-                'order_items.game_id'
+                'order_items.game_id',
+                'order_items.voucher_code'
             )
             ->leftJoin('order_items', 'order_items.order_id', '=', 'orders.id')
             ->leftJoin('products', 'products.id', '=', 'order_items.product_id')
@@ -357,7 +363,7 @@ class CustomerController extends Controller
             ];
 
             $snapToken = Snap::getSnapToken($params);
-
+            $order->pay_total = $orders->sum('product_price') + 2500;
             $order->snap_token = $snapToken;
             $order->save();
 
@@ -378,6 +384,7 @@ class CustomerController extends Controller
     {
         $order = Order::findOrFail($id);
         $order->status = "Cancelled";
+        $order->pay_total = 0;
         $order->finished_at = date('Y-m-d H:i:s');
         $order->save();
         return redirect('/customer_order_detail/' . $id)->with('cancel', 'Pesanan telah dibatalkan');

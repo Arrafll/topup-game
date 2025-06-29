@@ -90,6 +90,7 @@ class AuthController extends Controller
             return redirect()->intended('customer'); 
         } catch (\Exception $e) { 
             // Redirect ke halaman utama jika terjadi kesalahan 
+            die($e);
             return redirect('/login')->with('error', 'Terjadi kesalahan saat login dengan Google.'); 
         } 
     }
