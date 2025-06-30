@@ -7,15 +7,19 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Models\User;
 use App\Models\ProductPackage;
 use App\Models\Attachment;
+use App\Models\User;
+use App\Models\UserData;
+use App\Models\Role;
 use Intervention\Image\Laravel\Facades\Image;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Database\Query\JoinClause;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
 {
@@ -308,6 +312,87 @@ class AdminController extends Controller
         }
 
         return redirect('admin_product_list')->with('success', "Data produk $namaProduk berhasil diubah.");
+    }
+
+    public function user_list()
+    {
+        $auth = Auth::user();
+
+        $users = DB::table('users')
+            ->select('users.*', 'roles.name as role_name')
+            ->join('roles', 'users.role_id', '=', 'roles.id')
+            ->where('users.id', '!=', $auth->id)
+            ->get();
+
+        $data = [
+            'title' => 'User List',
+            'role' => 1,
+            'users' => $users,
+        ];
+        return view('admin.user.user_list', $data);
+    }
+    public function user_edit($id)
+    {
+        $roles = Role::all();
+        $user = DB::table('users')
+            ->select('users.*', 'user_data.handphone as handphone', 'user_data.alamat as alamat')
+            ->join('user_data', 'users.id', '=', 'user_data.user_id')
+            ->where('users.id', '=', $id)
+            ->first();
+
+
+        $data = [
+            'title' => 'User Edit',
+            'role' => 1,
+            'user' => $user,
+            'roles' => $roles
+        ];
+        return view('admin.user.user_edit', $data);
+    }
+
+    public function user_update(Request $request)
+    {
+
+        $userId = (int) $request->userId;
+        $email = $request->email;
+
+        $existingUser = User::where('email', $email)->first();
+        if ($existingUser) {
+            // Email is already registered
+            if ($existingUser->id != $userId)
+                return back()->withInput()->withErrors(['email' => 'This email address is already registered.']);
+        }
+
+        $name = $request->name;
+        $alamat = $request->alamat;
+        $handphone = $request->handphone;
+        $role = $request->role;
+
+        $user = User::find($userId);
+        $userData = UserData::find($userId);
+
+        $user->name = $name;
+        $user->email = $email;
+        $user->role_id = $role;
+
+        $userData->handphone = $handphone;
+        $userData->alamat = $alamat;
+
+        $user->save();
+        $userData->save();
+
+        return redirect('admin_user_list')->with('success', 'Data user berhasil diubah.');
+
+
+    }
+
+    public function user_delete($id)
+    {
+        $userData = UserData::where('user_id', '=',$id)->delete();
+        $user = User::where('id', '=',$id)->delete();
+        return redirect('admin_list')->with('success', 'Data produk berhasil dihapus.');
+
+
     }
 
 

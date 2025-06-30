@@ -33,6 +33,12 @@ Route::group(['middleware' => ['auth', \App\Http\Middleware\Role::class . ':1']]
     Route::get('/admin_product_delete/{id}', [AdminController::class, 'product_delete'])->name('admin_product_delete');
     Route::get('/admin_product_edit/{id}', [AdminController::class, 'product_edit'])->name('admin_product_edit');
     Route::post('/admin_product_update', [AdminController::class, 'product_update'])->name('admin_product_update');
+
+    Route::get('/admin_user_list', [AdminController::class, 'user_list'])->name('admin_user_list');
+    Route::get('/admin_user_edit/{id}', [AdminController::class, 'user_edit'])->name('admin_user_edit');
+    Route::post('/admin_user_update', [AdminController::class, 'user_update'])->name('admin_user_update');
+    Route::get('/admin_user_delete/{id}', [AdminController::class, 'user_delete'])->name('admin_user_delete');
+
     Route::get('/admin_order_list', [AdminController::class, 'order_list'])->name('admin_order_list');
     Route::get('/admin_order_history_list', [AdminController::class, 'order_history_list'])->name('admin_order_history_list');
     Route::get('/admin_order_detail/{id}', [AdminController::class, 'order_detail'])->name('admin_order_detail');
