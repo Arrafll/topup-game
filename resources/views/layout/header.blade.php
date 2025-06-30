@@ -6,8 +6,17 @@
         <span class="header-toggle me-3">
           <i class="ph ph-circles-four"></i>
         </span>
+        @if ($role == 1 && Route::is('admin'))
+        <div class="col-sm-3">
+          <select class="form-select" id="dashboard-year-filter">
+          <option value="" selected>Tahun</option>
+          @foreach ($years as $y)
+        <option value="{{ $y->year }}">{{ $y->year }}</option>
+        @endforeach
+          </select>
+        </div>
+    @endif
       </div>
-
       <div class="col-6 col-sm-8 d-flex align-items-center justify-content-end header-right p-0">
 
         <ul class="d-flex align-items-center">

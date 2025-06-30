@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\User;
 use App\Models\ProductPackage;
 use App\Models\Attachment;
 use Intervention\Image\Laravel\Facades\Image;
@@ -27,12 +28,85 @@ class AdminController extends Controller
     }
     public function index()
     {
+        $years = DB::table(table: 'orders')->selectRaw('YEAR(created_at) as year')->groupByRaw('YEAR(created_at)')->orderByRaw('YEAR(created_at) DESC')->get();
         $data = [
             'title' => 'Dashboard',
-            'role' => 1
+            'role' => 1,
+            'years' => $years
         ];
 
         return view('admin/dashboard', $data);
+    }
+
+    public function widget_get(Request $request)
+    {
+
+        $year = $request->year;
+        if (empty($year)) {
+            $year = date('Y');
+        }
+
+        $months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        $saleTrends = [];
+        $totalOrder = 0;
+        $month = 1;
+        for ($i = 0; $i < 12; $i++) {
+            $order = DB::table(table: 'orders')->selectRaw('COUNT(id) as total, SUM(IFNULL(pay_total,0)) as sales')->whereRaw("MONTH(created_at) = '$month' AND YEAR(created_at) = '$year'")->first();
+            $arr = ['month' => $months[$i], 'total' => $order->total];
+            array_push($saleTrends, $arr);
+            $month++;
+            $totalOrder += (int) $order->total;
+        }
+
+        $productCount = Product::whereRaw("YEAR(created_at) = $year")->count();
+        $userCount = User::whereRaw("YEAR(created_at) = $year")->count();
+        $saleSum = DB::table(table: 'orders')->selectRaw('COUNT(id) as total, SUM(IFNULL(pay_total,0)) as sales')->whereRaw("status IN ('Done') AND YEAR(created_at) = '$year'")->first();
+
+        $queryAttachment = DB::table('attachments')
+            ->select(DB::raw(value: 'MIN(attachments.name) as product_pic'), 'product_id')
+            ->groupBy('attachments.product_id');
+        $queryOrderItems = DB::table('order_items')
+            ->select(DB::raw(value: 'COUNT(order_items.id) as orders_count'), 'product_id')
+            ->whereRaw("YEAR(order_items.created_at) = '$year'")
+            ->groupBy('order_items.product_id');
+        $product = DB::table('products')
+            ->select('products.*', 'attachments.*', 'order_items.*', DB::raw('COUNT(product_packages.id) as packages'), 'categories.name as category_name')
+            ->leftJoin('product_packages', 'product_packages.product_id', '=', 'products.id')
+            ->leftJoin('categories', 'categories.id', '=', 'products.category_id')
+            ->leftJoinSub($queryAttachment, 'attachments', function (JoinClause $join) {
+                $join->on('products.id', '=', 'attachments.product_id');
+            })
+            ->leftJoinSub($queryOrderItems, 'order_items', function (JoinClause $join) {
+                $join->on('products.id', '=', 'order_items.product_id');
+            })
+            ->whereRaw("YEAR(products.created_at) = '$year'")
+            ->orderBy('products.created_at', 'ASC')
+            ->groupBy('products.id')
+            ->limit(5)
+            ->get();
+
+        $categories = DB::table(table: 'categories')
+            ->select('categories.*', DB::raw('SUM(order_items.orders_count) as order_counts'))
+            ->leftJoin('products', 'categories.id', '=', 'products.category_id')
+            ->leftJoinSub($queryOrderItems, 'order_items', function (JoinClause $join) {
+                $join->on('products.id', '=', 'order_items.product_id');
+            })
+            ->whereRaw("YEAR(products.created_at) = '$year'")
+            ->groupBy('categories.id')
+            ->limit(5)
+            ->get();
+
+        $data = [
+            'salesTrends' => $saleTrends,
+            'totalOrder' => $totalOrder,
+            'saleSum' => $saleSum,
+            'userCount' => $userCount,
+            'productCount' => $productCount,
+            'productList' => $product,
+            'categories' => $categories
+
+        ];
+        return response()->json(['response' => 'success', 'data' => $data]);
     }
     public function product_list()
     {

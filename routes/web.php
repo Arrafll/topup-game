@@ -26,6 +26,7 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::group(['middleware' => ['auth', \App\Http\Middleware\Role::class . ':1']], function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin');
+    Route::post('/admin_widget_get', [AdminController::class, 'widget_get'])->name('admin_widget_get');
     Route::get('/admin_product_list', [AdminController::class, 'product_list'])->name('admin_product_list');
     Route::get('/admin_product_add', [AdminController::class, 'product_add'])->name('admin_product_add');
     Route::post('/admin_product_insert', [AdminController::class, 'product_insert'])->name('admin_product_insert');
