@@ -332,7 +332,7 @@
         }
 
         function popularProduct(data) {
-
+            console.log(data)
             let tr = "";
             $(`#widgetPopularProd`).html('');
 
@@ -347,13 +347,13 @@
                                                         alt="" class=" w-35">
                                                     </div>
                                                     <div class="ms-5">
-                                                        <h6 class="mb-0">${item.name}</h6>
+                                                        <h6 class="mb-0">${item.name }</h6>
                                                         <p class="mb-0">${item.packages} Paket</p>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td>${item.category_name}</td>
-                                            <td>${item.orders_count}</td>
+                                            <td>${item.orders_count || 0}</td>
                                         </tr>`
 
                 });

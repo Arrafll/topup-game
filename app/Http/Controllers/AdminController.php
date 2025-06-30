@@ -62,8 +62,8 @@ class AdminController extends Controller
             $totalOrder += (int) $order->total;
         }
 
-        $productCount = Product::whereRaw("YEAR(created_at) = $year")->count();
-        $userCount = User::whereRaw("YEAR(created_at) = $year")->count();
+        $productCount = Product::whereRaw("YEAR(created_at) <= $year")->count();
+        $userCount = User::whereRaw("YEAR(created_at) <= $year")->count();
         $saleSum = DB::table(table: 'orders')->selectRaw('COUNT(id) as total, SUM(IFNULL(pay_total,0)) as sales')->whereRaw("status IN ('Done') AND YEAR(created_at) = '$year'")->first();
 
         $queryAttachment = DB::table('attachments')
@@ -83,19 +83,17 @@ class AdminController extends Controller
             ->leftJoinSub($queryOrderItems, 'order_items', function (JoinClause $join) {
                 $join->on('products.id', '=', 'order_items.product_id');
             })
-            ->whereRaw("YEAR(products.created_at) = '$year'")
             ->orderBy('products.created_at', 'ASC')
             ->groupBy('products.id')
             ->limit(5)
             ->get();
 
         $categories = DB::table(table: 'categories')
-            ->select('categories.*', DB::raw('SUM(order_items.orders_count) as order_counts'))
+            ->select('categories.*', DB::raw('SUM(order_items.orders_count as order_counts'))
             ->leftJoin('products', 'categories.id', '=', 'products.category_id')
             ->leftJoinSub($queryOrderItems, 'order_items', function (JoinClause $join) {
                 $join->on('products.id', '=', 'order_items.product_id');
             })
-            ->whereRaw("YEAR(products.created_at) = '$year'")
             ->groupBy('categories.id')
             ->limit(5)
             ->get();
@@ -114,7 +112,6 @@ class AdminController extends Controller
     }
     public function product_list()
     {
-
 
         $queryAttachment = DB::table('attachments')
             ->select(DB::raw(value: 'MIN(attachments.name) as product_pic'), 'product_id')
@@ -388,8 +385,8 @@ class AdminController extends Controller
 
     public function user_delete($id)
     {
-        $userData = UserData::where('user_id', '=',$id)->delete();
-        $user = User::where('id', '=',$id)->delete();
+        $userData = UserData::where('user_id', '=', $id)->delete();
+        $user = User::where('id', '=', $id)->delete();
         return redirect('admin_list')->with('success', 'Data produk berhasil dihapus.');
 
 
