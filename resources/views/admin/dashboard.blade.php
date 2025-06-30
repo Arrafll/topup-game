@@ -277,6 +277,8 @@
         function pieChart(data) {
             // **------ pie_charts 1**
 
+            console.log(data);
+
 
             if (chartCategories) {
                 chartCategories.destroy();
@@ -290,8 +292,10 @@
             }
 
             data.forEach(function (item) {
+                let counts = item.order_counts;
+                if (item.order_counts == null) counts = 0;
                 categories.push(item.name);
-                order.push(parseInt(item.order_counts));
+                order.push(parseInt(counts));
             });
 
 
@@ -340,31 +344,31 @@
                 data.forEach(function (item) {
                     //get the value of name
                     tr += `<tr>
-                                            <td>
-                                                <div class="position-relative">
-                                                    <div class="position-absolute">
-                                                        <img src="{{ asset('uploads/product/${item.product_pic}') }}"
-                                                        alt="" class=" w-35">
+                                                <td>
+                                                    <div class="position-relative">
+                                                        <div class="position-absolute">
+                                                            <img src="{{ asset('uploads/product/${item.product_pic}') }}"
+                                                            alt="" class=" w-35">
+                                                        </div>
+                                                        <div class="ms-5">
+                                                            <h6 class="mb-0">${item.name}</h6>
+                                                            <p class="mb-0">${item.packages} Paket</p>
+                                                        </div>
                                                     </div>
-                                                    <div class="ms-5">
-                                                        <h6 class="mb-0">${item.name }</h6>
-                                                        <p class="mb-0">${item.packages} Paket</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>${item.category_name}</td>
-                                            <td>${item.orders_count || 0}</td>
-                                        </tr>`
+                                                </td>
+                                                <td>${item.category_name}</td>
+                                                <td>${item.orders_count || 0}</td>
+                                            </tr>`
 
                 });
             }
 
             if (data.length == 0) {
                 tr = `<tr>
-                                <td colspan="3" class="text-center">
-                                    Tidak ada data
-                                </td>
-                            </tr>`
+                                    <td colspan="3" class="text-center">
+                                        Tidak ada data
+                                    </td>
+                                </tr>`
             }
 
             $(`#widgetPopularProd`).append(tr);

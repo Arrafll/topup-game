@@ -41,7 +41,7 @@
                                 </div>
                             @endsession
                             <div class="app-datatable-default overflow-auto">
-                                <table class="display w-100 row-border-table table-responsive datatable-original">
+                                <table class="display w-100 row-border-table table-responsive" id="datatableOrder">
                                     <thead>
                                         <tr>
                                             <th>Kode</th>
@@ -111,6 +111,13 @@
                 }
             })
         }
+
+        let orderTable = $("#datatableOrder").DataTable({
+            responsive: true,
+            order: [[4, 'desc']]
+        }
+        );
+
 
     </script>
 @endsection

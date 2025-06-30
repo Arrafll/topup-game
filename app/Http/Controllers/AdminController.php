@@ -83,13 +83,13 @@ class AdminController extends Controller
             ->leftJoinSub($queryOrderItems, 'order_items', function (JoinClause $join) {
                 $join->on('products.id', '=', 'order_items.product_id');
             })
-            ->orderBy('products.created_at', 'ASC')
+            ->orderBy('orders_count', 'DESC')
             ->groupBy('products.id')
             ->limit(5)
             ->get();
 
         $categories = DB::table(table: 'categories')
-            ->select('categories.*', DB::raw('SUM(order_items.orders_count as order_counts'))
+            ->select('categories.*', DB::raw('SUM(order_items.orders_count) as order_counts'))
             ->leftJoin('products', 'categories.id', '=', 'products.category_id')
             ->leftJoinSub($queryOrderItems, 'order_items', function (JoinClause $join) {
                 $join->on('products.id', '=', 'order_items.product_id');
@@ -460,6 +460,7 @@ class AdminController extends Controller
         }
 
         $order = Order::find($order_id);
+        $order->finished_at = date('Y-m-d H:i:s');
         $order->status = 'Done';
         $order->save();
 

@@ -58,9 +58,9 @@ Route::group(['middleware' => ['auth', \App\Http\Middleware\Role::class . ':2']]
     Route::post('/customer_cart_add', [CustomerController::class, 'cart_add'])->name('customer_cart_add');
     Route::get('/customer_cart_delete/{id}', [CustomerController::class, 'cart_delete'])->name('customer_cart_delete');
     Route::get('/customer_cart_delete_sync/{id}', [CustomerController::class, 'cart_delete_sync'])->name('customer_cart_delete_sync');
-    Route::get('/customer_order_now/{id}/{amount}', [CustomerController::class, 'order_now'])->name(name: 'customer_order_now');
+    Route::get('/customer_order_now/{id}/{amount}/{game_id}', [CustomerController::class, 'order_now'])->name(name: 'customer_order_now');
     Route::get('/customer_order_cart', [CustomerController::class, 'order_cart'])->name('customer_order_cart');
-    Route::post('/customer_order_add', [CustomerController::class, 'order_add'])->name('customer_order_add');
+    Route::post('/customer_order_add_now', [CustomerController::class, 'order_add_now'])->name('customer_order_add_now');
     Route::get('/customer_order_list', [CustomerController::class, 'order_list'])->name('customer_order_list');
     Route::get('/customer_order_detail/{id}', [CustomerController::class, 'order_detail'])->name('customer_order_detail');
     Route::get('/customer_order_cancel/{id}', [CustomerController::class, 'order_cancel'])->name('customer_order_cancel');

@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->integer('product_id');
             $table->integer('package_id');
             $table->string('game_id', '100');
-            $table->text('voucher_code');
+            $table->text('voucher_code')->nullable();;
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
         });

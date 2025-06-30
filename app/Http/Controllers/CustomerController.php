@@ -263,22 +263,9 @@ class CustomerController extends Controller
         return view('customer.order.cart', $data);
 
     }
-
-    public function order_now($id)
-    {
-        // $order-fuckyou
-        // $data = [
-        //     'title' => 'Buat Pesanan',
-        //     'role' => 2,
-        //     'carts' => $this->cartList,
-        //     'cartList' => $this->cartList,
-        // ];
-
-    }
-
     public function order_list()
     {
-        $orders = Order::where('user_id', '=', Auth::user()->id)->get();
+        $orders = Order::where('user_id', '=', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
 
         $data = [
             'title' => 'Order List',
@@ -408,18 +395,65 @@ class CustomerController extends Controller
         return redirect('/customer_order_detail/' . $id)->with('paid', 'Pesanan akan segera diproses, mohon tunggu');
     }
 
-    // public function checkout_process($order)
-    // {
-    //     $desc = $request->descOrder;
-    //     $code = $request->code;
+    public function order_now($id = "", $package = "", $gameId = "")
+    {
 
-    //     $dataOrder = [
-    //         'snap_token' => $request->snap_token,
-    //         'note' => $desc,
-    //         'code' => $code
-    //     ];
+        $queryAttachment = DB::table('attachments')
+            ->select(DB::raw(value: 'MIN(attachments.name) as product_pic'), 'product_id')
+            ->groupBy('attachments.product_id');
+        $product = DB::table('products')
+            ->select('products.*', 'attachments.product_pic', 'product_packages.price as product_price', 'product_packages.amount as package_amount', 'product_packages.id as package_id')
+            ->leftJoin('product_packages', 'product_packages.product_id', '=', 'products.id')
+            ->leftJoinSub($queryAttachment, 'attachments', function (JoinClause $join) {
+                $join->on('products.id', '=', 'attachments.product_id');
+            })
+            ->where('products.id', $id)
+            ->where('product_packages.id', $package)
+            ->first();
 
-    //     $order = Order::create($dataOrder);
 
-    // }
+
+        $data = [
+            'title' => 'Buat Pesanan',
+            'role' => 2,
+            'product' => $product,
+            'game_id' => $gameId,
+            'cartList' => $this->cartList
+        ];
+
+        return view('customer.order.order_now', $data);
+
+    }
+
+
+    public function order_add_now(Request $request)
+    {
+    
+        $note = $request->descOrder;
+        $packageId = $request->packageId;
+        $gameId = $request->gameId;
+        $productId = $request->productId;
+
+        $orderCode = "KTO" . date('ymdhis');
+        $userId = Auth::user()->id;
+
+        $dataOrder = ['user_id' => $userId, 'note' => $note, 'status' => 'Waiting Payment', 'code' => $orderCode, 'pay_status' => 'Unpaid'];
+        $orderId = Order::create($dataOrder)->id;
+
+        $carts = $this->cartList;
+
+        $orderItem = [
+            'order_id' => $orderId,
+            'product_id' => $productId,
+            'package_id' => $packageId,
+            'game_id' => $gameId,
+        ];
+
+        OrderItem::create($orderItem);
+
+
+        $carts = Cart::where('user_id', '=', $userId)->delete();
+        return redirect('/customer_order_detail/' . $orderId);
+
+    }
 }
