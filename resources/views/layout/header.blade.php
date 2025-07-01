@@ -283,10 +283,15 @@
                                     <li class="app-divider-v dotted py-1"></li>
 
                                     <li>
-
+                                        @if(!session('guest'))
                                         <a class="mb-0 text-danger" href="{{ route('logout') }}">
                                             <i class="ph-duotone  ph-sign-out pe-1 f-s-20"></i> Log Out
                                         </a>
+                                        @else
+                                        <a class="mb-0 text-primary" href="{{ route('logout') }}">
+                                            <i class="ph-duotone  ph-sign-out pe-1 f-s-20"></i> Log In
+                                        </a>
+                                        @endif
                                     </li>
                                 </ul>
                             </div>
