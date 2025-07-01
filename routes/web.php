@@ -3,10 +3,11 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\GuestController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect('/home');
+    return redirect('/beranda');
 });
 
 Route::get('/home', [AuthController::class, 'redirectLogged'])->name(name: 'home');
@@ -14,7 +15,13 @@ Route::get('/customer_product_list', [CustomerController::class, 'product_list']
 Route::get('/customer_product_detail/{id}', [CustomerController::class, 'product_detail'])->name('customer_product_detail');
 
 Route::group(['middleware' => ['guest']], function () {
+    Route::get('/beranda', [GuestController::class, 'home'])->name('beranda');
+    Route::post('/guest_get_product', [GuestController::class, 'get_product'])->name('guest_get_product');
+    Route::get('/guest_product_detail/{id}', [GuestController::class, 'product_detail'])->name('guest_product_detail');
+    Route::get('/guest_product_list', [GuestController::class, 'product_list'])->name('guest_product_list');
+
     Route::get('/login', [AuthController::class, 'login'])->name('login');
+    Route::get('/google_redirect', [AuthController::class, 'google_redirect'])->name('google_redirect');
     Route::get('/google_redirect', [AuthController::class, 'google_redirect'])->name('google_redirect');
     Route::get('/google_signin', [AuthController::class, 'google_signin'])->name('google_signin');
     Route::get('/register', [AuthController::class, 'register'])->name('register');
@@ -46,6 +53,7 @@ Route::group(['middleware' => ['auth', \App\Http\Middleware\Role::class . ':1']]
     Route::post('/admin_order_finish', [AdminController::class, 'order_finish'])->name('admin_order_finish');
     Route::get('/admin_profile', [AdminController::class, 'profile'])->name('admin_profile');
     Route::get('/admin_report_list', [AdminController::class, 'report_list'])->name('admin_report_list');
+    Route::get('/admin_report_export/', [AdminController::class, 'report_export'])->name('admin_report_export');
     Route::get('/admin_report_export/{year}', [AdminController::class, 'report_export'])->name('admin_report_export');
     Route::get('/admin_report_export/{year}/{month}', [AdminController::class, 'report_export'])->name('admin_report_export');
 });

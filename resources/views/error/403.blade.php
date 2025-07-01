@@ -13,7 +13,7 @@
   <link rel="icon" href="{{ asset('assets/images/logo/favicon.png') }}" type="image/x-icon">
   <link rel="shortcut icon" href="{{ asset('assets/images/logo/favicon.png') }}" type="image/x-icon">
 
-  <title>Forbidden | ra-admin - Premium Admin Template</title>
+  <title>Forbidden | KlikTopup</title>
 
   <!--font-awesome-css-->
   <link rel="stylesheet" href="{{ asset('assets/vendor/fontawesome/css/all.css') }}">
@@ -52,7 +52,7 @@
             </div>
           </div>
         </div>
-        <a role="button" href="index.html" class="btn btn-lg btn-success"><i class="ti ti-home"></i> Back To Home</a>
+        <a role="button" href="/" class="btn btn-lg btn-success"><i class="ti ti-home"></i> Back To Home</a>
       </div>
     </div>
   </div>

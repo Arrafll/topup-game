@@ -5,7 +5,7 @@
     background: rgba(var(--primary), 1);
   }
 </style>
-<nav class="@if ($role == 1) vertical-sidebar @else horizontal-sidebar @endif"> 
+<nav class="@if ($role == 1) vertical-sidebar @else horizontal-sidebar @endif">
   <div class="app-logo">
     <a class="logo d-inline-block" href="index.html">
       <img src="{{ asset('assets/images/logo/kliktopup-logo.png') }}" alt="#">
@@ -52,23 +52,37 @@
         <i class="ph-duotone ph-user"></i> User
       </a>
       </li>
-    @else
-   
-     <li class="no-sub">
-            <a class="{{ Route::is('customer') ? 'active' : '' }}" href="{{ route('customer') }}">
-              <i class="ph-duotone  ph-house-line"></i> Beranda
-            </a>
-          </li>
-          <li class="no-sub">
-            <a class="{{ Route::is('customer_product*') ? 'active' : '' }}" href="{{ route('customer_product_list') }}">
-              <i class="ph ph-game-controller"></i> Games
-            </a>
-          </li>
-          <li class="no-sub">
-            <a class="{{ Route::is('customer_order*') ? 'active' : '' }}" href="{{ route('customer_order_list') }}">
-              <i class="ti ti-report-search"></i> Cek Pesanan
-            </a>
-          </li>
+    @endif
+      @if($role == 2)
+
+      <li class="no-sub">
+      <a class="{{ Route::is('customer') ? 'active' : '' }}" href="{{ route('customer') }}">
+        <i class="ph-duotone  ph-house-line"></i> Beranda
+      </a>
+      </li>
+      <li class="no-sub">
+      <a class="{{ Route::is('customer_product*') ? 'active' : '' }}" href="{{ route('customer_product_list') }}">
+        <i class="ph ph-game-controller"></i> Games
+      </a>
+      </li>
+      <li class="no-sub">
+      <a class="{{ Route::is('customer_order*') ? 'active' : '' }}" href="{{ route('customer_order_list') }}">
+        <i class="ti ti-report-search"></i> Cek Pesanan
+      </a>
+      </li>
+    @endif
+     @if($role == 0)
+
+      <li class="no-sub">
+      <a class="{{ Route::is('beranda') ? 'active' : '' }}" href="{{ route('customer') }}">
+        <i class="ph-duotone  ph-house-line"></i> Beranda
+      </a>
+      </li>
+      <li class="no-sub">
+      <a class="{{ Route::is('guest_product*') ? 'active' : '' }}" href="{{ route('customer_product_list') }}">
+        <i class="ph ph-game-controller"></i> Games
+      </a>
+      </li>
     @endif
     </ul>
   </div>

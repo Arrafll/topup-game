@@ -66,16 +66,7 @@
                                             <tr>
                                                 <td>
                                                     <div class="d-flex align-items-center">
-                                                        <div
-                                                            class="h-30 w-30 d-flex-center b-r-50 overflow-hidden text-bg-info">
-                                                            @if (isset($u->user_pic))
-                                                                <img src="{{ asset('uploads/user/' . $u->user_pic) }}" alt=""
-                                                                    class="img-fluid">
-                                                            @else
-                                                                <img src="../assets/images/avtar/4.png" alt="" class="img-fluid">
-                                                            @endif
-
-                                                        </div>
+                                                        
                                                         <p class="mb-0 ps-2"> {{ $u->name }}</p>
                                                     </div>
                                                 </td>

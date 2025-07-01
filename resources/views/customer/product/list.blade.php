@@ -35,12 +35,12 @@
                         <li class="">
                             <a href="#" class="f-s-14 f-w-500">
                                 <span>
-                                    <i class="ph-duotone  ph-stack f-s-16"></i> Apps
+                                   KlikTopup
                                 </span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="f-s-14 f-w-500">E-shop</a>
+                            <a href="#" class="f-s-14 f-w-500">Games</a>
                         </li>
                         <li class="active">
                             <a href="#" class="f-s-14 f-w-500">Product</a>

@@ -43,14 +43,14 @@
                     <h4 class="main-title">Product Details</h4>
                     <ul class="app-line-breadcrumbs mb-3">
                         <li class="">
-                            <a href="{{ route('customer') }}" class="f-s-14 f-w-500">
+                            <a href="{{ route('beranda') }}" class="f-s-14 f-w-500">
                                 <span>
-                                 KlikTopup
+                                 </i> KlikTopup
                                 </span>
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('customer_product_list') }}" class="f-s-14 f-w-500">Games</a>
+                            <a href="/guest_product_list" class="f-s-14 f-w-500">Games</a>
                         </li>
                         <li class="active">
                             <a href="#" class="f-s-14 f-w-500">Product Details</a>
@@ -140,11 +140,11 @@
                                 <div class="product-details-btn text-end mt-4">
                                     {{-- <a href="cart.html" role="button" class="btn btn-primary">Add To Cart</a> --}}
 
-                                    <button href="#" onclick="addToCart()" role="button"
-                                        class="btn btn-light-primary button-action" id="cartAddBtn">+
-                                        Keranjang</button>
-                                    <button onclick="orderNow()" role="button" class="btn btn-primary button-action">Beli
-                                        Langsung</button>
+                                    <a href="/login" role="button" class="btn btn-light-primary button-action"
+                                        id="cartAddBtn">+
+                                        Keranjang</a>
+                                    <a href="/login" role="button" class="btn btn-primary button-action">Beli
+                                        Langsung</a>
                                     {{-- <a href="wishlist.html" role="button" class="btn btn-danger">Add to Wishlist</a>
                                     --}}
                                 </div>
@@ -165,7 +165,7 @@
                                                 @foreach ($related as $r)
                                                     <tr class="border-0">
                                                         <td>
-                                                            <a href="/customer_product_detail/{{$r->id}}">
+                                                            <a href="/guest_product_detail/{{$r->id}}">
                                                                 <div class="position-relative">
                                                                     <img src="{{ asset('uploads/product/' . $r->product_pic) }}"
                                                                         alt="product-image" class="w-45 h-45 position-absolute">
@@ -188,7 +188,7 @@
                                                 @endforeach
                                             </tbody>
                                         </table>
-                                        <a role="button" href="/customer_product_list" target="_blank"
+                                        <a role="button" href="/guest_product_list" target="_blank"
                                             class="btn  btn-primary w-100">View All Products</a>
                                     </div>
                                 </div>
@@ -220,6 +220,7 @@
             fade: true,
             asNavFor: '.product-slider-nav'
         });
+
         $('.product-slider-nav').slick({
             slidesToShow: '{{ $attachmentsCount }}',
             slidesToScroll: 1,
@@ -247,131 +248,6 @@
         $(`.select-package`).on('click', function (e) {
             $(this).find('input[name="package"]').prop('checked', true);
         })
-
-        function addToCart() {
-
-
-            let gameId = $(`#gameId`).val();
-            let productId = $(`#productId`).val();
-            let packageId = $(`input[name="package"]:checked`).val();
-            $(`#gameId`).removeClass('is-invalid')
-            if (gameId.length < 1 || packageId == undefined) {
-
-
-                if (gameId.length < 1) $(`#gameId`).addClass('is-invalid')
-                Toastify({
-                    text: "Mohon isi id game dan pilih salah satu paket!",
-                    duration: 2500,
-                    position: "right",
-                    style: {
-                        background: "rgb(var(--danger),1)",
-                    }
-                }).showToast();
-                return false;
-            }
-
-            $dataPost = {
-                "_token": "{{ csrf_token() }}",
-                "productId": productId,
-                "gameId": gameId,
-                "packageId": packageId
-            }
-
-            $.ajax({
-                type: "POST",
-                url: "{{ route('customer_cart_add') }}",
-                data: $dataPost,
-                beforeSend: function () {
-                    $('#cartAddBtn').html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Loading');
-                    $('.button-action').attr('disabled', true);
-                },
-                success: function (response) {
-
-
-                    $('#cartAddBtn').html('+ Keranjang')
-                    $('.button-action').attr('disabled', false);
-
-                    let cartCounts = parseInt($('#cartCounts').text());
-                    $('#cartCounts').text(cartCounts + 1);
-
-                    let cartTotalCounts = parseInt($('#cartTotalCounts').data('total'));
-                    $('#cartTotalCounts').text(`Rp ` + formatIdrs(parseInt(cartTotalCounts) + parseInt(response.carts.product_price)));
-                    $('#cartTotalCounts').data('total', parseInt(cartTotalCounts) + parseInt(response.carts.product_price));
-                    let element =
-                        `<div class="head-box">
-                                        <img src="{{ asset('uploads/product/${response.carts.product_pic}') }}" alt="cart"
-                                          class="h-50 object-fit-cover me-3 b-r-10">
-                                        <div class="flex-grow-1">
-                                          <a class="mb-0 f-w-600 f-s-16" href="product_details.html" target="_blank">${response.carts.name}</a><br>
-                                          <span class="text-secondary text-dark f-w-400">${response.carts.game}</span><br>
-                                          <span class="text-secondary">${response.carts.package_amount} ${response.carts.unit} - <span class="text-dark f-w-400 row-cart-price" data-price="${response.carts.product_price}">Rp ${formatIdrs(response.carts.product_price)}</span></span>
-                                        </div>
-                                        <div class="text-end">
-                                          <i class="ph ph-trash f-s-25 text-danger" data-cart="${response.carts.cart_id}" onclick="removeCart(this)"></i>
-
-                                        </div>
-                                        </div>`
-                    $(element).insertBefore('#emptyCartMessage');
-                    Toastify({
-                        text: "Berhasil ditambahkan ke keranjang!",
-                        duration: 2500,
-                        position: "right",
-                        style: {
-                            background: "rgb(var(--success),1)",
-                        }
-                    }).showToast();
-                    console.log(response.carts);
-                    $('#gameId').val('');
-                    $('.select-package').prop('checked', false);
-
-                }
-            });
-
-        }
-
-
-        var formatIdrs = function (num) {
-            var str = num.toString().replace("", ""), parts = false, output = [], i = 1, formatted = null;
-            if (str.indexOf(".") > 0) {
-                parts = str.split(".");
-                str = parts[0];
-            }
-            str = str.split("").reverse();
-            for (var j = 0, len = str.length; j < len; j++) {
-                if (str[j] != ",") {
-                    output.push(str[j]);
-                    if (i % 3 == 0 && j < (len - 1)) {
-                        output.push(".");
-                    }
-                    i++;
-                }
-            }
-            formatted = output.reverse().join("");
-            return ("" + formatted + ((parts) ? "." + parts[1].substr(0, 2) : ""));
-        };
-
-        function orderNow() {
-            let gameId = $(`#gameId`).val();
-            let productId = $(`#productId`).val();
-            let packageId = $(`input[name="package"]:checked`).val();
-
-            if (gameId.length < 1 || packageId == undefined) {
-
-
-                if (gameId.length < 1) $(`#gameId`).addClass('is-invalid')
-                Toastify({
-                    text: "Mohon isi id game dan pilih salah satu paket!",
-                    duration: 2500,
-                    position: "right",
-                    style: {
-                        background: "rgb(var(--danger),1)",
-                    }
-                }).showToast();
-                return false;
-            }
-
-            window.location.href = `/customer_order_now/${productId}/${packageId}/${gameId}`;
-        }
 
 
     </script>

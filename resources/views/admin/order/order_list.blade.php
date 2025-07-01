@@ -6,7 +6,7 @@
             <!-- Breadcrumb start -->
             <div class="row m-1">
                 <div class="col-12 ">
-                    <h4 class="main-title mb-2">Cek Pesanan</h4>
+                    <h4 class="main-title mb-2">Order List</h4>
                     <ul class="app-line-breadcrumbs mb-3">
                         <li class="">
                             <a href="/" class="f-s-14 f-w-500">
@@ -16,7 +16,7 @@
                             </a>
                         </li>
                         <li class="active">
-                            <a href="#" class="f-s-14 f-w-500">Cek Pesanan</a>
+                            <a href="#" class="f-s-14 f-w-500">Order List</a>
                         </li>
                     </ul>
                 </div>

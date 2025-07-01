@@ -12,7 +12,7 @@
                         <li class="">
                             <a href="{{ route('home') }}" class="f-s-14 f-w-500">
                                 <span>
-                                    <i class="ph-duotone  ph-stack f-s-16"></i> Beranda
+                                   KlikTopup
                                 </span>
                             </a>
                         </li>

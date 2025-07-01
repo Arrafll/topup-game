@@ -80,17 +80,14 @@
             <!-- Breadcrumb start -->
             <div class="row m-1">
                 <div class="col-12 ">
-                    <h4 class="main-title">Beranda</h4>
+                    <h4 class="main-title">KlikTopup</h4>
                     <ul class="app-line-breadcrumbs mb-3">
                         <li class="">
-                            <a href="{{ route('beranda') }}" class="f-s-14 f-w-500">
+                            <a href="#" class="f-s-14 f-w-500">
                                 <span>
-                                    KlikTopup
+                                  Beranda
                                 </span>
                             </a>
-                        </li>
-                        <li class="active">
-                            <a href="/guest_product_list" class="f-s-14 f-w-500">Beranda</a>
                         </li>
                     </ul>
                 </div>
@@ -208,7 +205,7 @@
 
 
             $.ajax({
-                url: '/customer_get_product',
+                url: '/guest_get_product',
                 type: 'POST',
                 data: dataPost,
                 dataType: 'json',
@@ -255,14 +252,14 @@
                                                        <div class="product-content-box">
                                                            <div class="product-grid">
                                                                <div class="product-image">
-                                                                   <a href="/customer_product_detail/${product.id}" class="image">
+                                                                   <a href="/guest_product_detail/${product.id}" class="image">
                                                                        <img class="pic-1" src="${imgPath}" alt="">
                                                                        <img class="images_box" src="${imgPath}"
                                                                            alt="">
                                                                    </a>
                                                                    <ul class="product-links">
 
-                                                                       <li><a href="/customer_product_detail/${product.id}"
+                                                                       <li><a href="/guest_product_detail/${product.id}"
                                                                                class="bg-success h-30 w-30 d-flex-center b-r-20"><i
                                                                                    class="ti ti-eye f-s-18 text-light"></i></a></li>
                                                                    </ul>
@@ -270,7 +267,7 @@
                                                            </div>
                                                            <div class="p-3">
                                                                <div class="d-flex justify-content-between align-items-center">
-                                                                   <a href="/customer_product_detail/${product.id}" class="m-0 f-s-18 f-w-500">${product.name.slice(0, 17) + (product.name.length > 17 ? "..." : "")}</a>
+                                                                   <a href="/guest_product_detail/${product.id}" class="m-0 f-s-18 f-w-500">${product.name.slice(0, 17) + (product.name.length > 17 ? "..." : "")}</a>
                                                                     <span class="badge text-bg-info text-white b-r-10">${product.category_name}</span>
                                                                </div>
                                                                <p class="text-secondary">${product.game}</p>
@@ -318,7 +315,7 @@
         $('.cat-card').on('click', function (ele) {
             event.preventDefault();
             if ($(this).data('category') == "other") {
-                window.location.href = `{{ route('customer_product_list') }}`;
+                window.location.href = `{{ route('guest_product_list') }}`;
                 return false;
             }
 

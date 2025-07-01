@@ -93,51 +93,77 @@
             </div>
           </li>
 
-          <li class="header-profile">
-            <a href="#" class="d-block head-icon" role="button" data-bs-toggle="offcanvas"
-              data-bs-target="#profilecanvasRight" aria-controls="profilecanvasRight">
-              <img src="{{ asset('assets/images/avtar/woman.jpg') }}" alt="avtar" class="b-r-10 h-35 w-35">
-            </a>
 
-            <div class="offcanvas offcanvas-end header-profile-canvas" tabindex="-1" id="profilecanvasRight"
-              aria-labelledby="profilecanvasRight">
-              <div class="offcanvas-body app-scroll">
-                <ul class="">
-                  <li>
-                    <div class="d-flex-center">
-                      <span class="h-45 w-45 d-flex-center b-r-10 position-relative">
-                        <img src="{{ asset('assets/images/avtar/woman.jpg') }}" alt="" class="img-fluid b-r-10">
-                      </span>
-                    </div>
-                    <div class="text-center mt-2">
-                      <h6 class="mb-0"> {{ auth()->user()->name }} </h6>
-                      <p class="f-s-12 mb-0 text-secondary"> {{ auth()->user()->email }}</p>
-                    </div>
-                  </li>
+          @if ($role != 0)
 
-                  <li class="app-divider-v dotted py-1"></li>
-                  <li>
-                    <a class="f-w-500" href="./profile.html" target="_blank">
-                      <i class="ph-duotone  ph-user-circle pe-1 f-s-20"></i> Profile Details
-                    </a>
-                  </li>
-                  <li>
-                    <a class="f-w-500" href="./setting.html" target="_blank">
-                      <i class="ph-duotone  ph-gear pe-1 f-s-20"></i> Settings
-                    </a>
-                  </li>
-                  <li class="app-divider-v dotted py-1"></li>
+        <li class="header-profile">
+        <a href="#" class="d-block head-icon" role="button" data-bs-toggle="offcanvas"
+          data-bs-target="#profilecanvasRight" aria-controls="profilecanvasRight">
+          @if (empty(auth()->user()->avatar))
 
-                  <li>
+        <img
+        src="https://img.freepik.com/premium-vector/3d-realistic-person-people-vector-illustration_156780-1097.jpg?semt=ais_hybrid&w=740"
+        alt="avtar" class="b-r-10 h-35 w-35">
 
-                    <a class="mb-0 text-danger" href="{{ route('logout') }}">
-                      <i class="ph-duotone  ph-sign-out pe-1 f-s-20"></i> Log Out
-                    </a>
-                  </li>
-                </ul>
-              </div>
+      @else
+        <img src="{{ auth()->user()->avatar }}" alt="avtar" class="b-r-10 h-35 w-35">
+      @endif
+        </a>
+        <div class="offcanvas offcanvas-end header-profile-canvas" tabindex="-1" id="profilecanvasRight"
+          aria-labelledby="profilecanvasRight">
+          <div class="offcanvas-body app-scroll">
+          <ul class="">
+
+            <li>
+            <div class="d-flex-center">
+              <span class="h-45 w-45 d-flex-center b-r-10 position-relative">
+              @if (empty(auth()->user()->avatar))
+
+          <img
+          src="https://img.freepik.com/premium-vector/3d-realistic-person-people-vector-illustration_156780-1097.jpg?semt=ais_hybrid&w=740"
+          alt="avtar" class="b-r-10 h-35 w-35">
+
+        @else
+          <img src="{{ auth()->user()->avatar }}" alt="avtar" class="b-r-10 h-35 w-35">
+        @endif
             </div>
-          </li>
+            <div class="text-center mt-2">
+              <h6 class="mb-0"> {{ auth()->user()->name }} </h6>
+              <p class="f-s-12 mb-0 text-secondary"> {{ auth()->user()->email }}</p>
+            </div>
+            </li>
+
+
+            <li class="app-divider-v dotted py-1"></li>
+            <li>
+            <a class="f-w-500" href="./profile.html" target="_blank">
+              <i class="ph-duotone  ph-user-circle pe-1 f-s-20"></i> Profile Details
+            </a>
+            </li>
+            <li>
+            <a class="f-w-500" href="./setting.html" target="_blank">
+              <i class="ph-duotone  ph-gear pe-1 f-s-20"></i> Settings
+            </a>
+            </li>
+            <li class="app-divider-v dotted py-1"></li>
+
+            <li>
+
+            <a class="mb-0 text-danger" href="{{ route('logout') }}">
+              <i class="ph-duotone  ph-sign-out pe-1 f-s-20"></i> Log Out
+            </a>
+            </li>
+          </ul>
+          </div>
+        </div>
+        </li>
+      @else
+        <li class="header-profile">
+        <a href="/login" class="btn btn-xs btn-primary text-white">
+          Login
+        </a>
+        </li>
+      @endif
         </ul>
       </div>
     </div>
