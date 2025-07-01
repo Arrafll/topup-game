@@ -55,7 +55,7 @@ class AdminController extends Controller
         $totalOrder = 0;
         $month = 1;
         for ($i = 0; $i < 12; $i++) {
-            $order = DB::table(table: 'orders')->selectRaw('COUNT(id) as total, SUM(IFNULL(pay_total,0)) as sales')->whereRaw("MONTH(created_at) = '$month' AND YEAR(created_at) = '$year'")->first();
+            $order = DB::table(table: 'orders')->selectRaw('COUNT(id) as total, SUM(IFNULL(pay_total,0)) as sales')->whereRaw("MONTH(created_at) = '$month' AND YEAR(created_at) = '$year' AND status = 'Done'")->first();
             $arr = ['month' => $months[$i], 'total' => $order->total];
             array_push($saleTrends, $arr);
             $month++;
@@ -63,7 +63,7 @@ class AdminController extends Controller
         }
 
         $productCount = Product::whereRaw("YEAR(created_at) <= $year")->count();
-        $userCount = User::whereRaw("YEAR(created_at) <= $year")->count();
+        $userCount = User::whereRaw("YEAR(created_at) <= $year AND role_id = '2'")->count();
         $saleSum = DB::table(table: 'orders')->selectRaw('COUNT(id) as total, SUM(IFNULL(pay_total,0)) as sales')->whereRaw("status IN ('Done') AND YEAR(created_at) = '$year'")->first();
 
         $queryAttachment = DB::table('attachments')
@@ -71,7 +71,8 @@ class AdminController extends Controller
             ->groupBy('attachments.product_id');
         $queryOrderItems = DB::table('order_items')
             ->select(DB::raw(value: 'COUNT(order_items.id) as orders_count'), 'product_id')
-            ->whereRaw("YEAR(order_items.created_at) = '$year'")
+            ->leftJoin('orders', 'orders.id', '=', 'order_items.order_id')
+            ->whereRaw("YEAR(order_items.created_at) = '$year' AND orders.status = 'Done'")
             ->groupBy('order_items.product_id');
         $product = DB::table('products')
             ->select('products.*', 'attachments.*', 'order_items.*', DB::raw('COUNT(product_packages.id) as packages'), 'categories.name as category_name')
@@ -487,6 +488,7 @@ class AdminController extends Controller
         $reports = DB::table(table: 'orders')
             ->selectRaw('YEAR(finished_at) as year, MONTH(finished_at) as month, COUNT(id) as total_order, SUM(IFNULL(pay_total,0)) as gross')
             ->whereIn('status', ['Done', 'Cancelled'])
+            ->whereIn('pay_status', ['Paid', 'Refunded'])
             ->groupByRaw('YEAR(finished_at), MONTH(finished_at)')
             ->orderByRaw('YEAR(finished_at) DESC, MONTH(finished_at) DESC')
             ->get();
@@ -509,7 +511,8 @@ class AdminController extends Controller
             ->selectRaw('YEAR(finished_at) as year, MONTH(finished_at) as month, COUNT(id) as total_order, SUM(pay_total) as gross,
             SUM(CASE WHEN status = "Cancelled" THEN 1 ELSE 0 END) AS total_cancelled, SUM(CASE WHEN status = "Done" THEN 1 ELSE 0 END) AS total_done
             ')
-            ->whereIn('status', ['Done', 'Cancelled']);
+            ->whereIn('status', ['Done', 'Cancelled'])
+            ->whereIn('pay_status', ['Paid', 'Refunded']);
 
         if (!empty($year) && !empty($month)) {
             $reports = $reports->whereRaw("YEAR(finished_at) = '$year' AND MONTH(finished_at) = '$month'");

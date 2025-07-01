@@ -69,7 +69,7 @@
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center position-relative">
                                         <div class="flex-shrink-0 align-self-end">
-                                            <p class="f-s-16 mb-0">User</p>
+                                            <p class="f-s-16 mb-0">Customer</p>
                                             <h5 id="userTotal">105</h5>
                                         </div>
 

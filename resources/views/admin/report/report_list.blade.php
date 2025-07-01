@@ -140,7 +140,7 @@
             if ($('#month-filter').val() != "" && val != "") {
                 $(`#exportExcelBtn`).attr('href', `/admin_report_export/${val}/${month}`);
             } else {
-                $(`#exportExcelBtn`).attr('href', `/admin_report_export`);
+                $(`#exportExcelBtn`).attr('href', `/admin_report_export/${val}`);
             }
             reportTable.column(0).search(val).draw(); // 2 = index kolom "Status"
 

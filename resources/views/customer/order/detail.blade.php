@@ -176,6 +176,7 @@
                                             <th scope="col"> Game ID</th>
                                             <th scope="col">Harga</th>
                                             <th scope="col">Tanggal Pesan</th>
+                                            <th scope="col">Kode Voucher</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -198,6 +199,7 @@
                                                 <td>{{ $o->game_id}} </td>
                                                 <td>{{ toCurrency($o->product_price, 'IDN') }}</td>
                                                 <td>{{ $o->order_date}} </td>
+                                                <td>@if ($o->voucher_code != "") {{$o->voucher_code}} @else - @endif</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

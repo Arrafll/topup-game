@@ -332,29 +332,32 @@ class CustomerController extends Controller
             ->get();
 
         $snapToken = $order->snap_token;
-        if (empty($order->snap_token) && empty($order->payed_at)) {
-            Config::$serverKey = config('midtrans.server_key');
-            Config::$isProduction = config('midtrans.is_production');
-            Config::$isSanitized = config('midtrans.is_sanitized');
-            Config::$is3ds = config('midtrans.is_3ds');
+        if (empty($order->finished_at) || empty($order->processed_at)) {
+            if (empty(($order->snap_token) && empty($order->payed_at))) {
+                Config::$serverKey = config('midtrans.server_key');
+                Config::$isProduction = config('midtrans.is_production');
+                Config::$isSanitized = config('midtrans.is_sanitized');
+                Config::$is3ds = config('midtrans.is_3ds');
 
-            $params = [
-                'transaction_details' => [
-                    'order_id' => $order->code,
-                    'gross_amount' => $orders->sum('product_price') + 2500,
-                ],
-                'customer_details' => [
-                    'first_name' => Auth::user()->name,
-                    'email' => Auth::user()->email,
-                ],
-            ];
+                $params = [
+                    'transaction_details' => [
+                        'order_id' => $order->code,
+                        'gross_amount' => $orders->sum('product_price') + 2500,
+                    ],
+                    'customer_details' => [
+                        'first_name' => Auth::user()->name,
+                        'email' => Auth::user()->email,
+                    ],
+                ];
 
-            $snapToken = Snap::getSnapToken($params);
-            $order->pay_total = $orders->sum('product_price') + 2500;
-            $order->snap_token = $snapToken;
-            $order->save();
+                $snapToken = Snap::getSnapToken($params);
+                $order->pay_total = $orders->sum('product_price') + 2500;
+                $order->snap_token = $snapToken;
+                $order->save();
 
+            }
         }
+
         $data = [
             'title' => 'Order Detail',
             'role' => 2,
@@ -385,10 +388,9 @@ class CustomerController extends Controller
         $respMidtrans = json_decode($jsonMidtrans, true);
 
         $order = Order::find($id);
-        $order->pay_method = $respMidtrans['payment_type'];
-        $order->payed_at = $respMidtrans['transaction_time'];
         $order->status = "Processed";
-        $order->processed_at = date('Y-m-d h:i:s');
+        $order->pay_method = $respMidtrans['payment_type'];
+        $order->payed_at = date('Y-m-d H:i:s');
         $order->pay_status = "Paid";
         $order->save();
 
@@ -412,7 +414,6 @@ class CustomerController extends Controller
             ->first();
 
 
-
         $data = [
             'title' => 'Buat Pesanan',
             'role' => 2,
@@ -428,7 +429,6 @@ class CustomerController extends Controller
 
     public function order_add_now(Request $request)
     {
-    
         $note = $request->descOrder;
         $packageId = $request->packageId;
         $gameId = $request->gameId;

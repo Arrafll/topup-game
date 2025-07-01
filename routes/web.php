@@ -46,7 +46,7 @@ Route::group(['middleware' => ['auth', \App\Http\Middleware\Role::class . ':1']]
     Route::post('/admin_order_finish', [AdminController::class, 'order_finish'])->name('admin_order_finish');
     Route::get('/admin_profile', [AdminController::class, 'profile'])->name('admin_profile');
     Route::get('/admin_report_list', [AdminController::class, 'report_list'])->name('admin_report_list');
-    Route::get('/admin_report_export', [AdminController::class, 'report_export'])->name('admin_report_export');
+    Route::get('/admin_report_export/{year}', [AdminController::class, 'report_export'])->name('admin_report_export');
     Route::get('/admin_report_export/{year}/{month}', [AdminController::class, 'report_export'])->name('admin_report_export');
 });
 
@@ -60,6 +60,7 @@ Route::group(['middleware' => ['auth', \App\Http\Middleware\Role::class . ':2']]
     Route::get('/customer_cart_delete_sync/{id}', [CustomerController::class, 'cart_delete_sync'])->name('customer_cart_delete_sync');
     Route::get('/customer_order_now/{id}/{amount}/{game_id}', [CustomerController::class, 'order_now'])->name(name: 'customer_order_now');
     Route::get('/customer_order_cart', [CustomerController::class, 'order_cart'])->name('customer_order_cart');
+    Route::post('/customer_order_add', [CustomerController::class, 'order_add'])->name('customer_order_add');
     Route::post('/customer_order_add_now', [CustomerController::class, 'order_add_now'])->name('customer_order_add_now');
     Route::get('/customer_order_list', [CustomerController::class, 'order_list'])->name('customer_order_list');
     Route::get('/customer_order_detail/{id}', [CustomerController::class, 'order_detail'])->name('customer_order_detail');

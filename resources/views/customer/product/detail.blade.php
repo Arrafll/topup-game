@@ -165,15 +165,18 @@
                                                 @foreach ($related as $r)
                                                     <tr class="border-0">
                                                         <td>
-                                                            <div class="position-relative">
-                                                                <img src="{{ asset('uploads/product/' . $r->product_pic) }}"
-                                                                    alt="product-image" class="w-45 h-45 position-absolute">
-                                                                <div class="mg-s-40">
-                                                                    <h6 class="text-dark f-w-600 txt-ellipsis-1">{{ $r->name }}
-                                                                    </h6>
-                                                                    <p class="text-secondary mb-0">{{ $r->game }}</p>
+                                                            <a href="/customer_product_detail/{{$r->id}}">
+                                                                <div class="position-relative">
+                                                                    <img src="{{ asset('uploads/product/' . $r->product_pic) }}"
+                                                                        alt="product-image" class="w-45 h-45 position-absolute">
+                                                                    <div class="mg-s-40">
+                                                                        <h6 class="text-dark f-w-600 txt-ellipsis-1">
+                                                                            {{ $r->name }}
+                                                                        </h6>
+                                                                        <p class="text-secondary mb-0">{{ $r->game }}</p>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
+                                                            </a>
                                                         </td>
                                                         <td class="text-end">
                                                             <h6 class="f-s-15 text-success">
@@ -296,18 +299,18 @@
                     $('#cartTotalCounts').data('total', parseInt(cartTotalCounts) + parseInt(response.carts.product_price));
                     let element =
                         `<div class="head-box">
-                                    <img src="{{ asset('uploads/product/${response.carts.product_pic}') }}" alt="cart"
-                                      class="h-50 object-fit-cover me-3 b-r-10">
-                                    <div class="flex-grow-1">
-                                      <a class="mb-0 f-w-600 f-s-16" href="product_details.html" target="_blank">${response.carts.name}</a><br>
-                                      <span class="text-secondary text-dark f-w-400">${response.carts.game}</span><br>
-                                      <span class="text-secondary">${response.carts.package_amount} ${response.carts.unit} - <span class="text-dark f-w-400 row-cart-price" data-price="${response.carts.product_price}">Rp ${formatIdrs(response.carts.product_price)}</span></span>
-                                    </div>
-                                    <div class="text-end">
-                                      <i class="ph ph-trash f-s-25 text-danger" data-cart="${response.carts.cart_id}" onclick="removeCart(this)"></i>
+                                        <img src="{{ asset('uploads/product/${response.carts.product_pic}') }}" alt="cart"
+                                          class="h-50 object-fit-cover me-3 b-r-10">
+                                        <div class="flex-grow-1">
+                                          <a class="mb-0 f-w-600 f-s-16" href="product_details.html" target="_blank">${response.carts.name}</a><br>
+                                          <span class="text-secondary text-dark f-w-400">${response.carts.game}</span><br>
+                                          <span class="text-secondary">${response.carts.package_amount} ${response.carts.unit} - <span class="text-dark f-w-400 row-cart-price" data-price="${response.carts.product_price}">Rp ${formatIdrs(response.carts.product_price)}</span></span>
+                                        </div>
+                                        <div class="text-end">
+                                          <i class="ph ph-trash f-s-25 text-danger" data-cart="${response.carts.cart_id}" onclick="removeCart(this)"></i>
 
-                                    </div>
-                                    </div>`
+                                        </div>
+                                        </div>`
                     $(element).insertBefore('#emptyCartMessage');
                     Toastify({
                         text: "Berhasil ditambahkan ke keranjang!",
@@ -366,7 +369,7 @@
                 }).showToast();
                 return false;
             }
-            
+
             window.location.href = `/customer_order_now/${productId}/${packageId}/${gameId}`;
         }
 
