@@ -91,6 +91,29 @@
     <div class="app-content">
       <div class="">
         @include('layout.header')
+
+        @if (session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                showToast('success', @json(session('success')));
+            });
+        </script>
+        @endif
+
+        @if (session('error'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                showToast('danger', @json(session('error')));
+            });
+        </script>
+        @endif
+
+        
+        <div id="alert-container"></div>
+        <div id="toast-container" style="position: fixed; top: 1rem; right: 1rem; z-index: 9999;"></div>
+
+
+
         @yield('content')
       </div>
     </div>

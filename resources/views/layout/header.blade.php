@@ -239,13 +239,13 @@
                   </li>
 
                   <li class="app-divider-v dotted py-1"></li>
-                  <li>
-                    <a class="f-w-500" href="./profile.html" target="_blank">
+                  {{-- <li>
+                    <a class="f-w-500" href="{{ route('customer_detail', ['id' => session('user_id')]) }}">
                       <i class="ph-duotone  ph-user-circle pe-1 f-s-20"></i> Profile Details
                     </a>
-                  </li>
+                  </li> --}}
                   <li>
-                    <a class="f-w-500" href="./setting.html" target="_blank">
+                    <a class="f-w-500" href="{{ route('customer_detail', ['id' => session('user_id')]) }}" >
                       <i class="ph-duotone  ph-gear pe-1 f-s-20"></i> Settings
                     </a>
                   </li>
@@ -265,5 +265,5 @@
       </div>
     </div>
   </div>
-</header>
+</header> 
 <!-- Header Section ends -->

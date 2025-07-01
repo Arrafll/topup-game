@@ -39,6 +39,8 @@ class AuthController extends Controller
         if (Auth::attempt(['email' => $email, 'password' => $password], $remember)) {
             $request->session()->regenerate();
            
+            $this->setSessionLogin(Auth::user());
+
             if(Auth::user()->role_id == 1) {
                 return redirect()->route('admin');
             } else {
@@ -78,11 +80,13 @@ class AuthController extends Controller
                     'user_id' => $user->id, 
                     'pic' => $socialUser->avatar
                 ]); 
- 
+                
                 // Login pengguna baru 
+                $this->setSessionLogin($user);
                 Auth::login($user); 
             } else { 
                 // Jika email sudah terdaftar, langsung login 
+                $this->setSessionLogin($registeredUser);
                 Auth::login($registeredUser); 
             } 
  
@@ -226,4 +230,15 @@ class AuthController extends Controller
         return redirect()->back()->with('successEdit', 'Data profil berhasil diperbarui.');
     }
     
+    protected function setSessionLogin($user)
+    {
+        session()->put('user_id', $user->id);
+        session()->put('user_name', $user->name);
+        session()->put('user_email', $user->email);
+    }
+
+    protected function  clearLoginSession()
+    {
+        session()->forget(['user_id', 'user_name', 'user_email']);
+    }
 }

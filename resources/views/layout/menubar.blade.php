@@ -7,7 +7,7 @@
 </style>
 <nav class="@if ($role == 1) vertical-sidebar @else horizontal-sidebar @endif">
   <div class="app-logo">
-    <a class="logo d-inline-block" href="index.html">
+    <a class="logo d-inline-block" href="{{ route('customer') }}">
       <img src="{{ asset('assets/images/logo/kliktopup-logo.png') }}" alt="#">
     </a>
 
