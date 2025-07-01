@@ -29,7 +29,40 @@
                     <div class="card">
 
 
+                        <div class="card-header">
+                            <ul class="nav nav-tabs app-tabs-primary order-tabs d-flex justify-content-start border-0 mb-0 pb-0"
+                                id="Outline" role="tablist">
 
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active d-flex align-items-center gap-1" id="discover-tab"
+                                        data-bs-toggle="tab" data-bs-target="#discover-tab-pane" type="button" role="tab"
+                                        aria-controls="discover-tab-pane" aria-selected="false" tabindex="-1"
+                                        onclick="filterTableOrder('Dalam Proses')"> <i
+                                            class="ti ti-truck-delivery f-s-18 mg-b-3"></i>
+                                        Diproses</button>
+                                </li>
+                            
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link d-flex align-items-center gap-1" id="order-tabs"
+                                        data-bs-toggle="tab" data-bs-target="#order-tab-returns" type="button" role="tab"
+                                        aria-controls="order-tab-returns" aria-selected="false" tabindex="-1" onclick="filterTableOrder('Selesai')"><i
+                                            class="ti ti-checkbox f-s-18 mg-b-3"></i>
+                                        Selesai</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link d-flex align-items-center gap-1" id="ordertab"
+                                        data-bs-toggle="tab" data-bs-target="#order-tab-cancelled" type="button" role="tab"
+                                        aria-controls="order-tab-cancelled" aria-selected="false" tabindex="-1" onclick="filterTableOrder('Dibatalkan')"><i
+                                            class="ti ti-square-rounded-x f-s-18 mg-b-3"></i> Dibatalkan</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link d-flex align-items-center gap-1" id="connect-tab"
+                                        data-bs-toggle="tab" data-bs-target="#connect-tab-pane" type="button" role="tab"
+                                        aria-controls="connect-tab-pane" aria-selected="true" onclick="filterTableOrder()">
+                                        <i class="ti ti-sort-descending-2 f-s-18 mg-b-3"></i> All Orders </button>
+                                </li>
+                            </ul>
+                        </div>
                         <div class="card-body">
                             @session('success')
                                 <div class="alert alert-session mb-2 alert-light-border-success d-flex align-items-center justify-content-between"
@@ -68,7 +101,7 @@
 
                                                 <td>{{ $o->created_at }}</td>
                                                 <td>
-                                                    <a type="button" href="/customer_order_detail/{{ $o->id }}"
+                                                    <a type="button" href="/admin_order_detail/{{ $o->id }}"
                                                         class="btn btn-light-success icon-btn w-30 h-30 b-r-22 me-2">
                                                         <i class="ti ti-eye"></i></a>
                                                 </td>
@@ -92,32 +125,14 @@
             $(".alert-session").delay(5000).fadeOut(300, function () {
                 $(this).remove();
             });
-
         })
 
-        function loadSwalDelete(id) {
-            Swal.fire({
-                title: 'Ingin hapus?',
-                text: "Proses hapus tidak bisa dibatalkan!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, hapus!',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = `/admin_product_delete/${id}`
-                }
-            })
-        }
+        let orderTable = $("#datatableOrder").DataTable();
 
-        let orderTable = $("#datatableOrder").DataTable({
-            responsive: true,
-            order: [[4, 'desc']]
+        function filterTableOrder(val = '') {
+            orderTable.column(1).search(val).draw(); // 2 = index kolom "Status"
         }
-        );
-
+        filterTableOrder('Dalam Proses');
 
     </script>
 @endsection

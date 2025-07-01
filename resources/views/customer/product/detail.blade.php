@@ -10,7 +10,6 @@
             cursor: pointer;
         }
 
-
         .form-selects .card .select-input {
             position: absolute;
             top: 0;
@@ -123,7 +122,8 @@
 
                                         <div class="col-sm-4">
                                             <div class="card hover-effect select-package">
-                                                <input type="radio" class="select-input" name="package" value="{{ $p->id}}">
+                                                <input type="radio" class="select-input select-package" name="package"
+                                                    value="{{ $p->id}}">
                                                 <div class="card-body  p-3">
                                                     <h5>{{ $p->amount}}</h5>
                                                     <h6>{{ toCurrency($p->price, 'IDN') }}</h6>
@@ -143,7 +143,7 @@
                                     <button href="#" onclick="addToCart()" role="button"
                                         class="btn btn-light-primary button-action" id="cartAddBtn">+
                                         Keranjang</button>
-                                    <button href="#" role="button" class="btn btn-primary button-action">Beli
+                                    <button onclick="orderNow()" role="button" class="btn btn-primary button-action">Beli
                                         Langsung</button>
                                     {{-- <a href="wishlist.html" role="button" class="btn btn-danger">Add to Wishlist</a>
                                     --}}
@@ -163,11 +163,10 @@
                                         <table class="table table-bottom-border align-middle products-data-table">
                                             <tbody>
                                                 @foreach ($related as $r)
-
                                                     <tr class="border-0">
                                                         <td>
                                                             <div class="position-relative">
-                                                                <img src="../../assets/images/dashboard/ecommerce-dashboard/16.png"
+                                                                <img src="{{ asset('uploads/product/' . $r->product_pic) }}"
                                                                     alt="product-image" class="w-45 h-45 position-absolute">
                                                                 <div class="mg-s-40">
                                                                     <h6 class="text-dark f-w-600 txt-ellipsis-1">{{ $r->name }}
@@ -247,6 +246,8 @@
         })
 
         function addToCart() {
+
+
             let gameId = $(`#gameId`).val();
             let productId = $(`#productId`).val();
             let packageId = $(`input[name="package"]:checked`).val();
@@ -282,8 +283,8 @@
                     $('.button-action').attr('disabled', true);
                 },
                 success: function (response) {
-                    
-                    
+
+
                     $('#cartAddBtn').html('+ Keranjang')
                     $('.button-action').attr('disabled', false);
 
@@ -295,22 +296,19 @@
                     $('#cartTotalCounts').data('total', parseInt(cartTotalCounts) + parseInt(response.carts.product_price));
                     let element =
                         `<div class="head-box">
-                        <img src="{{ asset('uploads/product/${response.carts.product_pic}') }}" alt="cart"
-                          class="h-50 object-fit-cover me-3 b-r-10">
-                        <div class="flex-grow-1">
-                          <a class="mb-0 f-w-600 f-s-16" href="product_details.html" target="_blank">${response.carts.name}</a><br>
-                          <span class="text-secondary text-dark f-w-400">${response.carts.game}</span><br>
-                          <span class="text-secondary">${response.carts.package_amount} ${response.carts.unit} - <span class="text-dark f-w-400 row-cart-price" data-price="${response.carts.product_price}">Rp ${formatIdrs(response.carts.product_price)}</span></span>
-                        </div>
-                        <div class="text-end">
-                          <i class="ph ph-trash f-s-25 text-danger" data-cart="${response.carts.cart_id}" onclick="removeCart(this)"></i>
+                                    <img src="{{ asset('uploads/product/${response.carts.product_pic}') }}" alt="cart"
+                                      class="h-50 object-fit-cover me-3 b-r-10">
+                                    <div class="flex-grow-1">
+                                      <a class="mb-0 f-w-600 f-s-16" href="product_details.html" target="_blank">${response.carts.name}</a><br>
+                                      <span class="text-secondary text-dark f-w-400">${response.carts.game}</span><br>
+                                      <span class="text-secondary">${response.carts.package_amount} ${response.carts.unit} - <span class="text-dark f-w-400 row-cart-price" data-price="${response.carts.product_price}">Rp ${formatIdrs(response.carts.product_price)}</span></span>
+                                    </div>
+                                    <div class="text-end">
+                                      <i class="ph ph-trash f-s-25 text-danger" data-cart="${response.carts.cart_id}" onclick="removeCart(this)"></i>
 
-                        </div>
-                        </div>`
+                                    </div>
+                                    </div>`
                     $(element).insertBefore('#emptyCartMessage');
-
-
-
                     Toastify({
                         text: "Berhasil ditambahkan ke keranjang!",
                         duration: 2500,
@@ -319,16 +317,17 @@
                             background: "rgb(var(--success),1)",
                         }
                     }).showToast();
-
                     console.log(response.carts);
+                    $('#gameId').val('');
+                    $('.select-package').prop('checked', false);
 
                 }
             });
 
         }
 
-        
-      var formatIdrs = function (num) {
+
+        var formatIdrs = function (num) {
             var str = num.toString().replace("", ""), parts = false, output = [], i = 1, formatted = null;
             if (str.indexOf(".") > 0) {
                 parts = str.split(".");
@@ -348,8 +347,30 @@
             return ("" + formatted + ((parts) ? "." + parts[1].substr(0, 2) : ""));
         };
 
-  
-        
+        function orderNow() {
+            let gameId = $(`#gameId`).val();
+            let productId = $(`#productId`).val();
+            let packageId = $(`input[name="package"]:checked`).val();
+
+            if (gameId.length < 1 || packageId == undefined) {
+
+
+                if (gameId.length < 1) $(`#gameId`).addClass('is-invalid')
+                Toastify({
+                    text: "Mohon isi id game dan pilih salah satu paket!",
+                    duration: 2500,
+                    position: "right",
+                    style: {
+                        background: "rgb(var(--danger),1)",
+                    }
+                }).showToast();
+                return false;
+            }
+            
+            window.location.href = `/customer_order_now/${productId}/${packageId}/${gameId}`;
+        }
+
+
     </script>
     {{--
     <script src="{{ asset('assets/js/product_details.js') }}"></script> --}}

@@ -5,7 +5,7 @@
     background: rgba(var(--primary), 1);
   }
 </style>
-<nav class="@if ($role == 1) vertical-sidebar @else horizontal-sidebar @endif">
+<nav class="@if ($role == 1) vertical-sidebar @else horizontal-sidebar @endif"> 
   <div class="app-logo">
     <a class="logo d-inline-block" href="{{ route('customer') }}">
       <img src="{{ asset('assets/images/logo/kliktopup-logo.png') }}" alt="#">
@@ -35,7 +35,7 @@
       </a>
       </li>
       <li class="no-sub">
-      <a class="" href="widget.html">
+      <a class="{{ Route::is('admin_report*') ? 'active' : '' }}" href="/admin_report_list">
         <i class="ph-duotone  ph-book-bookmark"></i> Report
       </a>
       </li>
@@ -48,7 +48,7 @@
       </a>
       </li>
       <li class="no-sub">
-      <a class="" href="widget.html">
+      <a class="{{ Route::is('admin_user*') ? 'active' : '' }}" href="/admin_user_list">
         <i class="ph-duotone ph-user"></i> User
       </a>
       </li>

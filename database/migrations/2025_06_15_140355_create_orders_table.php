@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->text('snap_token')->nullable();
             $table->text('note')->nullable();
             $table->string('status');
-            $table->string('pay_method');
+            $table->string('pay_method')->nullable();
             $table->integer('pay_total')->nullable();
             $table->string('pay_status')->nullable();
             $table->string('pay_cred')->nullable();

@@ -6,7 +6,7 @@
             <!-- Breadcrumb start -->
             <div class="row m-1">
                 <div class="col-12 ">
-                    <h4 class="main-title mb-2">Cek Pesanan</h4>
+                    <h4 class="main-title">User List</h4>
                     <ul class="app-line-breadcrumbs mb-3">
                         <li class="">
                             <a href="/" class="f-s-14 f-w-500">
@@ -15,19 +15,27 @@
                                 </span>
                             </a>
                         </li>
+                        <li>
+                            <a href="#" class="f-s-14 f-w-500">Data Management</a>
+                        </li>
                         <li class="active">
-                            <a href="#" class="f-s-14 f-w-500">Cek Pesanan</a>
+                            <a href="#" class="f-s-14 f-w-500">User List</a>
                         </li>
                     </ul>
                 </div>
             </div>
             <!-- Breadcrumb end -->
 
-            <!-- Product List start -->
+            <!-- User List start -->
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-
+                        <div class="card-header">
+                            <h5>User List</h5>
+                            <p>List data akun yang sudah terdaftar.
+                                Anda dapat menambah, mengubah, dan menghapus data akun di sini.
+                            </p>
+                        </div>
 
 
                         <div class="card-body">
@@ -41,36 +49,47 @@
                                 </div>
                             @endsession
                             <div class="app-datatable-default overflow-auto">
-                                <table class="display w-100 row-border-table table-responsive" id="datatableOrder">
+                                <table class="display w-100 row-border-table table-responsive datatable-original">
                                     <thead>
                                         <tr>
-                                            <th>Kode</th>
-                                            <th>Status</th>
-                                            <th>Status Pembayaran</th>
-                                            <th>Metode Pembayaran</th>
+                                         
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Role</th>
                                             <th>Tanggal Dibuat</th>
+                                            <th>Tanggal Diubah</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($orders as $o)
+                                        @foreach ($users as $u)
                                             <tr>
                                                 <td>
-                                                    #{{ $o->code }}
-                                                </td>
-                                                <td>{!! getStatusLabel($o->status) !!}</td>
-                                                <td>{!! getStatusLabel($o->pay_status) !!}</td>
-                                                @if (empty($o->pay_status))
-                                                    <td>-</td>
-                                                @else
-                                                    <td>{!! getPayMethod($o->pay_method) !!}</td>
-                                                @endif
+                                                    <div class="d-flex align-items-center">
+                                                        <div
+                                                            class="h-30 w-30 d-flex-center b-r-50 overflow-hidden text-bg-info">
+                                                            @if (isset($u->user_pic))
+                                                                <img src="{{ asset('uploads/user/' . $u->user_pic) }}" alt=""
+                                                                    class="img-fluid">
+                                                            @else
+                                                                <img src="../assets/images/avtar/4.png" alt="" class="img-fluid">
+                                                            @endif
 
-                                                <td>{{ $o->created_at }}</td>
+                                                        </div>
+                                                        <p class="mb-0 ps-2"> {{ $u->name }}</p>
+                                                    </div>
+                                                </td>
+                                                <td>{{ $u->email }}</td>
+                                                <td>{{ $u->role_name }}</td>
+                                                <td>{{ $u->created_at }}</td>
+                                                <td>{{ $u->updated_at }}</td>
                                                 <td>
-                                                    <a type="button" href="/customer_order_detail/{{ $o->id }}"
+                                                    <a type="button" href="/admin_user_edit/{{ $u->id }}"
                                                         class="btn btn-light-success icon-btn w-30 h-30 b-r-22 me-2">
-                                                        <i class="ti ti-eye"></i></a>
+                                                        <i class="ti ti-edit"></i></a>
+                                                    <button type="button"
+                                                        class="btn btn-light-danger icon-btn w-30 h-30 b-r-22 delete-btn" onclick="loadSwalDelete('{{ $u->id }}')"><i
+                                                            class="ti ti-trash"></i></button>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -81,7 +100,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Product List end -->
+            <!-- User List end -->
         </div>
     </main>
     <!-- Body main section ends -->
@@ -107,17 +126,10 @@
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = `/admin_product_delete/${id}`
+                    window.location.href = `/admin_user_delete/${id}`
                 }
             })
         }
-
-        let orderTable = $("#datatableOrder").DataTable({
-            responsive: true,
-            order: [[4, 'desc']]
-        }
-        );
-
 
     </script>
 @endsection
