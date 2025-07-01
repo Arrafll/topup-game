@@ -185,7 +185,7 @@
                                                 @endforeach
                                             </tbody>
                                         </table>
-                                        <a role="button" href="/customer_product_list" target="_blank"
+                                        <a role="button" href="/customer_product_list"
                                             class="btn  btn-primary w-100">View All Products</a>
                                     </div>
                                 </div>
@@ -247,6 +247,11 @@
 
         function addToCart() {
 
+            if({{session('guest')}})
+            {
+                showToast('danger', 'Silahkan login untuk menggunakan semua fitur KlikTopup!');
+                return;
+            }
 
             let gameId = $(`#gameId`).val();
             let productId = $(`#productId`).val();
@@ -348,6 +353,11 @@
         };
 
         function orderNow() {
+            if({{session('guest')}})
+            {
+                showToast('danger', 'Silahkan login untuk menggunakan semua fitur KlikTopup!');
+                return;
+            }
             let gameId = $(`#gameId`).val();
             let productId = $(`#productId`).val();
             let packageId = $(`input[name="package"]:checked`).val();

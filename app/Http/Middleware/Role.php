@@ -15,15 +15,27 @@ class Role
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, $role): Response
+    public function handle(Request $request, Closure $next, ...$roles): Response
     {
-       
+        // Jika belum login, dan 'guest' termasuk role yang diizinkan
+        if (!Auth::check()) {
+            if (in_array('guest', $roles)) {
+                return $next($request);
+            }
+
+            return response()->view('error.403');
+        }
+
         $user = Auth::user();
         $roleUser = $user->role_id;
-       
-        if(Auth::check() && $roleUser == $role) return $next($request);
-        
-        return  response()->view('error.403');
-       
+
+        // Jika role user cocok dengan salah satu role yang diizinkan
+        if (in_array($roleUser, $roles)) {
+            return $next($request);
+        }
+
+        // Selain itu: tolak akses
+        return response()->view('error.403');
     }
+
 }

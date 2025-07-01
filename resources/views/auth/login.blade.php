@@ -137,6 +137,11 @@
                       class="btn btn-gmail text-white d-inline-flex-center w-100"><i
                         class="fa-solid fa-brands fa-google fa-fw"></i> &nbsp;Sign In With Google </a>
                   </div>
+                  <div class="col-12 mt-3">
+                    <a type="button" href="{{ route('guest_redirect') }}"
+                      class="btn btn-white d-inline-flex-center w-100"><i
+                        class="fa-solid fa-user"></i> &nbsp;Sign In as Guests </a>
+                  </div>
                 </div>
               </form>
             </div>

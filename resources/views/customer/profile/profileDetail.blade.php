@@ -287,26 +287,6 @@ $isGoogleLogin = !is_null($user->media_id);
 
 
 <script>
-    function showToast(type, message) {
-        const container = document.getElementById('toast-container');
-        const toast = document.createElement('div');
-        toast.className = `alert alert-${type}`;
-        toast.innerText = message;
-        toast.style.minWidth = '250px';
-        toast.style.marginTop = '0.5rem';
-        container.appendChild(toast);
-        setTimeout(() => toast.remove(), 4000);
-    }
-
-    function showAlert(type, message) {
-        const container = document.getElementById('alert-container');
-        container.innerHTML = `
-        <div class="alert alert-${type}">
-            ${message}
-        </div>
-    `;
-        setTimeout(() => container.innerHTML = '', 5000);
-    }
 
     document.addEventListener('DOMContentLoaded', function () {
         // Form Profil

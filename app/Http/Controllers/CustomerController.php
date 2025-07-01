@@ -24,7 +24,14 @@ class CustomerController extends Controller
 {
     public function __construct()
     {
-        $this->cartList = $this->get_carts();
+        if(!session('guest'))
+        {
+            $this->cartList = $this->get_carts();
+        }
+        else
+        {
+            $this->cartList = new Cart();
+        }
         setlocale(LC_TIME, 'id_ID');
         \Carbon\Carbon::setLocale('id');
     }

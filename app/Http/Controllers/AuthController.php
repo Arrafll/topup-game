@@ -233,6 +233,7 @@ class AuthController extends Controller
     
     protected function setSessionLogin($user)
     {
+        session()->put('guest', false);
         session()->put('user_id', $user->id);
         session()->put('user_name', $user->name);
         session()->put('user_email', $user->email);
@@ -242,4 +243,15 @@ class AuthController extends Controller
     {
         session()->forget(['user_id', 'user_name', 'user_email']);
     }
+
+    public function guest_redirect()
+    {
+        // Set session khusus guest
+        session()->put('guest', true);
+        session()->put('user_name', 'Guest');
+        session()->put('user_role', 0); // 0 = guest
+
+        return redirect()->route('customer');
+    }
+
 }

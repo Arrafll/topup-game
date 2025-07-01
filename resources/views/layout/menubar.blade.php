@@ -65,7 +65,7 @@
             </a>
           </li>
           <li class="no-sub">
-            <a class="{{ Route::is('customer_order*') ? 'active' : '' }}" href="{{ route('customer_order_list') }}">
+            <a class="{{ Route::is('customer_order*') ? 'active' : '' }}" href="{{ !session('guest') ? route('customer_order_list') : '#' }}" onclick="if({{session('guest')}}){showToast('danger', 'Silahkan login untuk menggunakan semua fitur KlikTopup!')}">
               <i class="ti ti-report-search"></i> Cek Pesanan
             </a>
           </li>
