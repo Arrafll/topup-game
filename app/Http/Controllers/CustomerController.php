@@ -85,7 +85,7 @@ class CustomerController extends Controller
 
 
         if (!empty($search)) {
-            $products = $products->where('products.name', '=', $search)->orWhere('products.game', '=', $search);
+            $products = $products->where('products.name', 'like', "%$search%")->orWhere('products.game', 'like', "%$search%");
         }
 
         if (!empty($category)) {
