@@ -333,7 +333,7 @@ class CustomerController extends Controller
 
         $snapToken = $order->snap_token;
         if (empty($order->finished_at) || empty($order->processed_at)) {
-            if (empty(($order->snap_token) && empty($order->payed_at))) {
+            if (empty($order->snap_token) && empty($order->payed_at)) {
                 Config::$serverKey = config('midtrans.server_key');
                 Config::$isProduction = config('midtrans.is_production');
                 Config::$isSanitized = config('midtrans.is_sanitized');
@@ -391,6 +391,7 @@ class CustomerController extends Controller
         $order->status = "Processed";
         $order->pay_method = $respMidtrans['payment_type'];
         $order->payed_at = date('Y-m-d H:i:s');
+        $order->processed_at = date('Y-m-d H:i:s');
         $order->pay_status = "Paid";
         $order->save();
 

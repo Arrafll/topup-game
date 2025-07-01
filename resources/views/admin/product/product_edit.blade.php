@@ -187,7 +187,7 @@
                                             <div
                                                 class="mt-4 d-flex justify-content-end gap-2 flex-column flex-sm-row text-end">
                                                 <button type="reset" class="btn btn-light-secondary">Reset</button>
-                                                <button type="submit" role="button" class="btn btn-primary">Add
+                                                <button type="submit" role="button" class="btn btn-primary">Edit
                                                     Product</button>
                                             </div>
                                         </div>
