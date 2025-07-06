@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Database\Query\JoinClause;
 use Midtrans\Config;
 use Midtrans\Snap;
+use App\Models\User;
+use App\Models\UserData;
+use Illuminate\Support\Facades\Validator;
 
 class CustomerController extends Controller
 {
@@ -456,5 +459,103 @@ class CustomerController extends Controller
         $carts = Cart::where('user_id', '=', $userId)->delete();
         return redirect('/customer_order_detail/' . $orderId);
 
+    }
+    public function customerDetail($id)
+    {
+        $user = User::with('userData')->findOrFail($id);
+
+        $data = [
+            'title' => 'Home',
+            'role' => 2,
+            'cartList' => $this->cartList,
+            'user' => $user
+        ];
+
+        return view('customer.profile.profileDetail', $data);
+    }
+
+    public function customerDetailUpdate(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        // Validasi manual, tanpa try-catch
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'handphone' => 'nullable|string|max:255',
+            'alamat' => 'nullable|string',
+            'bio' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        // Update ke tabel users
+        $user->name = $request->input('name');
+        $user->save();
+
+        // Update atau insert ke user_data
+        $userData = $user->userData ?? new \App\Models\UserData();
+        $userData->user_id = $user->id;
+        $userData->handphone = $request->input('handphone');
+        $userData->alamat = $request->input('alamat');
+        $userData->bio = $request->input('bio');
+        $userData->save();
+
+        session()->flash('success', 'Profil berhasil diperbarui');
+        return response()->json(['reload' => true]);
+
+    }
+
+    public function customerSecurityUpdate(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        if ($user->media_id) {
+            return response()->json([
+                'errors' => ['email' => ['Akun Google tidak dapat mengubah email atau password.']]
+            ], 422);
+        }
+
+        $rules = [];
+
+        // Validasi email jika diisi
+        if ($request->filled('email')) {
+            $rules['email'] = 'required|email|unique:users,email,' . $user->id;
+        }
+
+        // Jika user ingin ganti password (input new_password terisi)
+        if ($request->filled('new_password') || $request->filled('current_password') || $request->filled('new_password_confirmation')) {
+            $rules['current_password'] = 'required';
+            $rules['new_password'] = 'required|min:8|confirmed';
+            $rules['new_password_confirmation'] = 'required';
+        }
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        // Validasi isi password lama
+        if ($request->filled('new_password')) {
+            if (!Hash::check($request->input('current_password'), $user->password)) {
+                return response()->json([
+                    'errors' => ['current_password' => ['Password lama salah.']]
+                ], 422);
+            }
+
+            $user->password = Hash::make($request->input('new_password'));
+        }
+
+        // Simpan email jika diubah
+        if ($request->filled('email')) {
+            $user->email = $request->input('email');
+        }
+
+        $user->save();
+
+        session()->flash('success', 'Keamanan akun berhasil diperbarui');
+        return response()->json(['reload' => true]);
     }
 }

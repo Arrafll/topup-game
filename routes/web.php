@@ -56,6 +56,11 @@ Route::group(['middleware' => ['auth', \App\Http\Middleware\Role::class . ':1']]
     Route::get('/admin_report_export/', [AdminController::class, 'report_export'])->name('admin_report_export');
     Route::get('/admin_report_export/{year}', [AdminController::class, 'report_export'])->name('admin_report_export');
     Route::get('/admin_report_export/{year}/{month}', [AdminController::class, 'report_export'])->name('admin_report_export');
+
+
+    Route::get('/admin_detail/{id}', [adminController::class, 'adminDetail'])->name('admin_detail');
+    Route::post('/admin_detail/profile/{id}/update', [adminController::class, 'adminDetailUpdate'])->name('admin_detail_update');
+    Route::post('/admin_detail/security/{id}/update', [adminController::class, 'adminSecurityUpdate'])->name('admin_security_update');
 });
 
 Route::group(['middleware' => ['auth', \App\Http\Middleware\Role::class . ':2']], function () {
@@ -82,4 +87,9 @@ Route::group(['middleware' => ['auth', \App\Http\Middleware\Role::class . ':2']]
     Route::post('/customer_get_product', [CustomerController::class, 'get_product'])->name('customer_get_product');
     Route::get('/customer/invoices', [CustomerController::class, 'invoiceList'])->name('customer.invoices');
     Route::get('/customer/invoice/{id}', [CustomerController::class, 'productInvoice'])->name('customer.invoice');
+
+    Route::get('/customer_detail/{id}', [CustomerController::class, 'customerDetail'])->name('customer_detail');
+    Route::post('/customer_detail/profile/{id}/update', [CustomerController::class, 'customerDetailUpdate'])->name('customer_detail_update');
+    Route::post('/customer_detail/security/{id}/update', [CustomerController::class, 'customerSecurityUpdate'])->name('customer_security_update');
 });
+

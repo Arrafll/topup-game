@@ -9,24 +9,27 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Laravel\Socialite\Facades\Socialite;
-use Illuminate\Support\Facades\File; 
+use Illuminate\Support\Facades\File;
 use Intervention\Image\Laravel\Facades\Image;
 
 class AuthController extends Controller
 {
-    public function __construct() {
-    
-    }
-    
+    public function __construct()
+    {
 
-    public function login(){
+    }
+
+
+    public function login()
+    {
         $data = [
             'title' => 'Sign In'
         ];
         return view('auth.login', $data);
     }
 
-    public function signin(Request $request){    
+    public function signin(Request $request)
+    {
         $validated = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
@@ -35,11 +38,12 @@ class AuthController extends Controller
         $email = $request->email;
         $password = $request->password;
         $remember = ($request->remember == "1") ? true : false;
-        
+
         if (Auth::attempt(['email' => $email, 'password' => $password], $remember)) {
             $request->session()->regenerate();
-           
-            if(Auth::user()->role_id == 1) {
+            $this->setSessionLogin(Auth::user());
+
+            if (Auth::user()->role_id == 1) {
                 return redirect()->route('admin');
             } else {
                 return redirect('/customer');
@@ -47,55 +51,59 @@ class AuthController extends Controller
         }
 
         return redirect('/login')->withInput()->with('invalid', 'Email atau password tidak valid');
-            
+
     }
 
-    public function google_redirect() 
-    { 
-        return Socialite::driver('google')->redirect(); 
-    } 
+    public function google_redirect()
+    {
+        return Socialite::driver('google')->redirect();
+    }
 
 
-    public function google_signin() {
-         try {
+    public function google_signin()
+    {
+        try {
             $socialUser = Socialite::driver('google')->stateless()->user();
             // Cek apakah email sudah terdaftar 
-            $registeredUser = User::where('email', $socialUser->email)->first(); 
-            
-            if (!$registeredUser) { 
+            $registeredUser = User::where('email', $socialUser->email)->first();
+
+            if (!$registeredUser) {
                 // Buat user baru 
-                $user = User::create([ 
-                    'name' => $socialUser->name, 
-                    'email' => $socialUser->email, 
-                    'media_id' => $socialUser->id, 
+                $user = User::create([
+                    'name' => $socialUser->name,
+                    'email' => $socialUser->email,
+                    'media_id' => $socialUser->id,
                     'media_token' => $socialUser->token,
                     'role_id' => '2', // Role 
                     'password' => Hash::make('default_password'), // Password default 
-                ]); 
- 
+                ]);
+
                 // Buat data customer 
-                UserData::create([ 
-                    'user_id' => $user->id, 
+                UserData::create([
+                    'user_id' => $user->id,
                     'pic' => $socialUser->avatar
-                ]); 
- 
+                ]);
+
                 // Login pengguna baru 
-                Auth::login($user); 
-            } else { 
+                Auth::login($user);
+            } else {
                 // Jika email sudah terdaftar, langsung login 
-                Auth::login($registeredUser); 
-            } 
- 
+                $this->setSessionLogin($registeredUser);
+                Auth::login($registeredUser);
+
+            }
+
             // Redirect ke halaman utama 
-            return redirect()->intended('customer'); 
-        } catch (\Exception $e) { 
+            return redirect()->intended('customer');
+        } catch (\Exception $e) {
             // Redirect ke halaman utama jika terjadi kesalahan 
             die($e);
-            return redirect('/login')->with('error', 'Terjadi kesalahan saat login dengan Google.'); 
-        } 
+            return redirect('/login')->with('error', 'Terjadi kesalahan saat login dengan Google.');
+        }
     }
-    public function register(){
-    
+    public function register()
+    {
+
         $data = [
             'title' => 'Sign Up'
         ];
@@ -103,8 +111,9 @@ class AuthController extends Controller
         return view('auth.register', $data);
     }
 
-    
-    public function createUser(Request $request){
+
+    public function createUser(Request $request)
+    {
 
         $validated = $request->validate([
             'fullname' => 'required|max:25',
@@ -115,8 +124,8 @@ class AuthController extends Controller
                 Rule::unique('users')
             ],
             'password_confirmation' => 'required',
-        ],[
-            'password_confirmation.required' => 'Mohon konfirmasi ulang password', 
+        ], [
+            'password_confirmation.required' => 'Mohon konfirmasi ulang password',
             'fullname.required' => 'Kolom nama harus diisi',
             'required' => 'Kolom :attribute harus diisi',
             'email.email' => 'Email harus valid',
@@ -139,21 +148,24 @@ class AuthController extends Controller
         ];
 
         UserData::create($userData);
-        return redirect('/login')->with('success', 'Selamat, akun berhasil dibuat!');   
+        return redirect('/login')->with('success', 'Selamat, akun berhasil dibuat!');
     }
 
-    public function logout(){
+    public function logout()
+    {
         Auth::logout();
         request()->session()->invalidate();
         request()->session()->regenerateToken();
         return redirect('/login');
     }
 
-    public function redirectLogged(){
+    public function redirectLogged()
+    {
         $user = Auth::user();
-        if(!isset($user->role_id)) return redirect('/login');
+        if (!isset($user->role_id))
+            return redirect('/login');
         $roleUser = $user->role_id;
-        
+
         switch ($roleUser) {
             case 1:
                 return redirect()->route('admin');
@@ -163,9 +175,10 @@ class AuthController extends Controller
                 break;
         }
     }
-    
 
-    public function user_update_data(Request $request) {
+
+    public function user_update_data(Request $request)
+    {
         $rules = [
             'fullname' => 'required|max:25',
             'email' => [
@@ -182,12 +195,12 @@ class AuthController extends Controller
         ];
 
         $validMsg = [
-              'kodepos.required' => 'Kolom kode pos tidak boleh kosong.',
-              'required' => 'Kolom :attribute tidak boleh kosong.',
-              'unique' => 'Data :attribute sudah terdaftar.',
-              'min' => 'Data :attribute minimal :min karakter.',
-              'max' => 'Data :attribute maksimal :max karakter.',
-              'numeric' => 'Karakter :attribute harus berupa angka.'
+            'kodepos.required' => 'Kolom kode pos tidak boleh kosong.',
+            'required' => 'Kolom :attribute tidak boleh kosong.',
+            'unique' => 'Data :attribute sudah terdaftar.',
+            'min' => 'Data :attribute minimal :min karakter.',
+            'max' => 'Data :attribute maksimal :max karakter.',
+            'numeric' => 'Karakter :attribute harus berupa angka.'
         ];
         $this->validate($request, $rules, $validMsg);
 
@@ -208,17 +221,17 @@ class AuthController extends Controller
         $userData->kode_pos = $request->kodepos;
         $userData->bio = $request->bio;
 
-        if($request->hasFile('fotoprofil')) {
+        if ($request->hasFile('fotoprofil')) {
 
-            if($userData->pic) {
+            if ($userData->pic) {
                 $path = public_path() . "/uploads/user-avatar/$userData->pic";
                 File::delete($path);
             }
-          
+
             $file = $request->file('fotoprofil');
-            $imageName = $user->name.time().'.'.$file->getClientOriginalExtension();
-            $image_resize = Image::read($file->getRealPath());              
-            $image_resize->save(public_path('uploads/user-avatar/' .$imageName));
+            $imageName = $user->name . time() . '.' . $file->getClientOriginalExtension();
+            $image_resize = Image::read($file->getRealPath());
+            $image_resize->save(public_path('uploads/user-avatar/' . $imageName));
             $userData->pic = $imageName;
         }
 
@@ -226,5 +239,12 @@ class AuthController extends Controller
 
         return redirect()->back()->with('successEdit', 'Data profil berhasil diperbarui.');
     }
-    
+    protected function setSessionLogin($user)
+    {
+        session()->put('guest', false);
+        session()->put('user_id', $user->id);
+        session()->put('user_name', $user->name);
+        session()->put('user_email', $user->email);
+    }
+
 }

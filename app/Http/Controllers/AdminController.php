@@ -20,7 +20,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
-
+use Illuminate\Support\Facades\Validator;
 class AdminController extends Controller
 {
     //
@@ -518,6 +518,10 @@ class AdminController extends Controller
             $reports = $reports->whereRaw("YEAR(finished_at) = '$year' AND MONTH(finished_at) = '$month'");
         }
 
+        if (!empty($year)) {
+            $reports = $reports->whereRaw("YEAR(finished_at) = '$year'");
+        }
+
         $reports = $reports->groupByRaw('YEAR(finished_at), MONTH(finished_at)')
             ->orderByRaw('YEAR(finished_at), MONTH(finished_at)')
             ->get();
@@ -634,5 +638,102 @@ class AdminController extends Controller
 
         $writer->save('php://output');
         exit;
+    }
+
+    public function adminDetail($id)
+    {
+        $user = User::with('userData')->findOrFail($id);
+
+        $data = [
+            'title' => 'Home',
+            'role' => 1,
+            'user' => $user
+        ];
+
+        return view('admin.profile.profileDetail', $data);
+    }
+
+    public function adminDetailUpdate(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        // Validasi manual, tanpa try-catch
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'handphone' => 'nullable|string|max:255',
+            'alamat' => 'nullable|string',
+            'bio' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        // Update ke tabel users
+        $user->name = $request->input('name');
+        $user->save();
+
+        // Update atau insert ke user_data
+        $userData = $user->userData ?? new \App\Models\UserData();
+        $userData->user_id = $user->id;
+        $userData->handphone = $request->input('handphone');
+        $userData->alamat = $request->input('alamat');
+        $userData->bio = $request->input('bio');
+        $userData->save();
+
+        session()->flash('success', 'Profil berhasil diperbarui');
+        return response()->json(['reload' => true]);
+
+    }
+    public function adminSecurityUpdate(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        if ($user->media_id) {
+            return response()->json([
+                'errors' => ['email' => ['Akun Google tidak dapat mengubah email atau password.']]
+            ], 422);
+        }
+
+        $rules = [];
+
+        // Validasi email jika diisi
+        if ($request->filled('email')) {
+            $rules['email'] = 'required|email|unique:users,email,' . $user->id;
+        }
+
+        // Jika user ingin ganti password (input new_password terisi)
+        if ($request->filled('new_password') || $request->filled('current_password') || $request->filled('new_password_confirmation')) {
+            $rules['current_password'] = 'required';
+            $rules['new_password'] = 'required|min:8|confirmed';
+            $rules['new_password_confirmation'] = 'required';
+        }
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        // Validasi isi password lama
+        if ($request->filled('new_password')) {
+            if (!Hash::check($request->input('current_password'), $user->password)) {
+                return response()->json([
+                    'errors' => ['current_password' => ['Password lama salah.']]
+                ], 422);
+            }
+
+            $user->password = Hash::make($request->input('new_password'));
+        }
+
+        // Simpan email jika diubah
+        if ($request->filled('email')) {
+            $user->email = $request->input('email');
+        }
+
+        $user->save();
+
+        session()->flash('success', 'Keamanan akun berhasil diperbarui');
+        return response()->json(['reload' => true]);
     }
 }

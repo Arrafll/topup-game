@@ -44,8 +44,12 @@ class User extends Authenticatable
         ];
     }
 
-        public function order()
+    public function order()
     {
         return $this->belongsTo(Order::class);
+    }
+    public function userData()
+    {
+        return $this->hasOne(\App\Models\UserData::class, 'user_id');
     }
 }

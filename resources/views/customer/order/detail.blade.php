@@ -371,7 +371,7 @@
                                 </form>
                                 <div class="row">
                                     <div class="text-end mt-4 col-12">
-                                        <button class="btn btn-success col-12 mb-2" id="checkout-button">Checkout</button>
+                                        <button class="btn btn-success col-12 mb-2" id="checkout-button">Bayar</button>
                                         <button class="btn btn-light-danger col-12"
                                             onclick="cancelOrder('{{ $order->id }}')">Batalkan
                                             Pesanan</button>

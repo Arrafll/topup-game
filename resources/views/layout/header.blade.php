@@ -135,15 +135,18 @@
 
 
             <li class="app-divider-v dotted py-1"></li>
+
             <li>
-            <a class="f-w-500" href="./profile.html" target="_blank">
-              <i class="ph-duotone  ph-user-circle pe-1 f-s-20"></i> Profile Details
-            </a>
-            </li>
-            <li>
-            <a class="f-w-500" href="./setting.html" target="_blank">
-              <i class="ph-duotone  ph-gear pe-1 f-s-20"></i> Settings
-            </a>
+            @if ($role == 1)
+        <a class="f-w-500" href="{{route('admin_detail', ['id' => session('user_id')])}}">
+          <i class="ph-duotone  ph-gear pe-1 f-s-20"></i> Settings
+        </a>
+        @endif
+            @if ($role == 2)
+        <a class="f-w-500" href="{{route('customer_detail', ['id' => session('user_id')])}}">
+          <i class="ph-duotone  ph-gear pe-1 f-s-20"></i> Settings
+        </a>
+        @endif
             </li>
             <li class="app-divider-v dotted py-1"></li>
 

@@ -100,7 +100,7 @@
                   <div class="col-12">
                     <div class="mb-3">
                       <label for="password" class="form-label">Password</label>
-                      <a href="./pwd_reset.html" class="link-primary float-end">Forgot Password ?</a>
+                      {{-- <a href="./pwd_reset.html" class="link-primary float-end">Forgot Password ?</a> --}}
                       <input type="password" class="form-control @error('password') is-invalid @enderror auth-form"
                         name="password" placeholder="Enter Your Password" id="password">
                       @error('password')
