@@ -791,22 +791,29 @@ public function order_detail($id)
     }
 
 
-    public function productVoucher($id){
-        // $user = User::with('userData')->findOrFail($id);
-        $product = Product::findOrFail($id);
-        $productPackage = ProductPackage::where('product_id', '=', $id)->get();
-        $voucher = Voucher::with('game')->where('game_id', '=', $id)->get();
+    public function productVoucher(Request $request, $id)
+{
+    $product = Product::findOrFail($id);
+    $productPackage = ProductPackage::where('product_id', $id)->get();
 
-        $data = [
-            'title' => 'Voucher',
-            'role' => 1,
-            'product' => $product,
-            'productPackage' => $productPackage,
-            'voucher' => $voucher
-        ];
+    $query = Voucher::with(['game', 'gamePackage'])->where('game_id', $id);
 
-        return view('admin.voucher.voucher_list', $data);
+    if ($request->has('package_id') && $request->package_id != 'all') {
+        $query->where('packages_id', $request->package_id);
     }
+
+    $voucher = $query->get();
+
+    return view('admin.voucher.voucher_list', [
+        'title' => 'Voucher',
+        'role' => 1,
+        'product' => $product,
+        'productPackage' => $productPackage,
+        'voucher' => $voucher,
+        'selectedPackage' => $request->package_id ?? 'all'
+    ]);
+}
+
 
 
 public function addVoucher(Request $request)

@@ -4,27 +4,29 @@
 <main>
     <div class="container-fluid">
         <!-- Breadcrumb start -->
-        <div class="row m-1">
-            <div class="col-12 ">
-                <h4 class="main-title">Ticket</h4>
-                <ul class="app-line-breadcrumbs mb-3">
-                    <li class="">
-                        <a href="#" class="f-s-14 f-w-500">
-                            <span>
-                                <i class="ph-duotone  ph-stack f-s-16"></i> Apps
-                            </span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="f-s-14 f-w-500">Ticket</a>
-                    </li>
-                    <li class="active">
-                        <a href="#" class="f-s-14 f-w-500">Ticket</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- Breadcrumb end -->
+<div class="row m-1">
+                <div class="col-12 ">
+                    <h4 class="main-title">Product List</h4>
+                    <ul class="app-line-breadcrumbs mb-3">
+                        <li class="">
+                            <a href="/" class="f-s-14 f-w-500">
+                                <span>
+                                    KlikTopUp
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="f-s-14 f-w-500">Data Management</a>
+                        </li>
+                        <li>
+                            <a href="#" class="f-s-14 f-w-500">Product List</a>
+                        </li>
+                        <li class="active">
+                            <a href="#" class="f-s-14 f-w-500">Voucher</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>        <!-- Breadcrumb end -->
 
         <!-- Ticket start -->
         <div class="row ticket-app">
@@ -55,30 +57,39 @@
 
             <div class="col-lg-6">
 
-                <div class="d-flex">
-                    <h5 class="ms-3 mb-2">Game Items <a href="" class="badge text-bg-primary">Show All</a></h5>
-                </div>
-                <ul class="ticket-slider ">
-                    @foreach ($productPackage as $pp)
-                    <li>
-                        <div class="card ticket-card bg-primary">
-                            <div class="card-body">
-                                <i class="ph-bold  ph-circle circle-bg-img"></i>
-                                <div class="h-50 w-50 d-flex-center b-r-15 bg-white mb-3">
-                                    <i class="ti ti-diamond f-s-25 text-primary"></i>
-                                </div>
-                                <p class="f-s-16 text-white">{{ $product->unit}}</p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h4 class="text-white">{{$pp->amount}}</h4>
-                                    <div class="b-r-15 bg-white">
-                                        <a href="" class="btn btn-light-primary">Show</a>
-                                    </div>
-                                </div>
-                            </div>
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <h5 class="ms-3 mb-2">Game Items</h5>
+    <a href="{{ route('admin_product_voucher', ['id' => $product->id, 'package_id' => 'all']) }}"
+       class="badge text-bg-primary me-3 {{ ($selectedPackage ?? 'all') == 'all' ? 'active' : '' }}">
+        Show All
+    </a>
+</div>
+<ul class="ticket-slider">
+    @foreach ($productPackage as $pp)
+        <li>
+            <div class="card ticket-card bg-primary">
+                <div class="card-body">
+                    <i class="ph-bold ph-circle circle-bg-img"></i>
+                    <div class="h-50 w-50 d-flex-center b-r-15 bg-white mb-3">
+                        <i class="ti ti-diamond f-s-25 text-primary"></i>
+                    </div>
+                    <p class="f-s-16 text-white">{{ $product->unit }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="text-white">{{ $pp->amount }}</h4>
+                        <div class="b-r-15 bg-white">
+                            <a href="{{ route('admin_product_voucher', ['id' => $product->id, 'package_id' => $pp->id]) }}"
+                               class="btn btn-light-primary">
+                                Show
+                            </a>
                         </div>
-                    </li>
-                    @endforeach
-                </ul>
+                    </div>
+                </div>
+            </div>
+        </li>
+    @endforeach
+</ul>
+
+
             </div>
 
             <!-- start create ticket modal  -->
@@ -130,7 +141,7 @@
             <!-- Edit Modal -->
             <div class="modal fade" id="editVoucherModal" tabindex="-1" aria-labelledby="editVoucherModalLabel"
                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered"g">
+                <div class="modal-dialog modal-dialog-centered" g">
                     <form id="editVoucherForm" method="POST" action="{{ route('admin_product_voucher_update') }}">
                         @csrf
                         <input type="hidden" name="id" id="edit_voucher_id">
@@ -201,25 +212,23 @@
                                                 <ul class="dropdown-menu">
                                                     <li>
                                                         <a class="dropdown-item edit-btn" href="#"
-                                                            data-id="{{ $vc->id }}"
-                                                            data-code="{{ $vc->redeem_code }}"
+                                                            data-id="{{ $vc->id }}" data-code="{{ $vc->redeem_code }}"
                                                             data-bs-toggle="modal" data-bs-target="#editVoucherModal">
                                                             <i class="ti ti-edit text-success me-2"></i> Edit
                                                         </a>
 
                                                     </li>
                                                     <li>
-                                                        <form
-    action="{{ route('admin_product_voucher_delete')}}"
-    method="POST"
-    onsubmit="return confirm('Yakin ingin menghapus voucher ini?')">
-    @csrf
-    <!-- Hapus: @method('DELETE') -->
-    <input type="hidden" name="id" value="{{ $vc->id }}">
-    <button class="dropdown-item delete-btn" type="submit">
-        <i class="ti ti-trash text-danger me-2"></i> Delete
-    </button>
-</form>
+                                                        <form action="{{ route('admin_product_voucher_delete')}}"
+                                                            method="POST"
+                                                            onsubmit="return confirm('Yakin ingin menghapus voucher ini?')">
+                                                            @csrf
+                                                            <!-- Hapus: @method('DELETE') -->
+                                                            <input type="hidden" name="id" value="{{ $vc->id }}">
+                                                            <button class="dropdown-item delete-btn" type="submit">
+                                                                <i class="ti ti-trash text-danger me-2"></i> Delete
+                                                            </button>
+                                                        </form>
 
                                                     </li>
                                                 </ul>
