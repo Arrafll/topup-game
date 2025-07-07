@@ -12,6 +12,7 @@ use App\Models\Attachment;
 use App\Models\User;
 use App\Models\UserData;
 use App\Models\Role;
+use App\Models\Voucher;
 use Intervention\Image\Laravel\Facades\Image;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -736,4 +737,71 @@ class AdminController extends Controller
         session()->flash('success', 'Keamanan akun berhasil diperbarui');
         return response()->json(['reload' => true]);
     }
+
+
+    public function productVoucher($id){
+        // $user = User::with('userData')->findOrFail($id);
+        $product = Product::findOrFail($id);
+        $productPackage = ProductPackage::where('product_id', '=', $id)->get();
+        $voucher = Voucher::with('game')->where('game_id', '=', $id)->get();
+
+        $data = [
+            'title' => 'Voucher',
+            'role' => 1,
+            'product' => $product,
+            'productPackage' => $productPackage,
+            'voucher' => $voucher
+        ];
+
+        return view('admin.voucher.voucher_list', $data);
+    }
+
+    public function addVoucher(Request $request) {
+         $request->validate([
+        'game_id' => 'required|exists:products,id',
+        'packages_id' => 'required|exists:product_packages,id',
+        'redeem_code' => 'required|string|max:30|unique:vouchers,redeem_code'
+    ]);
+
+    DB::table('vouchers')->insert([
+        'game_id' => $request->game_id,
+        'packages_id' => $request->packages_id,
+        'redeem_code' => $request->redeem_code,
+        'is_used' => false,
+        'used_date' => null,
+        'created_at' => now()->format('Y-m-d'),
+        'updated_at' => now()->format('Y-m-d'),
+    ]);
+
+    return redirect()->back()->with('success', 'Voucher berhasil ditambahkan!');
+    }
+
+    public function deleteVoucher(Request $request)
+{
+    $request->validate([
+        'id' => 'required|exists:vouchers,id',
+    ]);
+
+    $voucher = Voucher::findOrFail($request->id);
+    $voucher->delete();
+
+    return redirect()->back()->with('success', 'Voucher berhasil dihapus.');
+}
+
+
+public function updateVoucher(Request $request)
+{
+    $request->validate([
+        'id' => 'required|exists:vouchers,id',
+        'redeem_code' => 'required|string|max:30|unique:vouchers,redeem_code,' . $request->id,
+    ]);
+
+    $voucher = Voucher::findOrFail($request->id);
+    $voucher->redeem_code = $request->redeem_code;
+    $voucher->updated_at = now();
+    $voucher->save();
+
+    return redirect()->back()->with('success', 'Redeem code berhasil diperbarui.');
+}
+
 }
