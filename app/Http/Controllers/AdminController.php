@@ -407,68 +407,120 @@ class AdminController extends Controller
 
         return view('admin.order.order_list', $data);
     }
+public function order_detail($id)
+{
+    $order = Order::with('user')->where('orders.id', $id)->first();
 
-    public function order_detail($id)
-    {
-        $order = Order::with('user')->where('orders.id', '=', $id)->first();
-        $queryAttachment = DB::table('attachments')
-            ->select(DB::raw(value: 'MIN(attachments.name) as product_pic'), 'product_id')
-            ->groupBy('attachments.product_id');
-        $orders = DB::table(table: 'orders')
-            ->select(
-                'products.*',
-                'attachments.product_pic',
-                'product_packages.price as product_price',
-                'product_packages.amount as package_amount',
-                'orders.created_at as order_date',
-                'orders.updated_at as order_update_date',
-                'order_items.id as item_id',
-                'order_items.game_id',
-                'order_items.voucher_code'
-            )
-            ->leftJoin('order_items', 'order_items.order_id', '=', 'orders.id')
-            ->leftJoin('products', 'products.id', '=', 'order_items.product_id')
-            ->leftJoin('product_packages', 'product_packages.id', '=', 'order_items.package_id')
-            ->leftJoinSub($queryAttachment, 'attachments', first: function (JoinClause $join) {
-                $join->on('products.id', '=', 'attachments.product_id');
-            })
-            ->where('orders.id', $id)
-            ->get();
+    // Ambil gambar utama produk
+    $queryAttachment = DB::table('attachments')
+        ->select(DB::raw('MIN(attachments.name) as product_pic'), 'product_id')
+        ->groupBy('product_id');
 
-        $data = [
-            'title' => 'Order Detail',
-            'orders' => $orders,
-            'order' => $order,
-            'role' => 1
-        ];
+    $orders = DB::table('orders')
+        ->select(
+            'products.id as product_id',
+            'products.name as game',
+            'attachments.product_pic',
+            'product_packages.id as package_id',
+            'product_packages.price as product_price',
+            'product_packages.amount as package_amount',
 
-        return view('admin.order.order_detail', $data);
-    }
+            'order_items.id as item_id',
+            'order_items.game_id',
+            'order_items.package_id',
+            'order_items.voucher_code',
+            'order_items.voucher_id',
+
+            'orders.created_at as order_date',
+            'orders.updated_at as order_update_date',
+
+            'vouchers.id as available_voucher_id',
+            'vouchers.redeem_code as available_voucher',
+
+            'vs.id as used_voucher_id',
+            'vs.redeem_code as used_voucher_code'
+        )
+        ->leftJoin('order_items', 'order_items.order_id', '=', 'orders.id')
+        ->leftJoin('products', 'products.id', '=', 'order_items.product_id')
+        ->leftJoin('product_packages', 'product_packages.id', '=', 'order_items.package_id')
+        ->leftJoinSub($queryAttachment, 'attachments', function (JoinClause $join) {
+            $join->on('products.id', '=', 'attachments.product_id');
+        })
+        // Voucher yang tersedia dan belum digunakan
+        ->leftJoin('vouchers', function (JoinClause $join) {
+            $join->on('vouchers.game_id', '=', 'order_items.product_id')
+                ->on('vouchers.packages_id', '=', 'order_items.package_id')
+                ->where('vouchers.is_used', '=', 0);
+        })
+        // Voucher yang sudah digunakan (relasi dari order_items.voucher_id)
+        ->leftJoin('vouchers as vs', 'vs.id', '=', 'order_items.voucher_id')
+        ->where('orders.id', $id)
+        ->groupBy(
+            'products.id',
+            'products.name',
+            'attachments.product_pic',
+            'product_packages.id',
+            'product_packages.price',
+            'product_packages.amount',
+            'order_items.id',
+            'order_items.game_id',
+            'order_items.package_id',
+            'order_items.voucher_code',
+            'order_items.voucher_id',
+            'orders.created_at',
+            'orders.updated_at',
+            'vouchers.id',
+            'vouchers.redeem_code',
+            'vs.id',
+            'vs.redeem_code'
+        )
+        ->get();
+
+    $data = [
+        'title' => 'Order Detail',
+        'orders' => $orders,
+        'order' => $order,
+        'role' => 1,
+    ];
+
+    return view('admin.order.order_detail', $data);
+}
+
 
 
     public function order_finish(Request $request)
-    {
-        $order_id = $request->orderId;
-        $voucherCodes = $request->voucherCodes;
-        $orderItems = $request->itemIds;
+{
+    $order_id = $request->orderId;
+    $voucherIds = $request->voucherIds; // kiriman dari form hidden input
+    $orderItems = $request->itemIds;
 
+    foreach ($orderItems as $index => $itemId) {
+        $orderItem = OrderItem::find($itemId);
+        $voucherId = $voucherIds[$index];
 
-        $idx = 0;
-        foreach ($orderItems as $oi) {
-            $orderItem = OrderItem::find($oi);
-            $orderItem->voucher_code = $voucherCodes[$idx];
+        $voucher = Voucher::find($voucherId);
+        if ($voucher && !$voucher->is_used) {
+            // Update order item
+            $orderItem->voucher_code = $voucher->redeem_code;
+            $orderItem->voucher_id = $voucher->id;
             $orderItem->save();
-            $idx++;
+
+            // Tandai voucher sebagai sudah digunakan
+            $voucher->is_used = true;
+            $voucher->used_date = now();
+            $voucher->save();
         }
-
-        $order = Order::find($order_id);
-        $order->finished_at = date('Y-m-d H:i:s');
-        $order->status = 'Done';
-        $order->save();
-
-        return redirect('/admin_order_detail/' . $order_id)->with('finish', 'Pesanan telah diselesaikan');
-
     }
+
+    $order = Order::find($order_id);
+    $order->finished_at = now();
+    $order->status = 'Done';
+    $order->save();
+
+    return redirect('/admin_order_detail/' . $order_id)
+        ->with('finish', 'Pesanan telah diselesaikan');
+}
+
 
     public function order_cancel($id)
     {
@@ -756,13 +808,30 @@ class AdminController extends Controller
         return view('admin.voucher.voucher_list', $data);
     }
 
-    public function addVoucher(Request $request) {
-         $request->validate([
+
+public function addVoucher(Request $request)
+{
+    // Validasi umum
+    $request->validate([
         'game_id' => 'required|exists:products,id',
         'packages_id' => 'required|exists:product_packages,id',
-        'redeem_code' => 'required|string|max:30|unique:vouchers,redeem_code'
+        'redeem_code' => 'required|string|max:30',
     ]);
 
+    // Cek manual apakah kombinasi redeem_code + game_id + packages_id sudah ada
+    $exists = DB::table('vouchers')
+        ->where('game_id', $request->game_id)
+        ->where('packages_id', $request->packages_id)
+        ->where('redeem_code', $request->redeem_code)
+        ->exists();
+
+    if ($exists) {
+        return redirect()->back()
+            ->withErrors(['redeem_code' => 'Kode voucher ini sudah digunakan untuk kombinasi game dan paket tersebut.'])
+            ->withInput();
+    }
+
+    // Jika tidak ada, simpan voucher
     DB::table('vouchers')->insert([
         'game_id' => $request->game_id,
         'packages_id' => $request->packages_id,
@@ -774,7 +843,9 @@ class AdminController extends Controller
     ]);
 
     return redirect()->back()->with('success', 'Voucher berhasil ditambahkan!');
-    }
+}
+
+
 
     public function deleteVoucher(Request $request)
 {

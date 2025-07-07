@@ -309,69 +309,76 @@ class CustomerController extends Controller
     }
 
     public function order_detail($id)
-    {
+{
+    $order = Order::find($id);
 
-        $order = Order::find($id);
-        $queryAttachment = DB::table('attachments')
-            ->select(DB::raw(value: 'MIN(attachments.name) as product_pic'), 'product_id')
-            ->groupBy('attachments.product_id');
-        $orders = DB::table(table: 'orders')
-            ->select(
-                'products.*',
-                'attachments.product_pic',
-                'product_packages.price as product_price',
-                'product_packages.amount as package_amount',
-                'orders.created_at as order_date',
-                'order_items.game_id',
-                'order_items.voucher_code'
-            )
-            ->leftJoin('order_items', 'order_items.order_id', '=', 'orders.id')
-            ->leftJoin('products', 'products.id', '=', 'order_items.product_id')
-            ->leftJoin('product_packages', 'product_packages.id', '=', 'order_items.package_id')
-            ->leftJoinSub($queryAttachment, 'attachments', first: function (JoinClause $join) {
-                $join->on('products.id', '=', 'attachments.product_id');
-            })
-            ->where('orders.id', $id)
-            ->get();
+    $queryAttachment = DB::table('attachments')
+        ->select(DB::raw('MIN(attachments.name) as product_pic'), 'product_id')
+        ->groupBy('product_id');
 
-        $snapToken = $order->snap_token;
-        if (empty($order->finished_at) || empty($order->processed_at)) {
-            if (empty($order->snap_token) && empty($order->payed_at)) {
-                Config::$serverKey = config('midtrans.server_key');
-                Config::$isProduction = config('midtrans.is_production');
-                Config::$isSanitized = config('midtrans.is_sanitized');
-                Config::$is3ds = config('midtrans.is_3ds');
+    $orders = DB::table('orders')
+        ->select(
+            'products.*',
+            'attachments.product_pic',
+            'product_packages.price as product_price',
+            'product_packages.amount as package_amount',
+            'orders.created_at as order_date',
+            'order_items.game_id',
+            'order_items.package_id',
+            'order_items.voucher_code',
+            'order_items.voucher_id',
+            'vouchers.redeem_code as voucher_redeem_code',
+            'vouchers.used_date as voucher_used_date',
+            'products.name as game'
+        )
+        ->leftJoin('order_items', 'order_items.order_id', '=', 'orders.id')
+        ->leftJoin('products', 'products.id', '=', 'order_items.product_id')
+        ->leftJoin('product_packages', 'product_packages.id', '=', 'order_items.package_id')
+        ->leftJoinSub($queryAttachment, 'attachments', function (JoinClause $join) {
+            $join->on('products.id', '=', 'attachments.product_id');
+        })
+        ->leftJoin('vouchers', 'vouchers.id', '=', 'order_items.voucher_id')
+        ->where('orders.id', $id)
+        ->get();
 
-                $params = [
-                    'transaction_details' => [
-                        'order_id' => $order->code,
-                        'gross_amount' => $orders->sum('product_price') + 2500,
-                    ],
-                    'customer_details' => [
-                        'first_name' => Auth::user()->name,
-                        'email' => Auth::user()->email,
-                    ],
-                ];
+    // Snap Token Logic
+    $snapToken = $order->snap_token;
+    if (empty($order->finished_at) || empty($order->processed_at)) {
+        if (empty($order->snap_token) && empty($order->payed_at)) {
+            Config::$serverKey = config('midtrans.server_key');
+            Config::$isProduction = config('midtrans.is_production');
+            Config::$isSanitized = config('midtrans.is_sanitized');
+            Config::$is3ds = config('midtrans.is_3ds');
 
-                $snapToken = Snap::getSnapToken($params);
-                $order->pay_total = $orders->sum('product_price') + 2500;
-                $order->snap_token = $snapToken;
-                $order->save();
+            $params = [
+                'transaction_details' => [
+                    'order_id' => $order->code,
+                    'gross_amount' => $orders->sum('product_price') + 2500,
+                ],
+                'customer_details' => [
+                    'first_name' => Auth::user()->name,
+                    'email' => Auth::user()->email,
+                ],
+            ];
 
-            }
+            $snapToken = Snap::getSnapToken($params);
+            $order->pay_total = $orders->sum('product_price') + 2500;
+            $order->snap_token = $snapToken;
+            $order->save();
         }
-
-        $data = [
-            'title' => 'Order Detail',
-            'role' => 2,
-            'orders' => $orders,
-            'order' => $order,
-            'snapToken' => $snapToken,
-            'cartList' => $this->cartList
-        ];
-
-        return view('customer.order.detail', $data);
     }
+
+    $data = [
+        'title' => 'Order Detail',
+        'role' => 2,
+        'orders' => $orders,
+        'order' => $order,
+        'snapToken' => $snapToken,
+        'cartList' => $this->cartList
+    ];
+
+    return view('customer.order.detail', $data);
+}
 
     public function order_cancel($id)
     {

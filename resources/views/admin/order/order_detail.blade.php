@@ -59,9 +59,9 @@
                                         </h6>
                                         <div class="text-end">
                                             @if (Auth::user()->phone == NULL)
-                                                <p>-</p>
+                                            <p>-</p>
                                             @else
-                                                <p>{{ $order->user->handphone }}</p>
+                                            <p>{{ $order->user->handphone }}</p>
                                             @endif
 
                                         </div>
@@ -117,9 +117,9 @@
                                         </h6>
                                         <div class="text-end">
                                             @if (empty($order->pay_method))
-                                                <p>-</p>
+                                            <p>-</p>
                                             @else
-                                                <p>{{ getPayMethod($order->pay_method) }}</p>
+                                            <p>{{ getPayMethod($order->pay_method) }}</p>
                                             @endif
                                         </div>
                                     </div>
@@ -129,9 +129,9 @@
                                         </h6>
                                         <div class="text-end">
                                             @if (empty($order->payed_at))
-                                                <p>-</p>
+                                            <p>-</p>
                                             @else
-                                                <p>{{ $order->payed_at }}</p>
+                                            <p>{{ $order->payed_at }}</p>
                                             @endif
                                         </div>
                                     </div>
@@ -183,35 +183,67 @@
 
                                         <tbody>
                                             @foreach ($orders as $o)
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex align-items-center gap-2">
-                                                            <img src="{{ asset('uploads/product/' . $o->product_pic)}}"
-                                                                alt="product-img" class="h-50 bg-light-secondary b-r-10">
-                                                            <div class="text-start">
-                                                                <h6 class="mb-0">{{ $o->name }}</h6>
-                                                                <p class="f-w-500 m-0 text-muted f-s-13">
-                                                                    <span
-                                                                        class="text-secondary">{{ $o->package_amount . ' ' . $o->unit }}</span>
-                                                                </p>
-                                                            </div>
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <img src="{{ asset('uploads/product/' . $o->product_pic)}}"
+                                                            alt="product-img" class="h-50 bg-light-secondary b-r-10">
+                                                        <div class="text-start">
+                                                            <h6 class="mb-0">{{ $o->game }}</h6>
+                                                            <p class="f-w-500 m-0 text-muted f-s-13">
+                                                                <span
+                                                                    class="text-secondary">{{ $o->package_amount}}</span>
+                                                            </p>
                                                         </div>
-                                                    </td>
-                                                    <td>{{ $o->game }}</td>
-                                                    <td>{{ $o->game_id}} </td>
-                                                    <td>{{ toCurrency($o->product_price, 'IDN') }}</td>
-                                                    <td>{{ $o->order_date}} </td>
-                                                    @if ($order->status == "Processed")
-                                                        <td class="text-center" width="10%"><input type="text" class="form-control"
-                                                                style="width: 100%;display:inline;" placeholder="N/A"
-                                                                name="voucherCodes[]">
-                                                            <input type="hidden" name="itemIds[]" value="{{ $o->item_id }}">
-                                                        </td>
+                                                    </div>
+                                                </td>
+                                                <td>{{ $o->game }}</td>
+                                                <td>{{ $o->game_id }}</td>
+                                                <td>{{ toCurrency($o->product_price, 'IDN') }}</td>
+                                                <td>{{ $o->order_date }}</td>
+
+                                                @if ($order->status == "Processed")
+                                                <td class="text-center" width="10%">
+                                                    @if ($o->available_voucher_id)
+                                                    <div class="d-flex flex-column align-items-center">
+                                                        <div class="position-relative" data-bs-toggle="tooltip"
+                                                            data-bs-placement="top"
+                                                            title="Kode: {{ $o->available_voucher }}&#10;Voucher ID: #{{ $o->used_voucher_id }}">
+                                                            <i class="ti ti-ticket fs-4 text-primary"></i>
+                                                        </div>
+                                                        <span
+                                                            class="badge bg-light-secondary text-dark mt-1">#{{ $o->available_voucher_id }}</span>
+                                                    </div>
+
+                                                    <input type="hidden" name="itemIds[]" value="{{ $o->item_id }}">
+                                                    <input type="hidden" name="voucherIds[]"
+                                                        value="{{ $o->available_voucher_id }}">
                                                     @else
-                                                        <td>@if ($o->voucher_code != "") {{$o->voucher_code}} @else - @endif</td>
+                                                    <span class="text-warning">Voucher tidak tersedia</span>
                                                     @endif
-                                                </tr>
-                                            @endforeach
+                                                </td>
+                                                @else
+                                                <td class="text-center" width="10%">
+                                                    @if ($o->used_voucher_code && $o->used_voucher_id)
+                                                    <div class="d-flex flex-column align-items-center">
+                                                        <div class="position-relative" data-bs-toggle="tooltip"
+                                                            data-bs-placement="top"
+                                                            title="Kode Redeem: {{ $o->used_voucher_code }}&#10;Voucher ID: #{{ $o->used_voucher_id }}">
+                                                            <i class="ti ti-ticket fs-4 text-success"></i>
+                                                        </div>
+                                                        <span
+                                                            class="badge bg-light text-dark mt-1">#{{ $o->used_voucher_id }}</span>
+                                                    </div>
+                                                    @else
+                                                    <span class="text-muted">-</span>
+                                                    @endif
+                                                </td>
+                                                @endif
+
+
+
+
+                                                @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -219,12 +251,12 @@
                         </form>
                         <div class="card-footer">
                             @if ($order->status == "Processed")
-                                <div class="col-12">
-                                    <div class="text-end">
-                                        <a onclick="cancelOrder('{{$order->id}}')" class="btn btn-light-danger">Batalkan</a>
-                                        <a onclick="finishOrder()" class="btn btn-primary">Selesaikan</a>
-                                    </div>
+                            <div class="col-12">
+                                <div class="text-end">
+                                    <a onclick="cancelOrder('{{$order->id}}')" class="btn btn-light-danger">Batalkan</a>
+                                    <a onclick="finishOrder()" class="btn btn-primary">Selesaikan</a>
                                 </div>
+                            </div>
                             @endif
                         </div>
 
@@ -254,84 +286,89 @@
 
                                         </div>
                                         <p class="mt-2 text-primary">Pesanan telah dibuat</p>
-                                        <p class="text-secondary">{{ \Carbon\Carbon::parse($order->created_at)->diffForHumans() }}</p>
+                                        <p class="text-secondary">
+                                            {{ \Carbon\Carbon::parse($order->created_at)->diffForHumans() }}</p>
                                     </div>
                                 </li>
 
 
                                 @if ($order->pay_status == "Paid" || $order->pay_status == "Refunded")
 
-                                    <li class="timeline-section">
-                                        <div class="timeline-icon">
-                                            <span class="text-light-secondary h-35 w-35 d-flex-center b-r-50">
-                                                <i class="ph ph-credit-card"></i>
-                                            </span>
+                                <li class="timeline-section">
+                                    <div class="timeline-icon">
+                                        <span class="text-light-secondary h-35 w-35 d-flex-center b-r-50">
+                                            <i class="ph ph-credit-card"></i>
+                                        </span>
+                                    </div>
+                                    <div class="timeline-content bg-light-secondary b-1-secondary">
+                                        <div class="d-flex justify-content-between align-items-center timeline-flex">
+                                            <h6 class="mt-2 text-secondary">Pesanan Dibayar</h6>
                                         </div>
-                                        <div class="timeline-content bg-light-secondary b-1-secondary">
-                                            <div class="d-flex justify-content-between align-items-center timeline-flex">
-                                                <h6 class="mt-2 text-secondary">Pesanan Dibayar</h6>
-                                            </div>
-                                            <p class="mt-2">
-                                                Pesanan telah dibayar
-                                            </p>
-                                            <p class="text-secondary">{{ \Carbon\Carbon::parse($order->payed_at)->diffForHumans() }}</p>
-                                        </div>
-                                    </li>
+                                        <p class="mt-2">
+                                            Pesanan telah dibayar
+                                        </p>
+                                        <p class="text-secondary">
+                                            {{ \Carbon\Carbon::parse($order->payed_at)->diffForHumans() }}</p>
+                                    </div>
+                                </li>
                                 @endif
                                 @if ($order->status == "Processed" || !empty($order->processed_at))
-                                    <li class="timeline-section">
-                                        <div class="timeline-icon">
-                                            <span class="text-light-info h-35 w-35 d-flex-center b-r-50">
-                                                <i class="ph ph-package"></i>
-                                            </span>
+                                <li class="timeline-section">
+                                    <div class="timeline-icon">
+                                        <span class="text-light-info h-35 w-35 d-flex-center b-r-50">
+                                            <i class="ph ph-package"></i>
+                                        </span>
+                                    </div>
+                                    <div class="timeline-content bg-light-info b-1-info">
+                                        <div class="d-flex justify-content-between align-items-center timeline-flex">
+                                            <h6 class="mt-2 text-info">Pesanan Di Proses</h6>
                                         </div>
-                                        <div class="timeline-content bg-light-info b-1-info">
-                                            <div class="d-flex justify-content-between align-items-center timeline-flex">
-                                                <h6 class="mt-2 text-info">Pesanan Di Proses</h6>
-                                            </div>
-                                            <p class="mt-2 text-info">
-                                                Pesanan dalam proses admin
-                                            </p>
-                                            <p class="text-secondary">{{ \Carbon\Carbon::parse($order->processed_at)->diffForHumans() }}</p>
-                                        </div>
-                                    </li>
+                                        <p class="mt-2 text-info">
+                                            Pesanan dalam proses admin
+                                        </p>
+                                        <p class="text-secondary">
+                                            {{ \Carbon\Carbon::parse($order->processed_at)->diffForHumans() }}</p>
+                                    </div>
+                                </li>
                                 @endif
                                 @if ($order->status == "Cancelled")
 
-                                    <li class="timeline-section">
-                                        <div class="timeline-icon">
-                                            <span class="text-light-danger h-35 w-35 d-flex-center b-r-50">
-                                                <i class="ph ph-receipt-x"></i>
-                                            </span>
+                                <li class="timeline-section">
+                                    <div class="timeline-icon">
+                                        <span class="text-light-danger h-35 w-35 d-flex-center b-r-50">
+                                            <i class="ph ph-receipt-x"></i>
+                                        </span>
+                                    </div>
+                                    <div class="timeline-content bg-light-danger b-1-danger">
+                                        <div class="d-flex justify-content-between align-items-center timeline-flex">
+                                            <h6 class="mt-2 text-danger">Pesanan Dibatalkan</h6>
                                         </div>
-                                        <div class="timeline-content bg-light-danger b-1-danger">
-                                            <div class="d-flex justify-content-between align-items-center timeline-flex">
-                                                <h6 class="mt-2 text-danger">Pesanan Dibatalkan</h6>
-                                            </div>
-                                            <p class="mt-2 text-danger">
-                                                Pesanan telah dibatalkan
-                                            </p>
-                                            <p class="text-danger">{{ \Carbon\Carbon::parse($order->finished_at)->diffForHumans() }}</p>
-                                        </div>
-                                    </li>
+                                        <p class="mt-2 text-danger">
+                                            Pesanan telah dibatalkan
+                                        </p>
+                                        <p class="text-danger">
+                                            {{ \Carbon\Carbon::parse($order->finished_at)->diffForHumans() }}</p>
+                                    </div>
+                                </li>
                                 @endif
                                 @if ($order->status == "Done")
-                                    <li class="timeline-section">
-                                        <div class="timeline-icon">
-                                            <span class="text-light-success h-35 w-35 d-flex-center b-r-50">
-                                                <i class="ph ph-arrow-square-left"></i>
-                                            </span>
+                                <li class="timeline-section">
+                                    <div class="timeline-icon">
+                                        <span class="text-light-success h-35 w-35 d-flex-center b-r-50">
+                                            <i class="ph ph-arrow-square-left"></i>
+                                        </span>
+                                    </div>
+                                    <div class="timeline-content bg-light-success b-1-success">
+                                        <div class="d-flex justify-content-between align-items-center timeline-flex">
+                                            <h6 class="mt-2 text-success">Selesai</h6>
                                         </div>
-                                        <div class="timeline-content bg-light-success b-1-success">
-                                            <div class="d-flex justify-content-between align-items-center timeline-flex">
-                                                <h6 class="mt-2 text-success">Selesai</h6>
-                                            </div>
-                                            <p class="mt-2 text-success">
-                                                Voucher berhasil dikirim
-                                            </p>
-                                            <p class="text-secondary">{{ \Carbon\Carbon::parse($order->finished_at)->diffForHumans() }}</p>
-                                        </div>
-                                    </li>
+                                        <p class="mt-2 text-success">
+                                            Voucher berhasil dikirim
+                                        </p>
+                                        <p class="text-secondary">
+                                            {{ \Carbon\Carbon::parse($order->finished_at)->diffForHumans() }}</p>
+                                    </div>
+                                </li>
                                 @endif
                             </ul>
                         </div>
@@ -356,7 +393,8 @@
                         <p>{{ $order->note }} </p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-light-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-light-secondary btn-sm"
+                            data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -423,4 +461,14 @@
             })
         }
     </script>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+    });
+</script>
+
 @endsection
