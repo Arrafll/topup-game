@@ -199,16 +199,20 @@
                                                 <td>{{ toCurrency($o->product_price, 'IDN') }}</td>
                                                 <td>{{ $o->order_date}} </td>
                                                 <td class="text-center">
-                                                    @if ($o->voucher_id)
-                                                        <div class="d-flex flex-column align-items-center">
-                                                            <div class="position-relative" data-bs-toggle="tooltip"
-                                                                data-bs-placement="top"
-                                                                title="Kode Redeem: {{ $o->voucher_redeem_code }}&#10;">
-                                                                <i class="ti ti-ticket fs-4 text-success"></i>
+                                                    @if($o->is_voucher == "1")
+                                                        @if ($o->voucher_id)
+                                                            <div class="d-flex flex-column align-items-center">
+                                                                <div class="position-relative" data-bs-toggle="tooltip"
+                                                                    data-bs-placement="top"
+                                                                    title="Kode Redeem: {{ $o->voucher_redeem_code }}&#10;">
+                                                                    <i class="ti ti-ticket fs-4 text-success"></i>
+                                                                </div>
+                                                                <span
+                                                                    class="badge bg-light-secondary text-dark mt-1">#{{ $o->voucher_id }}</span>
                                                             </div>
-                                                            <span
-                                                                class="badge bg-light-secondary text-dark mt-1">#{{ $o->voucher_id }}</span>
-                                                        </div>
+                                                        @else
+                                                            <span class="text-success">-</span>
+                                                        @endif
                                                     @else
                                                         <span class="text-success">Produk tanpa voucher</span>
                                                     @endif

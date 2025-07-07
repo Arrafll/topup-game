@@ -79,12 +79,12 @@
       @if($role == 0)
 
       <li class="no-sub">
-      <a class="{{ Route::is('beranda') ? 'active' : '' }}" href="{{ route('customer') }}">
+      <a class="{{ Route::is('beranda') ? 'active' : '' }}" href="{{ route('beranda') }}">
         <i class="ph-duotone  ph-house-line"></i> Beranda
       </a>
       </li>
       <li class="no-sub">
-      <a class="{{ Route::is('guest_product*') ? 'active' : '' }}" href="{{ route('customer_product_list') }}">
+      <a class="{{ Route::is('guest_product*') ? 'active' : '' }}" href="{{ route('guest_product_list') }}">
         <i class="ph ph-game-controller"></i> Games
       </a>
       </li>

@@ -119,7 +119,19 @@ class GuestController extends Controller
             ->get();
 
 
-        $packages = ProductPackage::where('product_id', '=', $id)->get();
+        $queryVouchers = DB::table('vouchers')
+            ->select(DB::raw('COUNT(vouchers.id) as vouchers_count'), 'vouchers.packages_id')
+            ->where('vouchers.is_used', '=', '0')
+            ->groupBy('vouchers.packages_id');
+        $packages = DB::table('product_packages')
+            ->select(DB::raw('IFNULL(vouchers.vouchers_count,0) as vouchers_count'), 'product_packages.*')
+            ->leftJoinSub($queryVouchers, 'vouchers', function (JoinClause $join) {
+                $join->on('product_packages.id', '=', 'vouchers.packages_id');
+            })
+            ->where('product_id', '=', $id)
+            ->groupBy('product_packages.id')
+            ->get();
+
         $attachments = Attachment::where('product_id', '=', $id)->get();
         $attachmentsCount = $attachments->count();
 

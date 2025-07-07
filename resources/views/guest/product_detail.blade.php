@@ -21,6 +21,10 @@
             border: 1px solid rgb(var(--primary), 1);
             color: rgb(var(--primary), 1);
         }
+                .form-selects .card:has(.select-input:disabled) {
+            border: 1px solid var(--border_color);
+        }
+
 
         .product-slider-nav img {
             width: 100%;
@@ -45,7 +49,7 @@
                         <li class="">
                             <a href="{{ route('beranda') }}" class="f-s-14 f-w-500">
                                 <span>
-                                 </i> KlikTopup
+                                    </i> KlikTopup
                                 </span>
                             </a>
                         </li>
@@ -100,8 +104,16 @@
                                 </div>
 
                                 <div class="app-divider-v dotted pb-2"></div>
-                                <div class="product-detailbox mt-3 row">
-
+                                <div class="product-detailbox row">
+                                    <div class="col-sm-12 mt-1 mb-1">
+                                        @if ($product->is_voucher == 1)
+                                            <p class="text-primary">Produk terdapat voucher yang akan dikirim ketika pesanan
+                                                selesai.</p>
+                                        @else
+                                            <p class="text-primary">Produk ini tanpa voucher, currency akan dikirimkan ke Game
+                                                ID di dalam game.</p>
+                                        @endif
+                                    </div>
                                     <input type="hidden" value="{{ $product->id }}" id="productId">
                                     <div class="col-sm-6">
                                         <h5>Game ID</h5>
@@ -122,8 +134,12 @@
 
                                         <div class="col-sm-4">
                                             <div class="card hover-effect select-package">
+                                                @if ($product->is_voucher == 1 && $p->vouchers_count < 1)
+                                                    <div class="ribbon-shape shape-right ribbon-danger">Habis</div>
+                                                @endif
                                                 <input type="radio" class="select-input select-package" name="package"
-                                                    value="{{ $p->id}}">
+                                                    value="{{ $p->id}}" @if ($product->is_voucher == 1 && $p->vouchers_count < 1)
+                                                    disabled @endif data-vouchers_count="{{ $p->vouchers_count }}">
                                                 <div class="card-body  p-3">
                                                     <h5>{{ $p->amount}}</h5>
                                                     <h6>{{ toCurrency($p->price, 'IDN') }}</h6>
