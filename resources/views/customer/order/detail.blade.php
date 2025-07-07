@@ -1,6 +1,22 @@
 @extends('layout.main')
 <!-- Body main section starts -->
 @section('content')
+<style>
+    .transition-fast {
+        transition: all 0.3s ease-in-out;
+    }
+
+    .animate-ping-once {
+        animation: ping-once 0.6s ease-in-out;
+    }
+
+    @keyframes ping-once {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.3); opacity: 0.8; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+</style>
+
     <main>
         <div class="container-fluid">
             <!-- Breadcrumb start -->
@@ -59,9 +75,9 @@
                                         </h6>
                                         <div class="text-end">
                                             @if (Auth::user()->phone == NULL)
-                                                <p>-</p>
+                                            <p>-</p>
                                             @else
-                                                <p>{{ Auth::user()->phone }}</p>
+                                            <p>{{ Auth::user()->phone }}</p>
                                             @endif
 
                                         </div>
@@ -118,9 +134,9 @@
                                         </h6>
                                         <div class="text-end">
                                             @if (empty($order->pay_method))
-                                                <p>-</p>
+                                            <p>-</p>
                                             @else
-                                                <p>{{ getPayMethod($order->pay_method) }}</p>
+                                            <p>{{ getPayMethod($order->pay_method) }}</p>
                                             @endif
                                         </div>
                                     </div>
@@ -130,9 +146,9 @@
                                         </h6>
                                         <div class="text-end">
                                             @if (empty($order->payed_at))
-                                                <p>-</p>
+                                            <p>-</p>
                                             @else
-                                                <p>{{ $order->payed_at }}</p>
+                                            <p>{{ $order->payed_at }}</p>
                                             @endif
                                         </div>
                                     </div>
@@ -180,45 +196,51 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($orders as $o)
-                                            <tr>
-                                                <td>
-                                                    <div class="d-flex align-items-center gap-2">
-                                                        <img src="{{ asset('uploads/product/' . $o->product_pic)}}"
-                                                            alt="product-img" class="h-50 bg-light-secondary b-r-10">
-                                                        <div class="text-start">
-                                                            <h6 class="mb-0">{{ $o->name }}</h6>
-                                                            <p class="f-w-500 m-0 text-muted f-s-13">
-                                                                <span
-                                                                    class="text-secondary">{{ $o->package_amount . ' ' . $o->unit }}</span>
-                                                            </p>
-                                                        </div>
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <img src="{{ asset('uploads/product/' . $o->product_pic)}}"
+                                                        alt="product-img" class="h-50 bg-light-secondary b-r-10">
+                                                    <div class="text-start">
+                                                        <h6 class="mb-0">{{ $o->name }}</h6>
+                                                        <p class="f-w-500 m-0 text-muted f-s-13">
+                                                            <span
+                                                                class="text-secondary">{{ $o->package_amount . ' ' . $o->unit }}</span>
+                                                        </p>
                                                     </div>
-                                                </td>
-                                                <td>{{ $o->game }}</td>
-                                                <td>{{ $o->game_id}} </td>
-                                                <td>{{ toCurrency($o->product_price, 'IDN') }}</td>
-                                                <td>{{ $o->order_date}} </td>
-                                                <td class="text-center">
-                                                    @if($o->is_voucher == "1")
-                                                        @if ($o->voucher_id)
-                                                            <div class="d-flex flex-column align-items-center">
-                                                                <div class="position-relative" data-bs-toggle="tooltip"
-                                                                    data-bs-placement="top"
-                                                                    title="Kode Redeem: {{ $o->voucher_redeem_code }}&#10;">
-                                                                    <i class="ti ti-ticket fs-4 text-success"></i>
-                                                                </div>
-                                                                <span
-                                                                    class="badge bg-light-secondary text-dark mt-1">#{{ $o->voucher_id }}</span>
-                                                            </div>
-                                                        @else
-                                                            <span class="text-success">-</span>
-                                                        @endif
-                                                    @else
-                                                        <span class="text-success">Produk tanpa voucher</span>
-                                                    @endif
-                                                </td>
+                                                </div>
+                                            </td>
+                                            <td>{{ $o->game }}</td>
+                                            <td>{{ $o->game_id}} </td>
+                                            <td>{{ toCurrency($o->product_price, 'IDN') }}</td>
+                                            <td>{{ $o->order_date}} </td>
+                                            <td class="text-center">
+                                                @if ($o->is_voucher == "1")
+                                                @if ($o->voucher_id)
+                                                <div class="d-flex flex-column align-items-center position-relative">
+                                                    <div class="position-relative"
+                                                        id="tooltip-trigger-{{ $o->item_id }}" data-bs-toggle="tooltip"
+                                                        data-bs-placement="top"
+                                                        title="Kode Redeem: {{ $o->voucher_redeem_code }}"
+                                                        style="cursor: pointer;"
+                                                        onclick="copyToClipboard('voucher-code-{{ $o->item_id }}', 'icon-{{ $o->item_id }}', 'tooltip-trigger-{{ $o->item_id }}')">
+                                                        <i id="icon-{{ $o->item_id }}"
+                                                            class="ti ti-ticket fs-4 text-success transition-fast"></i>
+                                                        <input type="text" id="voucher-code-{{ $o->item_id }}"
+                                                            class="d-none" value="{{ $o->voucher_redeem_code }}">
+                                                    </div>
+                                                    <span
+                                                        class="badge bg-light-secondary text-dark mt-1">#{{ $o->voucher_id }}</span>
+                                                </div>
+                                                @else
+                                                <span class="text-success">-</span>
+                                                @endif
+                                                @else
+                                                <span class="text-success">Produk tanpa voucher</span>
+                                                @endif
+                                            </td>
 
-                                            </tr>
+                                        </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -264,144 +286,144 @@
 
                                 @if ($order->pay_status == "Paid" || $order->pay_status == "Refunded")
 
-                                    <li class="timeline-section">
-                                        <div class="timeline-icon">
-                                            <span class="text-light-secondary h-35 w-35 d-flex-center b-r-50">
-                                                <i class="ph ph-credit-card"></i>
-                                            </span>
+                                <li class="timeline-section">
+                                    <div class="timeline-icon">
+                                        <span class="text-light-secondary h-35 w-35 d-flex-center b-r-50">
+                                            <i class="ph ph-credit-card"></i>
+                                        </span>
+                                    </div>
+                                    <div class="timeline-content bg-light-secondary b-1-secondary">
+                                        <div class="d-flex justify-content-between align-items-center timeline-flex">
+                                            <h6 class="mt-2 text-secondary">Pesanan Dibayar</h6>
                                         </div>
-                                        <div class="timeline-content bg-light-secondary b-1-secondary">
-                                            <div class="d-flex justify-content-between align-items-center timeline-flex">
-                                                <h6 class="mt-2 text-secondary">Pesanan Dibayar</h6>
-                                            </div>
-                                            <p class="mt-2">
-                                                Pesanan telah dibayar
-                                            </p>
-                                            <p class="text-secondary">
-                                                {{ \Carbon\Carbon::parse($order->payed_at)->diffForHumans() }}
-                                            </p>
-                                        </div>
-                                    </li>
+                                        <p class="mt-2">
+                                            Pesanan telah dibayar
+                                        </p>
+                                        <p class="text-secondary">
+                                            {{ \Carbon\Carbon::parse($order->payed_at)->diffForHumans() }}
+                                        </p>
+                                    </div>
+                                </li>
                                 @endif
                                 @if ($order->status == "Processed" || !empty($order->processed_at))
-                                    <li class="timeline-section">
-                                        <div class="timeline-icon">
-                                            <span class="text-light-info h-35 w-35 d-flex-center b-r-50">
-                                                <i class="ph ph-package"></i>
-                                            </span>
+                                <li class="timeline-section">
+                                    <div class="timeline-icon">
+                                        <span class="text-light-info h-35 w-35 d-flex-center b-r-50">
+                                            <i class="ph ph-package"></i>
+                                        </span>
+                                    </div>
+                                    <div class="timeline-content bg-light-info b-1-info">
+                                        <div class="d-flex justify-content-between align-items-center timeline-flex">
+                                            <h6 class="mt-2 text-info">Pesanan Di Proses</h6>
                                         </div>
-                                        <div class="timeline-content bg-light-info b-1-info">
-                                            <div class="d-flex justify-content-between align-items-center timeline-flex">
-                                                <h6 class="mt-2 text-info">Pesanan Di Proses</h6>
-                                            </div>
-                                            <p class="mt-2 text-info">
-                                                Pesanan dalam proses admin
-                                            </p>
-                                            <p class="text-secondary">
-                                                {{ \Carbon\Carbon::parse($order->processed_at)->diffForHumans() }}
-                                            </p>
-                                        </div>
-                                    </li>
+                                        <p class="mt-2 text-info">
+                                            Pesanan dalam proses admin
+                                        </p>
+                                        <p class="text-secondary">
+                                            {{ \Carbon\Carbon::parse($order->processed_at)->diffForHumans() }}
+                                        </p>
+                                    </div>
+                                </li>
                                 @endif
                                 @if ($order->status == "Cancelled")
 
-                                    <li class="timeline-section">
-                                        <div class="timeline-icon">
-                                            <span class="text-light-danger h-35 w-35 d-flex-center b-r-50">
-                                                <i class="ph ph-receipt-x"></i>
-                                            </span>
+                                <li class="timeline-section">
+                                    <div class="timeline-icon">
+                                        <span class="text-light-danger h-35 w-35 d-flex-center b-r-50">
+                                            <i class="ph ph-receipt-x"></i>
+                                        </span>
+                                    </div>
+                                    <div class="timeline-content bg-light-danger b-1-danger">
+                                        <div class="d-flex justify-content-between align-items-center timeline-flex">
+                                            <h6 class="mt-2 text-danger">Pesanan Dibatalkan</h6>
                                         </div>
-                                        <div class="timeline-content bg-light-danger b-1-danger">
-                                            <div class="d-flex justify-content-between align-items-center timeline-flex">
-                                                <h6 class="mt-2 text-danger">Pesanan Dibatalkan</h6>
-                                            </div>
-                                            <p class="mt-2 text-danger">
-                                                Pesanan telah dibatalkan
-                                            </p>
-                                            <p class="text-danger">
-                                                {{ \Carbon\Carbon::parse($order->finished_at)->diffForHumans() }}
-                                            </p>
-                                        </div>
-                                    </li>
+                                        <p class="mt-2 text-danger">
+                                            Pesanan telah dibatalkan
+                                        </p>
+                                        <p class="text-danger">
+                                            {{ \Carbon\Carbon::parse($order->finished_at)->diffForHumans() }}
+                                        </p>
+                                    </div>
+                                </li>
                                 @endif
                                 @if ($order->status == "Done")
-                                    <li class="timeline-section">
-                                        <div class="timeline-icon">
-                                            <span class="text-light-success h-35 w-35 d-flex-center b-r-50">
-                                                <i class="ph ph-arrow-square-left"></i>
-                                            </span>
+                                <li class="timeline-section">
+                                    <div class="timeline-icon">
+                                        <span class="text-light-success h-35 w-35 d-flex-center b-r-50">
+                                            <i class="ph ph-arrow-square-left"></i>
+                                        </span>
+                                    </div>
+                                    <div class="timeline-content bg-light-success b-1-success">
+                                        <div class="d-flex justify-content-between align-items-center timeline-flex">
+                                            <h6 class="mt-2 text-success">Selesai</h6>
                                         </div>
-                                        <div class="timeline-content bg-light-success b-1-success">
-                                            <div class="d-flex justify-content-between align-items-center timeline-flex">
-                                                <h6 class="mt-2 text-success">Selesai</h6>
-                                            </div>
-                                            <p class="mt-2 text-success">
-                                                Voucher berhasil dikirim
-                                            </p>
-                                            <p class="text-secondary">
-                                                {{ \Carbon\Carbon::parse($order->finished_at)->diffForHumans() }}
-                                            </p>
-                                        </div>
-                                    </li>
+                                        <p class="mt-2 text-success">
+                                            Voucher berhasil dikirim
+                                        </p>
+                                        <p class="text-secondary">
+                                            {{ \Carbon\Carbon::parse($order->finished_at)->diffForHumans() }}
+                                        </p>
+                                    </div>
+                                </li>
                                 @endif
                             </ul>
                         </div>
                     </div>
                     @if (empty($order->payed_at) && empty($order->finished_at))
-                        <div class="card">
-                            <div class="card-header">
-                                <h5>Detail Pembayaran</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table cart-side-table mb-0">
-                                        <tbody>
-                                            <tr class="total-price">
-                                                <th>Jumlah :</th>
-                                                <th class="text-end">
-                                                    <span id="cart-sub">
-                                                        {{ $orders->count('id')}} Item
-                                                    </span>
-                                                </th>
-                                            </tr>
-                                            <tr>
-                                                <td>Sub Total:
-                                                </td>
-                                                <td class="text-end" id="cart-discount">
-                                                    {{ toCurrency($orders->sum('product_price'), 'IDN') }}
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Biaya Admin :</td>
-                                                <td class="text-end" id="cart-shipping">Rp 2.500</td>
-                                            </tr>
-                                            <tr class="total-price">
-                                                <th>Total :</th>
-                                                <th class="text-end">
-                                                    <span id="cart-total">
-                                                        {{ toCurrency($orders->sum('product_price') + 2500, 'IDN') }}
-                                                    </span>
-                                                </th>
-                                            </tr>
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Detail Pembayaran</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table cart-side-table mb-0">
+                                    <tbody>
+                                        <tr class="total-price">
+                                            <th>Jumlah :</th>
+                                            <th class="text-end">
+                                                <span id="cart-sub">
+                                                    {{ $orders->count('id')}} Item
+                                                </span>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <td>Sub Total:
+                                            </td>
+                                            <td class="text-end" id="cart-discount">
+                                                {{ toCurrency($orders->sum('product_price'), 'IDN') }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Biaya Admin :</td>
+                                            <td class="text-end" id="cart-shipping">Rp 2.500</td>
+                                        </tr>
+                                        <tr class="total-price">
+                                            <th>Total :</th>
+                                            <th class="text-end">
+                                                <span id="cart-total">
+                                                    {{ toCurrency($orders->sum('product_price') + 2500, 'IDN') }}
+                                                </span>
+                                            </th>
+                                        </tr>
 
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <form action="/customer_checkout" method="post" id="formPayment">
-                                    @csrf
-                                    <input type="hidden" name="orderId" value="{{ $order->id }}">
-                                    <input type="hidden" name="jsonMidtrans" value="" id="jsonMidtrans">
-                                </form>
-                                <div class="row">
-                                    <div class="text-end mt-4 col-12">
-                                        <button class="btn btn-success col-12 mb-2" id="checkout-button">Bayar</button>
-                                        <button class="btn btn-light-danger col-12"
-                                            onclick="cancelOrder('{{ $order->id }}')">Batalkan
-                                            Pesanan</button>
-                                    </div>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <form action="/customer_checkout" method="post" id="formPayment">
+                                @csrf
+                                <input type="hidden" name="orderId" value="{{ $order->id }}">
+                                <input type="hidden" name="jsonMidtrans" value="" id="jsonMidtrans">
+                            </form>
+                            <div class="row">
+                                <div class="text-end mt-4 col-12">
+                                    <button class="btn btn-success col-12 mb-2" id="checkout-button">Bayar</button>
+                                    <button class="btn btn-light-danger col-12"
+                                        onclick="cancelOrder('{{ $order->id }}')">Batalkan
+                                        Pesanan</button>
                                 </div>
                             </div>
                         </div>
+                    </div>
                     @endif
                     <!-- Order Status end -->
 
@@ -496,4 +518,42 @@
 
     @endif
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (el) {
+                new bootstrap.Tooltip(el);
+            });
+        });
+
+        function copyToClipboard(inputId, iconId, tooltipId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            const tooltipTrigger = document.getElementById(tooltipId);
+
+            if (!input || !icon || !tooltipTrigger) return;
+
+            const tooltip = bootstrap.Tooltip.getInstance(tooltipTrigger);
+            const originalTitle = tooltip._config.title || tooltipTrigger.getAttribute('data-bs-original-title') || 'Kode Redeem';
+
+            navigator.clipboard.writeText(input.value).then(() => {
+                // Animasi icon
+                icon.classList.remove('ti-ticket');
+                icon.classList.add('ti-check', 'animate-ping-once', 'text-primary');
+
+                // Tampilkan tooltip 'Disalin!'
+                tooltip.setContent({ '.tooltip-inner': 'Disalin!' });
+                tooltip.show();
+
+                // Kembalikan setelah 1.5 detik
+                setTimeout(() => {
+                    icon.classList.remove('ti-check', 'animate-ping-once', 'text-primary');
+                    icon.classList.add('ti-ticket', 'text-success');
+
+                    tooltip.setContent({ '.tooltip-inner': originalTitle });
+                    tooltip.hide();
+                }, 1500);
+            });
+        }
+    </script>
 @endsection

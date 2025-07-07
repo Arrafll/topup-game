@@ -350,7 +350,8 @@ class CustomerController extends Controller
                 'order_items.voucher_id',
                 'vouchers.redeem_code as voucher_redeem_code',
                 'vouchers.used_date as voucher_used_date',
-                'products.name as game'
+                'products.name as game',
+                'order_items.id as item_id'
             )
             ->leftJoin('order_items', 'order_items.order_id', '=', 'orders.id')
             ->leftJoin('products', 'products.id', '=', 'order_items.product_id')
