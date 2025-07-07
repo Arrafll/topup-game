@@ -75,7 +75,7 @@
 
                                     <div>
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <div class="mb-3">
                                                     <label class="form-label">Kategori Produk</label>
                                                     <select class="form-select form-product" id="city"
@@ -90,7 +90,17 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="mb-3 col-md-6">
+                                            <div class="col-md-4">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Pengiriman Produk</label>
+                                                    <select class="form-select form-product" id="bentukProduk" name="bentukProduk">
+                                                        <option value="">Pilih Pengiriman</option>
+                                                        <option value="1" @if ($product->is_voucher == 1) selected @endif>Voucher</option>
+                                                        <option value="0" @if ($product->is_voucher == 0) selected @endif>Transfer In Game</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 col-md-4">
                                                 <label class="form-label">Nama Satuan Produk</label>
                                                 <input type="text" class="form-control form-product"
                                                     placeholder="Contoh : Diamond, Cash, dan lainnya" name="satuanProduk"
@@ -257,11 +267,11 @@
 
         function addPaketRow() {
             let eleRow = `  <div class="col-md-6 paket-row"><div class="card hover-effect box-shadow-3"><div class="card-header code-header">
-                                 <h6>Paket</h6><a href="#" aria-expanded="false" aria-controls="accordionsItem1" onclick="deletePaketRow(this)">
-                                 <i class="fa-solid fa-times fa-fw close-card"></i></a></div><div class="card-body"><div class="app-form">
-                                 <div class="input-group mb-3"><input type="number" min="1" class="form-control form-product" placeholder="Masukkan jumlah paket (100 diamond, 100 cash, dll)"
-                                 name="jumlahPaket[]"></div><div class="input-group"><input type="number" min="1" class="form-control form-product" placeholder="Masukkan nominal harga" name="nominalPaket[]">
-                                 </div></div></div></div></div>`
+                                     <h6>Paket</h6><a href="#" aria-expanded="false" aria-controls="accordionsItem1" onclick="deletePaketRow(this)">
+                                     <i class="fa-solid fa-times fa-fw close-card"></i></a></div><div class="card-body"><div class="app-form">
+                                     <div class="input-group mb-3"><input type="number" min="1" class="form-control form-product" placeholder="Masukkan jumlah paket (100 diamond, 100 cash, dll)"
+                                     name="jumlahPaket[]"></div><div class="input-group"><input type="number" min="1" class="form-control form-product" placeholder="Masukkan nominal harga" name="nominalPaket[]">
+                                     </div></div></div></div></div>`
 
             $('.list-paket').append(eleRow);
             window.scrollTo(0, document.body.scrollHeight);
@@ -288,8 +298,8 @@
                 if ($(this).val() == "") {
                     $(this).addClass('is-invalid');
                     $(this).after(`<div class="invalid-feedback">
-                                      Formulir tidak boleh kosong!
-                                </div>`)
+                                          Formulir tidak boleh kosong!
+                                    </div>`)
                     isValid = false;
                 }
             })
@@ -300,8 +310,8 @@
                 if ($.inArray(fileType, validImageTypes) < 0) {
                     $(this).addClass('is-invalid');
                     $(this).after(`<div class="invalid-feedback">
-                                      Format file harus jpg, jpeg, atau png!
-                                    </div>`)
+                                          Format file harus jpg, jpeg, atau png!
+                                        </div>`)
                     isValid = false;
                 }
             })
@@ -328,9 +338,9 @@
 
         function addGambarRow() {
             let ele = ` <div class="input-file mb-2 row-gambar-detail-produk">
-                                <label class="form-label mb-2">Upload Gambar</label>
-                                <input type="file" class="form-control form-product image-form" name="imgDetailProduk[]" form="form-edit-product" accept="image/*">
-                                </div>`
+                                    <label class="form-label mb-2">Upload Gambar</label>
+                                    <input type="file" class="form-control form-product image-form" name="imgDetailProduk[]" form="form-edit-product" accept="image/*">
+                                    </div>`
 
             $(`.gambar-detail-produk`).append(ele);
             $(`#rmImgDetailBtn`).show();

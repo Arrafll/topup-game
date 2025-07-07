@@ -58,14 +58,15 @@ Route::group(['middleware' => ['auth', \App\Http\Middleware\Role::class . ':1']]
     Route::get('/admin_report_export/{year}/{month}', [AdminController::class, 'report_export'])->name('admin_report_export');
 
 
-    Route::get('/admin_detail/{id}', [adminController::class, 'adminDetail'])->name('admin_detail');
-    Route::post('/admin_detail/profile/{id}/update', [adminController::class, 'adminDetailUpdate'])->name('admin_detail_update');
-    Route::post('/admin_detail/security/{id}/update', [adminController::class, 'adminSecurityUpdate'])->name('admin_security_update');
-    
-    Route::get('/admin_product_voucher/list/{id}', [adminController::class, 'productVoucher'])->name('admin_product_voucher');
-    Route::post('/admin_product_voucher/add', [adminController::class, 'addVoucher'])->name('admin_product_voucher_add');
-    Route::post('/admin_product_voucher/delete', [adminController::class, 'deleteVoucher'])->name('admin_product_voucher_delete');
-    Route::post('/admin_product_voucher/edit', [VoucherController::class, 'updateVoucher'])->name('admin_product_voucher_update');
+    Route::get('/admin_detail/{id}', [AdminController::class, 'adminDetail'])->name('admin_detail');
+    Route::post('/admin_detail/profile/{id}/update', [AdminController::class, 'adminDetailUpdate'])->name('admin_detail_update');
+    Route::post('/admin_detail/security/{id}/update', [AdminController::class, 'adminSecurityUpdate'])->name('admin_security_update');
+
+    Route::get('/admin_voucher_list', [AdminController::class, 'voucher_list'])->name('admin_voucher_list');
+    Route::get('/admin_product_voucher/list/{id}', [AdminController::class, 'productVoucher'])->name('admin_product_voucher');
+    Route::post('/admin_product_voucher/add', [AdminController::class, 'addVoucher'])->name('admin_product_voucher_add');
+    Route::post('/admin_product_voucher/delete', [AdminController::class, 'deleteVoucher'])->name('admin_product_voucher_delete');
+    Route::post('/admin_product_voucher/edit', [AdminController::class, 'updateVoucher'])->name('admin_product_voucher_update');
 
 });
 

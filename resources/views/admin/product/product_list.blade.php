@@ -92,10 +92,6 @@
                                                         data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Product {{$p->name}}"
                                                         class="btn btn-light-success icon-btn w-30 h-30 b-r-22 me-2">
                                                         <i class="ti ti-edit"></i></a>
-                                                    <a type="button" href="{{route('admin_product_voucher', ['id' => $p->id])}}"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Voucher {{$p->name}}"
-                                                        class="btn btn-light-warning icon-btn w-30 h-30 b-r-22 me-2">
-                                                        <i class="ti ti-ticket"></i></a>
                                                     <button type="button"
                                                         class="btn btn-light-danger icon-btn w-30 h-30 b-r-22 delete-btn" onclick="loadSwalDelete('{{ $p->id }}')"><i
                                                             class="ti ti-trash"></i></button>

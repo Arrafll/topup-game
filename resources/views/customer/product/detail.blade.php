@@ -22,6 +22,11 @@
             color: rgb(var(--primary), 1);
         }
 
+
+        .form-selects .card:has(.select-input:disabled) {
+            border: 1px solid var(--border_color);
+        }
+
         .product-slider-nav img {
             width: 100%;
             height: 150px;
@@ -45,7 +50,7 @@
                         <li class="">
                             <a href="{{ route('customer') }}" class="f-s-14 f-w-500">
                                 <span>
-                                 KlikTopup
+                                    KlikTopup
                                 </span>
                             </a>
                         </li>
@@ -100,9 +105,18 @@
                                 </div>
 
                                 <div class="app-divider-v dotted pb-2"></div>
-                                <div class="product-detailbox mt-3 row">
+                                <div class="product-detailbox row">
 
                                     <input type="hidden" value="{{ $product->id }}" id="productId">
+                                    <div class="col-sm-12 mt-1 mb-1">
+                                        @if ($product->is_voucher == 1)
+                                            <p class="text-primary">Produk terdapat voucher yang akan dikirim ketika pesanan
+                                                selesai.</p>
+                                        @else
+                                            <p class="text-primary">Produk ini tanpa voucher, currency akan dikirimkan ke Game
+                                                ID di dalam game.</p>
+                                        @endif
+                                    </div>
                                     <div class="col-sm-6">
                                         <h5>Game ID</h5>
                                         <div class="mt-2">
@@ -122,8 +136,12 @@
 
                                         <div class="col-sm-4">
                                             <div class="card hover-effect select-package">
+                                                @if ($product->is_voucher == 1 && $p->vouchers_count < 1)
+                                                    <div class="ribbon-shape shape-right ribbon-danger">Habis</div>
+                                                @endif
                                                 <input type="radio" class="select-input select-package" name="package"
-                                                    value="{{ $p->id}}">
+                                                    value="{{ $p->id}}" @if ($product->is_voucher == 1 && $p->vouchers_count < 1)
+                                                    disabled @endif data-vouchers_count="{{ $p->vouchers_count }}">
                                                 <div class="card-body  p-3">
                                                     <h5>{{ $p->amount}}</h5>
                                                     <h6>{{ toCurrency($p->price, 'IDN') }}</h6>
@@ -253,7 +271,8 @@
 
             let gameId = $(`#gameId`).val();
             let productId = $(`#productId`).val();
-            let packageId = $(`input[name="package"]:checked`).val();
+            let packageId = $(`input[name="package"]:enabled:checked`).val();
+            let vouchers_count = $(`input[name="package"]:enabled:checked`).data('vouchers_count');
             $(`#gameId`).removeClass('is-invalid')
             if (gameId.length < 1 || packageId == undefined) {
 
@@ -274,7 +293,9 @@
                 "_token": "{{ csrf_token() }}",
                 "productId": productId,
                 "gameId": gameId,
-                "packageId": packageId
+                "packageId": packageId,
+                "vouchers_count" : vouchers_count,
+                "is_voucher": '{{ $product->is_voucher }}'
             }
 
             $.ajax({
@@ -286,44 +307,54 @@
                     $('.button-action').attr('disabled', true);
                 },
                 success: function (response) {
-
-
-                    $('#cartAddBtn').html('+ Keranjang')
                     $('.button-action').attr('disabled', false);
+                    $('#cartAddBtn').html('+ Keranjang')
+                  
+                    if (response.response == "success") {
+        
 
-                    let cartCounts = parseInt($('#cartCounts').text());
-                    $('#cartCounts').text(cartCounts + 1);
+                        let cartCounts = parseInt($('#cartCounts').text());
+                        $('#cartCounts').text(cartCounts + 1);
 
-                    let cartTotalCounts = parseInt($('#cartTotalCounts').data('total'));
-                    $('#cartTotalCounts').text(`Rp ` + formatIdrs(parseInt(cartTotalCounts) + parseInt(response.carts.product_price)));
-                    $('#cartTotalCounts').data('total', parseInt(cartTotalCounts) + parseInt(response.carts.product_price));
-                    let element =
-                        `<div class="head-box">
-                                        <img src="{{ asset('uploads/product/${response.carts.product_pic}') }}" alt="cart"
-                                          class="h-50 object-fit-cover me-3 b-r-10">
-                                        <div class="flex-grow-1">
-                                          <a class="mb-0 f-w-600 f-s-16" href="product_details.html" target="_blank">${response.carts.name}</a><br>
-                                          <span class="text-secondary text-dark f-w-400">${response.carts.game}</span><br>
-                                          <span class="text-secondary">${response.carts.package_amount} ${response.carts.unit} - <span class="text-dark f-w-400 row-cart-price" data-price="${response.carts.product_price}">Rp ${formatIdrs(response.carts.product_price)}</span></span>
-                                        </div>
-                                        <div class="text-end">
-                                          <i class="ph ph-trash f-s-25 text-danger" data-cart="${response.carts.cart_id}" onclick="removeCart(this)"></i>
+                        let cartTotalCounts = parseInt($('#cartTotalCounts').data('total'));
+                        $('#cartTotalCounts').text(`Rp ` + formatIdrs(parseInt(cartTotalCounts) + parseInt(response.carts.product_price)));
+                        $('#cartTotalCounts').data('total', parseInt(cartTotalCounts) + parseInt(response.carts.product_price));
+                        let element =
+                            `<div class="head-box">
+                                                                            <img src="{{ asset('uploads/product/${response.carts.product_pic}') }}" alt="cart"
+                                                                              class="h-50 object-fit-cover me-3 b-r-10">
+                                                                            <div class="flex-grow-1">
+                                                                              <a class="mb-0 f-w-600 f-s-16">${response.carts.name}</a><br>
+                                                                              <span class="text-secondary text-dark f-w-400">${response.carts.game}</span><br>
+                                                                              <span class="text-secondary">${response.carts.package_amount} ${response.carts.unit} - <span class="text-dark f-w-400 row-cart-price" data-price="${response.carts.product_price}">Rp ${formatIdrs(response.carts.product_price)}</span></span>
+                                                                            </div>
+                                                                            <div class="text-end">
+                                                                              <i class="ph ph-trash f-s-25 text-danger" data-cart="${response.carts.cart_id}" onclick="removeCart(this)"></i>
 
-                                        </div>
-                                        </div>`
-                    $(element).insertBefore('#emptyCartMessage');
-                    Toastify({
-                        text: "Berhasil ditambahkan ke keranjang!",
-                        duration: 2500,
-                        position: "right",
-                        style: {
-                            background: "rgb(var(--success),1)",
-                        }
-                    }).showToast();
-                    console.log(response.carts);
-                    $('#gameId').val('');
-                    $('.select-package').prop('checked', false);
-
+                                                                            </div>
+                                                                            </div>`
+                        $(element).insertBefore('#emptyCartMessage');
+                        Toastify({
+                            text: "Berhasil ditambahkan ke keranjang!",
+                            duration: 2500,
+                            position: "right",
+                            style: {
+                                background: "rgb(var(--success),1)",
+                            }
+                        }).showToast();
+                        console.log(response.carts);
+                        $('#gameId').val('');
+                        $('.select-package').prop('checked', false);
+                    } else {
+                        Toastify({
+                            text: "Keranjang melebihi stok!",
+                            duration: 2500,
+                            position: "right",
+                            style: {
+                                background: "rgb(var(--danger),1)",
+                            }
+                        }).showToast();
+                    }
                 }
             });
 
@@ -353,7 +384,7 @@
         function orderNow() {
             let gameId = $(`#gameId`).val();
             let productId = $(`#productId`).val();
-            let packageId = $(`input[name="package"]:checked`).val();
+            let packageId = $(`input[name="package"]:enabled:checked`).val();
 
             if (gameId.length < 1 || packageId == undefined) {
 

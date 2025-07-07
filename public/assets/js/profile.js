@@ -9,6 +9,15 @@ function readURL(input) {
             $('#imgPreview').fadeIn(650);
         }
         reader.readAsDataURL(input.files[0]);
+        $.ajax({
+            type: "method",
+            url: "url",
+            data: "data",
+            dataType: "dataType",
+            success: function (response) {
+                
+            }
+        });
     }
 }
 $("#imageUpload").change(function() {

@@ -19,6 +19,7 @@ use Midtrans\Snap;
 use App\Models\User;
 use App\Models\UserData;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class CustomerController extends Controller
 {
@@ -153,10 +154,10 @@ class CustomerController extends Controller
         $product = Product::findOrFail($id);
 
         $queryAttachment = DB::table('attachments')
-            ->select(DB::raw(value: 'MIN(attachments.name) as product_pic'), 'product_id')
+            ->select(DB::raw('MIN(attachments.name) as product_pic'), 'product_id')
             ->groupBy('attachments.product_id');
         $queryPackage = DB::table('product_packages')
-            ->select(DB::raw(value: 'MIN(product_packages.price) as product_price'), 'product_id')
+            ->select(DB::raw('MIN(product_packages.price) as product_price'), 'product_id')
             ->groupBy('product_packages.product_id');
         $related = DB::table('products')
             ->select('products.*', 'attachments.product_pic', DB::raw('IFNULL(product_packages.product_price,0) as product_price'))
@@ -171,10 +172,22 @@ class CustomerController extends Controller
             ->limit(5)
             ->get();
 
+        $queryVouchers = DB::table('vouchers')
+            ->select(DB::raw('COUNT(vouchers.id) as vouchers_count'), 'vouchers.packages_id')
+            ->where('vouchers.is_used', '=', '0')
+            ->groupBy('vouchers.packages_id');
+        $packages = DB::table('product_packages')
+            ->select(DB::raw('IFNULL(vouchers.vouchers_count,0) as vouchers_count'), 'product_packages.*')
+            ->leftJoinSub($queryVouchers, 'vouchers', function (JoinClause $join) {
+                $join->on('product_packages.id', '=', 'vouchers.packages_id');
+            })
+            ->where('product_id', '=', $id)
+            ->groupBy('product_packages.id')
+            ->get();
 
-        $packages = ProductPackage::where('product_id', '=', $id)->get();
         $attachments = Attachment::where('product_id', '=', $id)->get();
         $attachmentsCount = $attachments->count();
+
 
         $data = [
             'title' => $product->name,
@@ -206,8 +219,16 @@ class CustomerController extends Controller
         $productId = $request->productId;
         $packageId = $request->packageId;
         $gameId = $request->gameId;
+        $vouchersCount = $request->vouchers_count;
+        $is_voucher = $request->is_voucher;
         $userId = Auth::user()->id;
-
+        
+        if ($is_voucher == '1') {
+            $cartExist = Cart::where('package_id', '=', $packageId)->count();
+            if ($cartExist >= $vouchersCount) {
+                return response()->json(['response' => 'failed']);
+            }
+        }
 
         $cart = [
             'product_id' => $productId,
@@ -309,76 +330,76 @@ class CustomerController extends Controller
     }
 
     public function order_detail($id)
-{
-    $order = Order::find($id);
+    {
+        $order = Order::find($id);
 
-    $queryAttachment = DB::table('attachments')
-        ->select(DB::raw('MIN(attachments.name) as product_pic'), 'product_id')
-        ->groupBy('product_id');
+        $queryAttachment = DB::table('attachments')
+            ->select(DB::raw('MIN(attachments.name) as product_pic'), 'product_id')
+            ->groupBy('product_id');
 
-    $orders = DB::table('orders')
-        ->select(
-            'products.*',
-            'attachments.product_pic',
-            'product_packages.price as product_price',
-            'product_packages.amount as package_amount',
-            'orders.created_at as order_date',
-            'order_items.game_id',
-            'order_items.package_id',
-            'order_items.voucher_code',
-            'order_items.voucher_id',
-            'vouchers.redeem_code as voucher_redeem_code',
-            'vouchers.used_date as voucher_used_date',
-            'products.name as game'
-        )
-        ->leftJoin('order_items', 'order_items.order_id', '=', 'orders.id')
-        ->leftJoin('products', 'products.id', '=', 'order_items.product_id')
-        ->leftJoin('product_packages', 'product_packages.id', '=', 'order_items.package_id')
-        ->leftJoinSub($queryAttachment, 'attachments', function (JoinClause $join) {
-            $join->on('products.id', '=', 'attachments.product_id');
-        })
-        ->leftJoin('vouchers', 'vouchers.id', '=', 'order_items.voucher_id')
-        ->where('orders.id', $id)
-        ->get();
+        $orders = DB::table('orders')
+            ->select(
+                'products.*',
+                'attachments.product_pic',
+                'product_packages.price as product_price',
+                'product_packages.amount as package_amount',
+                'orders.created_at as order_date',
+                'order_items.game_id',
+                'order_items.package_id',
+                'order_items.voucher_code',
+                'order_items.voucher_id',
+                'vouchers.redeem_code as voucher_redeem_code',
+                'vouchers.used_date as voucher_used_date',
+                'products.name as game'
+            )
+            ->leftJoin('order_items', 'order_items.order_id', '=', 'orders.id')
+            ->leftJoin('products', 'products.id', '=', 'order_items.product_id')
+            ->leftJoin('product_packages', 'product_packages.id', '=', 'order_items.package_id')
+            ->leftJoinSub($queryAttachment, 'attachments', function (JoinClause $join) {
+                $join->on('products.id', '=', 'attachments.product_id');
+            })
+            ->leftJoin('vouchers', 'vouchers.id', '=', 'order_items.voucher_id')
+            ->where('orders.id', $id)
+            ->get();
 
-    // Snap Token Logic
-    $snapToken = $order->snap_token;
-    if (empty($order->finished_at) || empty($order->processed_at)) {
-        if (empty($order->snap_token) && empty($order->payed_at)) {
-            Config::$serverKey = config('midtrans.server_key');
-            Config::$isProduction = config('midtrans.is_production');
-            Config::$isSanitized = config('midtrans.is_sanitized');
-            Config::$is3ds = config('midtrans.is_3ds');
+        // Snap Token Logic
+        $snapToken = $order->snap_token;
+        if (empty($order->finished_at) || empty($order->processed_at)) {
+            if (empty($order->snap_token) && empty($order->payed_at)) {
+                Config::$serverKey = config('midtrans.server_key');
+                Config::$isProduction = config('midtrans.is_production');
+                Config::$isSanitized = config('midtrans.is_sanitized');
+                Config::$is3ds = config('midtrans.is_3ds');
 
-            $params = [
-                'transaction_details' => [
-                    'order_id' => $order->code,
-                    'gross_amount' => $orders->sum('product_price') + 2500,
-                ],
-                'customer_details' => [
-                    'first_name' => Auth::user()->name,
-                    'email' => Auth::user()->email,
-                ],
-            ];
+                $params = [
+                    'transaction_details' => [
+                        'order_id' => $order->code,
+                        'gross_amount' => $orders->sum('product_price') + 2500,
+                    ],
+                    'customer_details' => [
+                        'first_name' => Auth::user()->name,
+                        'email' => Auth::user()->email,
+                    ],
+                ];
 
-            $snapToken = Snap::getSnapToken($params);
-            $order->pay_total = $orders->sum('product_price') + 2500;
-            $order->snap_token = $snapToken;
-            $order->save();
+                $snapToken = Snap::getSnapToken($params);
+                $order->pay_total = $orders->sum('product_price') + 2500;
+                $order->snap_token = $snapToken;
+                $order->save();
+            }
         }
+
+        $data = [
+            'title' => 'Order Detail',
+            'role' => 2,
+            'orders' => $orders,
+            'order' => $order,
+            'snapToken' => $snapToken,
+            'cartList' => $this->cartList
+        ];
+
+        return view('customer.order.detail', $data);
     }
-
-    $data = [
-        'title' => 'Order Detail',
-        'role' => 2,
-        'orders' => $orders,
-        'order' => $order,
-        'snapToken' => $snapToken,
-        'cartList' => $this->cartList
-    ];
-
-    return view('customer.order.detail', $data);
-}
 
     public function order_cancel($id)
     {
@@ -444,7 +465,6 @@ class CustomerController extends Controller
         $packageId = $request->packageId;
         $gameId = $request->gameId;
         $productId = $request->productId;
-
         $orderCode = "KTO" . date('ymdhis');
         $userId = Auth::user()->id;
 
@@ -472,7 +492,7 @@ class CustomerController extends Controller
         $user = User::with('userData')->findOrFail($id);
 
         $data = [
-            'title' => 'Home',
+            'title' => 'Profile',
             'role' => 2,
             'cartList' => $this->cartList,
             'user' => $user

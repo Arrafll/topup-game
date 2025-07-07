@@ -34203,7 +34203,7 @@ input[type=range]::-webkit-slider-thumb {
 .profile-container .image-details .profile-image {
   width: 100%;
   height: 200px;
-  background-image: url(3d17abacbfc1911d64d4.jpg);
+  background-image: url(fa1f52d77e700f84f29c.png);
   background-repeat: no-repeat;
   background-size: cover;
   border-radius: var(--bs-border-radius);
@@ -34251,9 +34251,8 @@ input[type=range]::-webkit-slider-thumb {
 .profile-container .image-details .profile-pic .avatar-upload .avatar-preview > div {
   width: 100%;
   height: 100%;
-  background-image: url(dfc326a61bcf692ffdab.png);
   border-radius: 100%;
-  background-color: rgb(var(--warning), 1);
+  background-color: rgb(var(--white), 1);
   border: 4px dashed rgb(var(--dark), 1);
   background-size: cover;
   background-repeat: no-repeat;
@@ -36819,7 +36818,6 @@ body[class="ltr dark"] .team-chat-container {
   width: 100%;
   height: 100%;
   background-color: rgba(var(--primary), 1);
-  background-image: url(dfc326a61bcf692ffdab.png);
   border-radius: 100%;
   background-size: cover;
   background-repeat: no-repeat;

@@ -67,15 +67,13 @@ $isGoogleLogin = !is_null($user->media_id);
                                     <div class="image-details">
                                         <div class="profile-image"></div>
                                         <div class="profile-pic">
-                                            <div class="avatar-upload">
-                                                <div class="avatar-edit">
-                                                    <input type="file" id="imageUpload" accept=".png, .jpg, .jpeg">
-                                                    <label for="imageUpload">
-                                                        <i class="ti ti-photo-heart"></i>
-                                                    </label>
-                                                </div>
+                                             <div class="avatar-upload">
                                                 <div class="avatar-preview">
-                                                    <div id="imgPreview"></div>
+                                                       @if (empty(auth()->user()->avatar))
+                                                    <div id="imgPreview" style="background-image: url('https://img.freepik.com/premium-vector/3d-realistic-person-people-vector-illustration_156780-1097.jpg?semt=ais_hybrid&w=740');"></div>
+                                                    @else
+                                                    <div id="imgPreview" style="background-image: url('{{ auth()->user()->avatar }}');"></div>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -200,7 +198,7 @@ $isGoogleLogin = !is_null($user->media_id);
                                                 </p>
                                             </div>
                                             <div class="col-sm-3 account-security-img">
-                                                <img src="{{ asset('assets/images/setting-app/password.jpg') }}" alt=""
+                                            <img src="{{ asset('assets/images/icons/shield.png') }}" alt=""
                                                     class="w-150">
                                             </div>
                                         </div>

@@ -43,7 +43,7 @@
         <img src="{{ asset('uploads/product/' . $cl->product_pic) }}" alt="cart"
           class="h-50 object-fit-cover me-3 b-r-10">
         <div class="flex-grow-1">
-          <a class="mb-0 f-w-600 f-s-16" href="product_details.html" target="_blank">
+          <a class="mb-0 f-w-600 f-s-16">
           {{ $cl->name }}</a><br>
           <span class="text-secondary text-dark f-w-400">{{ $cl->game }}</span><br>
           <span class="text-secondary">{{ $cl->package_amount }} {{ $cl->unit }} - <span
@@ -138,12 +138,12 @@
 
             <li>
             @if ($role == 1)
-        <a class="f-w-500" href="{{route('admin_detail', ['id' => session('user_id')])}}">
+        <a class="f-w-500" href="{{route('admin_detail', ['id' => auth()->user()->id ])}}">
           <i class="ph-duotone  ph-gear pe-1 f-s-20"></i> Settings
         </a>
         @endif
             @if ($role == 2)
-        <a class="f-w-500" href="{{route('customer_detail', ['id' => session('user_id')])}}">
+        <a class="f-w-500" href="{{route('customer_detail', ['id' => auth()->user()->id ])}}">
           <i class="ph-duotone  ph-gear pe-1 f-s-20"></i> Settings
         </a>
         @endif

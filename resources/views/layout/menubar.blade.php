@@ -48,6 +48,11 @@
       </a>
       </li>
       <li class="no-sub">
+      <a class="{{ Route::is('admin_voucher*') ? 'active' : '' }}" href="/admin_voucher_list">
+        <i class="ph-duotone  ph-ticket"></i> Voucher
+      </a>
+      </li>
+      <li class="no-sub">
       <a class="{{ Route::is('admin_user*') ? 'active' : '' }}" href="/admin_user_list">
         <i class="ph-duotone ph-user"></i> User
       </a>
@@ -71,7 +76,7 @@
       </a>
       </li>
     @endif
-     @if($role == 0)
+      @if($role == 0)
 
       <li class="no-sub">
       <a class="{{ Route::is('beranda') ? 'active' : '' }}" href="{{ route('customer') }}">
